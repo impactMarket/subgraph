@@ -1,0 +1,129 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: IPCTDelegator
+    network: celo-alfajores
+    source:
+      address: "0xBf35872f98E716bfc06B03aB173037576DebE1F5"
+      abi: IPCTDelegator
+      startBlock: 8568251
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ProposalEntity
+      abis:
+        - name: IPCTDelegator
+          file: ./abis/IPCTDelegator.json
+      eventHandlers:
+        - event: ProposalCanceled(uint256)
+          handler: handleProposalCanceled
+        - event: ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)
+          handler: handleProposalCreated
+        - event: ProposalExecuted(uint256)
+          handler: handleProposalExecuted
+        - event: ProposalQueued(uint256,uint256)
+          handler: handleProposalQueued
+      file: ./src/mappings/proposals.ts
+  - kind: ethereum/contract
+    name: CommunityAdmin
+    network: celo-alfajores
+    source:
+      address: "0x88B101c163bbFE1dc4764225248a6DAd282d7A39"
+      abi: CommunityAdmin
+      startBlock: 8568251
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - CommunityEntity
+      abis:
+        - name: CommunityAdmin
+          file: ./abis/CommunityAdmin.json
+      eventHandlers:
+        - event: CommunityAdded(indexed address,address[],uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleCommunityAdded
+        - event: CommunityMigrated(address[],indexed address,indexed address)
+          handler: handleCommunityMigrated
+      file: ./src/mappings/communityAdmin.ts
+  - kind: ethereum/contract
+    name: OldImpactMarket
+    network: celo-alfajores
+    source:
+      address: "0x23611bDA8C4a048c22139b4a444f3E329E2046b4"
+      abi: OldImpactMarket
+      startBlock: 8584117
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - CommunityEntity
+      abis:
+        - name: OldImpactMarket
+          file: ./abis/old/ImpactMarket.json
+      eventHandlers:
+        - event: CommunityAdded(indexed address,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleOldCommunityAdded
+      file: ./src/mappings/old/impactMarket.ts
+templates:
+  - name: Community
+    kind: ethereum/contract
+    network: celo-alfajores
+    source:
+      abi: Community
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ManagerEntity
+        - BeneficiaryEntity
+        - ClaimEntity
+      abis:
+        - name: Community
+          file: ./abis/Community.json
+      eventHandlers:
+        - event: ManagerAdded(indexed address,indexed address)
+          handler: handleManagerAdded
+        - event: ManagerRemoved(indexed address,indexed address)
+          handler: handleManagerRemoved
+        - event: BeneficiaryAdded(indexed address,indexed address)
+          handler: handleBeneficiaryAdded
+        - event: BeneficiaryRemoved(indexed address,indexed address)
+          handler: handleBeneficiaryRemoved
+        - event: BeneficiaryClaim(indexed address,uint256)
+          handler: handleBeneficiaryClaim
+      file: ./src/mappings/community.ts
+  - name: OldCommunity
+    kind: ethereum/contract
+    network: celo-alfajores
+    source:
+      abi: OldCommunity
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ManagerEntity
+        - BeneficiaryEntity
+        - ClaimEntity
+      abis:
+        - name: OldCommunity
+          file: ./abis/old/Community.json
+      eventHandlers:
+        - event: ManagerAdded(indexed address)
+          handler: handleOldManagerAdded
+        - event: ManagerRemoved(indexed address)
+          handler: handleOldManagerRemoved
+        - event: BeneficiaryAdded(indexed address)
+          handler: handleOldBeneficiaryAdded
+        - event: BeneficiaryRemoved(indexed address)
+          handler: handleOldBeneficiaryRemoved
+        - event: BeneficiaryClaim(indexed address,uint256)
+          handler: handleOldBeneficiaryClaim
+      file: ./src/mappings/old/community.ts

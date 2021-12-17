@@ -1,0 +1,48 @@
+type ProposalEntity @entity {
+  id: ID! # proposal id
+  status: Int!
+  endBlock: Int!
+}
+
+type CommunityEntity @entity {
+  id: ID! # community address
+  previous: Bytes!
+  claimAmount: BigInt!
+  maxClaim: BigInt!
+  decreaseStep: BigInt!
+  baseInterval: Int!
+  incrementInterval: Int!
+  # total
+  totalBeneficiary: Int!
+  totalManagers: Int!
+  totalContributed: BigInt!
+  totalClaimed: BigInt!
+  # arays
+  managers: [ManagerEntity!]!
+  beneficiaries: [BeneficiaryEntity!]!
+  claims: [ClaimEntity!]!
+}
+
+type ManagerEntity @entity {
+  id: ID! # tx hash
+  address: Bytes!
+  community: CommunityEntity!
+  state: Int!
+}
+
+type BeneficiaryEntity @entity {
+  id: ID! # tx hash
+  address: Bytes!
+  community: CommunityEntity!
+  state: Int!
+  lastClaimAt: Int!
+  preLastClaimAt: Int!
+}
+
+type ClaimEntity @entity {
+  id: ID! # tx hash
+  beneficiary: BeneficiaryEntity!
+  community: CommunityEntity!
+  amount: BigInt!
+  timestamp: Int!
+}
