@@ -14,7 +14,8 @@
   "dependencies": {
     "@graphprotocol/graph-cli": "0.25.1",
     "@graphprotocol/graph-ts": "0.24.1",
-    "matchstick-as": "0.2.2"
+    "matchstick-as": "0.2.2",
+    "@ethersproject/units": "5.5.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "3.4.0",
