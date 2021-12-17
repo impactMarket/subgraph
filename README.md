@@ -13,12 +13,6 @@ The first time you need to build the docker image (with `$ docker build -t match
 $ docker run -it --rm --mount type=bind,source=<absolute/path/to/project>,target=/matchstick matchstick
 ```
 
-If you get a permission error while building the docker image, use
-```
-$ sudo chown yours:yours -R <this-folder>/node_modules
-$ chmod +r <this-folder>/node_modules/binary-install-raw/bin/0.2.2/binary-linux-20
-```
-
 ## Deploy
 ```
 $ yarn codegen
