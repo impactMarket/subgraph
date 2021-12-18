@@ -1,3 +1,5 @@
+import { BigInt } from '@graphprotocol/graph-ts';
+
 import {
     CommunityAdded,
     CommunityMigrated,
@@ -15,6 +17,10 @@ export function handleCommunityAdded(event: CommunityAdded): void {
     community.decreaseStep = event.params.decreaseStep;
     community.baseInterval = event.params.baseInterval.toI32();
     community.incrementInterval = event.params.incrementInterval.toI32();
+    community.totalBeneficiary = 0;
+    community.totalManagers = 0;
+    community.totalClaimed = BigInt.fromI32(0);
+    community.totalContributed = BigInt.fromI32(0);
     // create community entry
     Community.create(event.params.communityAddress);
     // save entity state
@@ -39,7 +45,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         // community.managers = previousCommunity.managers;
         community.claims = previousCommunity.claims;
         community.totalBeneficiary = previousCommunity.totalBeneficiary;
-        // community.totalManagers = previousCommunity.totalManagers;
+        community.totalManagers = 0;
         community.totalClaimed = previousCommunity.totalClaimed;
         community.totalContributed = previousCommunity.totalContributed;
         community.previous = event.params.previousCommunityAddress;
