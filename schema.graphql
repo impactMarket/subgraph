@@ -46,3 +46,7 @@ type ClaimEntity @entity {
   amount: BigInt!
   timestamp: Int!
 }
+
+type CeloDollarEntity @entity {
+  id: ID! # tx hash
+}

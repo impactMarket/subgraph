@@ -440,3 +440,38 @@ export class ClaimEntity extends Entity {
     this.set("timestamp", Value.fromI32(value));
   }
 }
+
+export class CeloDollarEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CeloDollarEntity entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save CeloDollarEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("CeloDollarEntity", id.toString(), this);
+    }
+  }
+
+  static load(id: string): CeloDollarEntity | null {
+    return changetype<CeloDollarEntity | null>(
+      store.get("CeloDollarEntity", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+}
