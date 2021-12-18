@@ -60,6 +60,8 @@ export function handleBeneficiaryAdded(event: BeneficiaryAdded): void {
         beneficiary.address = event.params.beneficiary;
         beneficiary.community = community.id;
         beneficiary.state = 0;
+        beneficiary.lastClaimAt = 0;
+        beneficiary.preLastClaimAt = 0;
         beneficiary.save();
         //
         const _beneficiaries = community.beneficiaries;
