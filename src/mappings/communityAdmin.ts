@@ -17,7 +17,7 @@ export function handleCommunityAdded(event: CommunityAdded): void {
     community.decreaseStep = event.params.decreaseStep;
     community.baseInterval = event.params.baseInterval.toI32();
     community.incrementInterval = event.params.incrementInterval.toI32();
-    community.totalBeneficiary = 0;
+    community.totalBeneficiaries = 0;
     community.totalManagers = 0;
     community.totalClaimed = BigInt.fromI32(0);
     community.totalContributed = BigInt.fromI32(0);
@@ -44,7 +44,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.beneficiaries = previousCommunity.beneficiaries;
         // community.managers = previousCommunity.managers;
         community.claims = previousCommunity.claims;
-        community.totalBeneficiary = previousCommunity.totalBeneficiary;
+        community.totalBeneficiaries = previousCommunity.totalBeneficiaries;
         community.totalManagers = 0;
         community.totalClaimed = previousCommunity.totalClaimed;
         community.totalContributed = previousCommunity.totalContributed;

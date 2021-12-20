@@ -158,13 +158,13 @@ export class CommunityEntity extends Entity {
     this.set("incrementInterval", Value.fromI32(value));
   }
 
-  get totalBeneficiary(): i32 {
-    let value = this.get("totalBeneficiary");
+  get totalBeneficiaries(): i32 {
+    let value = this.get("totalBeneficiaries");
     return value!.toI32();
   }
 
-  set totalBeneficiary(value: i32) {
-    this.set("totalBeneficiary", Value.fromI32(value));
+  set totalBeneficiaries(value: i32) {
+    this.set("totalBeneficiaries", Value.fromI32(value));
   }
 
   get totalManagers(): i32 {

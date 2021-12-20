@@ -13,7 +13,7 @@ type CommunityEntity @entity {
   baseInterval: Int!
   incrementInterval: Int!
   # total
-  totalBeneficiary: Int!
+  totalBeneficiaries: Int!
   totalManagers: Int!
   totalContributed: BigInt!
   totalClaimed: BigInt!
