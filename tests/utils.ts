@@ -68,24 +68,24 @@ export function createCommunityAddedEvent(
 }
 
 export function createManagerAddedEvent(
-    account: string,
     manager: string,
+    account: string,
     fromCommunityAddress: string
 ): ManagerAdded {
     const managerAddedEvent = changetype<ManagerAdded>(newMockEvent());
     managerAddedEvent.parameters = new Array();
     managerAddedEvent.address = Address.fromString(fromCommunityAddress);
-    const accountParam = new ethereum.EventParam(
-        'account',
-        ethereum.Value.fromAddress(Address.fromString(account))
-    );
     const managerParam = new ethereum.EventParam(
         'manager',
         ethereum.Value.fromAddress(Address.fromString(manager))
     );
+    const accountParam = new ethereum.EventParam(
+        'account',
+        ethereum.Value.fromAddress(Address.fromString(account))
+    );
 
-    managerAddedEvent.parameters.push(accountParam);
     managerAddedEvent.parameters.push(managerParam);
+    managerAddedEvent.parameters.push(accountParam);
 
     return managerAddedEvent;
 }
