@@ -67,7 +67,7 @@ export function handleOldBeneficiaryAdded(event: OldBeneficiaryAdded): void {
         const _beneficiaries = community.beneficiaries;
         _beneficiaries.push(beneficiary.id);
         community.beneficiaries = _beneficiaries;
-        community.totalBeneficiary += 1;
+        community.totalBeneficiaries += 1;
         community.save();
     }
 }
@@ -84,7 +84,7 @@ export function handleOldBeneficiaryRemoved(
             beneficiary.state = 1;
             beneficiary.save();
             //
-            community.totalBeneficiary -= 1;
+            community.totalBeneficiaries -= 1;
             community.save();
         }
     }
@@ -106,6 +106,10 @@ export function handleOldBeneficiaryClaim(event: OldBeneficiaryClaim): void {
             claim.amount = event.params._amount;
             claim.timestamp = event.block.timestamp.toI32();
             claim.save();
+            //
+            beneficiary.preLastClaimAt = beneficiary.lastClaimAt;
+            beneficiary.lastClaimAt = event.block.timestamp.toI32();
+            beneficiary.save();
             //
             const _claims = community.claims;
             _claims.push(claim.id);

@@ -16,7 +16,7 @@ export function handleOldCommunityAdded(event: OldCommunityAdded): void {
     community.decreaseStep = new BigInt(0);
     community.baseInterval = event.params._baseInterval.toI32();
     community.incrementInterval = event.params._incrementInterval.toI32();
-    community.totalBeneficiary = 0;
+    community.totalBeneficiaries = 0;
     community.totalManagers = 0;
     community.totalClaimed = BigInt.fromI32(0);
     community.totalContributed = BigInt.fromI32(0);
