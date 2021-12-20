@@ -1,3 +1,4 @@
+import { Address } from '@graphprotocol/graph-ts';
 import {
     CommunityEntity,
     ManagerEntity,
@@ -13,23 +14,29 @@ import {
 } from '../../generated/templates/Community/Community';
 
 export function handleManagerAdded(event: ManagerAdded): void {
-    const community = CommunityEntity.load(event.address.toHex());
-    if (community) {
-        const managerId = event.params.account.toHex() + '-' + community.id;
-        let manager = ManagerEntity.load(managerId);
-        if (!manager) {
-            manager = new ManagerEntity(managerId);
+    if (
+        event.params.account.notEqual(
+            Address.fromString('0x88b101c163bbfe1dc4764225248a6dad282d7a39') // community admin address
+        )
+    ) {
+        const community = CommunityEntity.load(event.address.toHex());
+        if (community) {
+            const managerId = event.params.account.toHex() + '-' + community.id;
+            let manager = ManagerEntity.load(managerId);
+            if (!manager) {
+                manager = new ManagerEntity(managerId);
+            }
+            manager.address = event.params.account;
+            manager.community = community.id;
+            manager.state = 0;
+            manager.save();
+            //
+            const _managers = community.managers;
+            _managers.push(manager.id);
+            community.managers = _managers;
+            community.totalManagers += 1;
+            community.save();
         }
-        manager.address = event.params.account;
-        manager.community = community.id;
-        manager.state = 0;
-        manager.save();
-        //
-        const _managers = community.managers;
-        _managers.push(manager.id);
-        community.managers = _managers;
-        community.totalManagers += 1;
-        community.save();
     }
 }
 

@@ -47,14 +47,14 @@ test('add managers', () => {
     handleCommunityAdded(community);
 
     const managerAddedEvent1 = createManagerAddedEvent(
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
         '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
+        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
         '0x1cad798788568098e51c5751fe03a8daa0c7eac6'
     );
 
     const managerAddedEvent2 = createManagerAddedEvent(
-        '0x88b101c163bbfe1dc4764225248a6dad282d7a39',
         '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
+        '0x88b101c163bbfe1dc4764225248a6dad282d7a39', // prevent adding community admin
         '0x1cad798788568098e51c5751fe03a8daa0c7eac6'
     );
 
@@ -66,6 +66,13 @@ test('add managers', () => {
         '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f-0x1cad798788568098e51c5751fe03a8daa0c7eac6',
         'address',
         '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'
+    );
+
+    assert.fieldEquals(
+        'CommunityEntity',
+        '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
+        'totalManagers',
+        '1'
     );
 
     clearStore();
