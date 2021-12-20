@@ -112,6 +112,9 @@ export function handleBeneficiaryClaim(event: BeneficiaryClaim): void {
             claim.timestamp = event.block.timestamp.toI32();
             claim.save();
             //
+            beneficiary.preLastClaimAt = beneficiary.lastClaimAt;
+            beneficiary.lastClaimAt = event.block.timestamp.toI32();
+            //
             const _claims = community.claims;
             _claims.push(claim.id);
             community.claims = _claims;
