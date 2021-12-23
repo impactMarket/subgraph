@@ -354,7 +354,7 @@ export class VotingPeriodSet__Params {
   }
 }
 
-export class IPCTDelegator__getActionsResult {
+export class PACTDelegator__getActionsResult {
   value0: Array<Address>;
   value1: Array<BigInt>;
   value2: Array<string>;
@@ -382,7 +382,7 @@ export class IPCTDelegator__getActionsResult {
   }
 }
 
-export class IPCTDelegator__getReceiptResultValue0Struct extends ethereum.Tuple {
+export class PACTDelegator__getReceiptResultValue0Struct extends ethereum.Tuple {
   get hasVoted(): boolean {
     return this[0].toBoolean();
   }
@@ -396,7 +396,7 @@ export class IPCTDelegator__getReceiptResultValue0Struct extends ethereum.Tuple 
   }
 }
 
-export class IPCTDelegator__proposalReceiptsResult {
+export class PACTDelegator__proposalReceiptsResult {
   value0: boolean;
   value1: i32;
   value2: BigInt;
@@ -419,7 +419,7 @@ export class IPCTDelegator__proposalReceiptsResult {
   }
 }
 
-export class IPCTDelegator__proposalsResult {
+export class PACTDelegator__proposalsResult {
   value0: BigInt;
   value1: Address;
   value2: BigInt;
@@ -471,9 +471,9 @@ export class IPCTDelegator__proposalsResult {
   }
 }
 
-export class IPCTDelegator extends ethereum.SmartContract {
-  static bind(address: Address): IPCTDelegator {
-    return new IPCTDelegator("IPCTDelegator", address);
+export class PACTDelegator extends ethereum.SmartContract {
+  static bind(address: Address): PACTDelegator {
+    return new PACTDelegator("PACTDelegator", address);
   }
 
   BALLOT_TYPEHASH(): Bytes {
@@ -698,14 +698,14 @@ export class IPCTDelegator extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getActions(proposalId: BigInt): IPCTDelegator__getActionsResult {
+  getActions(proposalId: BigInt): PACTDelegator__getActionsResult {
     let result = super.call(
       "getActions",
       "getActions(uint256):(address[],uint256[],string[],bytes[])",
       [ethereum.Value.fromUnsignedBigInt(proposalId)]
     );
 
-    return new IPCTDelegator__getActionsResult(
+    return new PACTDelegator__getActionsResult(
       result[0].toAddressArray(),
       result[1].toBigIntArray(),
       result[2].toStringArray(),
@@ -715,7 +715,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
 
   try_getActions(
     proposalId: BigInt
-  ): ethereum.CallResult<IPCTDelegator__getActionsResult> {
+  ): ethereum.CallResult<PACTDelegator__getActionsResult> {
     let result = super.tryCall(
       "getActions",
       "getActions(uint256):(address[],uint256[],string[],bytes[])",
@@ -726,7 +726,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new IPCTDelegator__getActionsResult(
+      new PACTDelegator__getActionsResult(
         value[0].toAddressArray(),
         value[1].toBigIntArray(),
         value[2].toStringArray(),
@@ -738,7 +738,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
   getReceipt(
     proposalId: BigInt,
     voter: Address
-  ): IPCTDelegator__getReceiptResultValue0Struct {
+  ): PACTDelegator__getReceiptResultValue0Struct {
     let result = super.call(
       "getReceipt",
       "getReceipt(uint256,address):((bool,uint8,uint96))",
@@ -748,7 +748,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
       ]
     );
 
-    return changetype<IPCTDelegator__getReceiptResultValue0Struct>(
+    return changetype<PACTDelegator__getReceiptResultValue0Struct>(
       result[0].toTuple()
     );
   }
@@ -756,7 +756,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
   try_getReceipt(
     proposalId: BigInt,
     voter: Address
-  ): ethereum.CallResult<IPCTDelegator__getReceiptResultValue0Struct> {
+  ): ethereum.CallResult<PACTDelegator__getReceiptResultValue0Struct> {
     let result = super.tryCall(
       "getReceipt",
       "getReceipt(uint256,address):((bool,uint8,uint96))",
@@ -770,7 +770,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<IPCTDelegator__getReceiptResultValue0Struct>(
+      changetype<PACTDelegator__getReceiptResultValue0Struct>(
         value[0].toTuple()
       )
     );
@@ -868,7 +868,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
   proposalReceipts(
     param0: BigInt,
     param1: Address
-  ): IPCTDelegator__proposalReceiptsResult {
+  ): PACTDelegator__proposalReceiptsResult {
     let result = super.call(
       "proposalReceipts",
       "proposalReceipts(uint256,address):(bool,uint8,uint96)",
@@ -878,7 +878,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
       ]
     );
 
-    return new IPCTDelegator__proposalReceiptsResult(
+    return new PACTDelegator__proposalReceiptsResult(
       result[0].toBoolean(),
       result[1].toI32(),
       result[2].toBigInt()
@@ -888,7 +888,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
   try_proposalReceipts(
     param0: BigInt,
     param1: Address
-  ): ethereum.CallResult<IPCTDelegator__proposalReceiptsResult> {
+  ): ethereum.CallResult<PACTDelegator__proposalReceiptsResult> {
     let result = super.tryCall(
       "proposalReceipts",
       "proposalReceipts(uint256,address):(bool,uint8,uint96)",
@@ -902,7 +902,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new IPCTDelegator__proposalReceiptsResult(
+      new PACTDelegator__proposalReceiptsResult(
         value[0].toBoolean(),
         value[1].toI32(),
         value[2].toBigInt()
@@ -1029,14 +1029,14 @@ export class IPCTDelegator extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  proposals(param0: BigInt): IPCTDelegator__proposalsResult {
+  proposals(param0: BigInt): PACTDelegator__proposalsResult {
     let result = super.call(
       "proposals",
       "proposals(uint256):(uint256,address,uint256,uint256,uint256,uint256,uint256,uint256,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
-    return new IPCTDelegator__proposalsResult(
+    return new PACTDelegator__proposalsResult(
       result[0].toBigInt(),
       result[1].toAddress(),
       result[2].toBigInt(),
@@ -1052,7 +1052,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
 
   try_proposals(
     param0: BigInt
-  ): ethereum.CallResult<IPCTDelegator__proposalsResult> {
+  ): ethereum.CallResult<PACTDelegator__proposalsResult> {
     let result = super.tryCall(
       "proposals",
       "proposals(uint256):(uint256,address,uint256,uint256,uint256,uint256,uint256,uint256,bool,bool)",
@@ -1063,7 +1063,7 @@ export class IPCTDelegator extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new IPCTDelegator__proposalsResult(
+      new PACTDelegator__proposalsResult(
         value[0].toBigInt(),
         value[1].toAddress(),
         value[2].toBigInt(),

@@ -3,11 +3,11 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: IPCTDelegator
+    name: PACTDelegator
     network: celo-alfajores
     source:
       address: "0xBf35872f98E716bfc06B03aB173037576DebE1F5"
-      abi: IPCTDelegator
+      abi: PACTDelegator
       startBlock: 8568251
     mapping:
       kind: ethereum/events
@@ -16,8 +16,8 @@ dataSources:
       entities:
         - ProposalEntity
       abis:
-        - name: IPCTDelegator
-          file: ./abis/IPCTDelegator.json
+        - name: PACTDelegator
+          file: ./abis/PACTDelegator.json
       eventHandlers:
         - event: ProposalCanceled(uint256)
           handler: handleProposalCanceled

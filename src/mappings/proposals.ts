@@ -3,7 +3,7 @@ import {
     ProposalCreated,
     ProposalExecuted,
     ProposalQueued,
-} from '../../generated/IPCTDelegator/IPCTDelegator';
+} from '../../generated/PACTDelegator/PACTDelegator';
 import { ProposalEntity } from '../../generated/schema';
 
 export function handleProposalCreated(event: ProposalCreated): void {
