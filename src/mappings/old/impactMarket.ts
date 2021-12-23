@@ -18,8 +18,11 @@ export function handleOldCommunityAdded(event: OldCommunityAdded): void {
     community.incrementInterval = event.params._incrementInterval.toI32();
     community.totalBeneficiaries = 0;
     community.totalManagers = 0;
-    community.totalClaimed = BigInt.fromI32(0);
     community.totalContributed = BigInt.fromI32(0);
+    community.totalClaimed = BigInt.fromI32(0);
+    community.managers = [];
+    community.beneficiaries = [];
+    community.claims = [];
     // create community entry
     OldCommunity.create(event.params._communityAddress);
     // save entity state
