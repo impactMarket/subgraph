@@ -1,0 +1,8 @@
+{
+    "startBlockAlpha": 2627648,
+    "startBlockV1": 10494981,
+    "network": "celo",
+    "PACTDelegator": "0x8f8BB984e652Cb8D0aa7C9D6712Ec2020EB1BAb4",
+    "CommunityAdmin": "0xd61c407c3A00dFD8C355973f7a14c55ebaFDf6F9",
+    "OldImpactMarket": "0xe55C3eb4a04F93c3302A5d8058348157561BF5ca"
+}

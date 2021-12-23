@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: PACTDelegator
-    network: celo-alfajores
+    network: {{network}}
     source:
-      address: "0xBf35872f98E716bfc06B03aB173037576DebE1F5"
+      address: "{{PACTDelegator}}"
       abi: PACTDelegator
-      startBlock: 8568251
+      startBlock: {{startBlockV1}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -30,11 +30,11 @@ dataSources:
       file: ./src/mappings/proposals.ts
   - kind: ethereum/contract
     name: CommunityAdmin
-    network: celo-alfajores
+    network: {{network}}
     source:
-      address: "0x88B101c163bbFE1dc4764225248a6DAd282d7A39"
+      address: "{{CommunityAdmin}}"
       abi: CommunityAdmin
-      startBlock: 8568251
+      startBlock: {{startBlockV1}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -52,11 +52,11 @@ dataSources:
       file: ./src/mappings/communityAdmin.ts
   - kind: ethereum/contract
     name: OldImpactMarket
-    network: celo-alfajores
+    network: {{network}}
     source:
-      address: "0x23611bDA8C4a048c22139b4a444f3E329E2046b4"
+      address: "{{OldImpactMarket}}"
       abi: OldImpactMarket
-      startBlock: 8584117
+      startBlock: {{startBlockAlpha}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -73,7 +73,7 @@ dataSources:
 templates:
   - name: Community
     kind: ethereum/contract
-    network: celo-alfajores
+    network: {{network}}
     source:
       abi: Community
     mapping:
@@ -101,7 +101,7 @@ templates:
       file: ./src/mappings/community.ts
   - name: OldCommunity
     kind: ethereum/contract
-    network: celo-alfajores
+    network: {{network}}
     source:
       abi: OldCommunity
     mapping:
