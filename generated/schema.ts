@@ -84,9 +84,6 @@ export class CommunityEntity extends Entity {
     this.set("decreaseStep", Value.fromBigInt(BigInt.zero()));
     this.set("totalContributed", Value.fromBigInt(BigInt.zero()));
     this.set("totalClaimed", Value.fromBigInt(BigInt.zero()));
-    this.set("managers", Value.fromStringArray(new Array(0)));
-    this.set("beneficiaries", Value.fromStringArray(new Array(0)));
-    this.set("claims", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
@@ -204,32 +201,79 @@ export class CommunityEntity extends Entity {
   set totalClaimed(value: BigInt) {
     this.set("totalClaimed", Value.fromBigInt(value));
   }
+}
 
-  get managers(): Array<string> {
-    let value = this.get("managers");
-    return value!.toStringArray();
+export class CommunityDailyEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("contributed", Value.fromBigInt(BigInt.zero()));
+    this.set("claimed", Value.fromBigInt(BigInt.zero()));
   }
 
-  set managers(value: Array<string>) {
-    this.set("managers", Value.fromStringArray(value));
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CommunityDailyEntity entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save CommunityDailyEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("CommunityDailyEntity", id.toString(), this);
+    }
   }
 
-  get beneficiaries(): Array<string> {
+  static load(id: string): CommunityDailyEntity | null {
+    return changetype<CommunityDailyEntity | null>(
+      store.get("CommunityDailyEntity", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get beneficiaries(): i32 {
     let value = this.get("beneficiaries");
-    return value!.toStringArray();
+    return value!.toI32();
   }
 
-  set beneficiaries(value: Array<string>) {
-    this.set("beneficiaries", Value.fromStringArray(value));
+  set beneficiaries(value: i32) {
+    this.set("beneficiaries", Value.fromI32(value));
   }
 
-  get claims(): Array<string> {
-    let value = this.get("claims");
-    return value!.toStringArray();
+  get managers(): i32 {
+    let value = this.get("managers");
+    return value!.toI32();
   }
 
-  set claims(value: Array<string>) {
-    this.set("claims", Value.fromStringArray(value));
+  set managers(value: i32) {
+    this.set("managers", Value.fromI32(value));
+  }
+
+  get contributed(): BigInt {
+    let value = this.get("contributed");
+    return value!.toBigInt();
+  }
+
+  set contributed(value: BigInt) {
+    this.set("contributed", Value.fromBigInt(value));
+  }
+
+  get claimed(): BigInt {
+    let value = this.get("claimed");
+    return value!.toBigInt();
+  }
+
+  set claimed(value: BigInt) {
+    this.set("claimed", Value.fromBigInt(value));
   }
 }
 
@@ -376,78 +420,5 @@ export class BeneficiaryEntity extends Entity {
 
   set preLastClaimAt(value: i32) {
     this.set("preLastClaimAt", Value.fromI32(value));
-  }
-}
-
-export class ClaimEntity extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("beneficiary", Value.fromString(""));
-    this.set("community", Value.fromString(""));
-    this.set("amount", Value.fromBigInt(BigInt.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save ClaimEntity entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save ClaimEntity entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("ClaimEntity", id.toString(), this);
-    }
-  }
-
-  static load(id: string): ClaimEntity | null {
-    return changetype<ClaimEntity | null>(store.get("ClaimEntity", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get beneficiary(): string {
-    let value = this.get("beneficiary");
-    return value!.toString();
-  }
-
-  set beneficiary(value: string) {
-    this.set("beneficiary", Value.fromString(value));
-  }
-
-  get community(): string {
-    let value = this.get("community");
-    return value!.toString();
-  }
-
-  set community(value: string) {
-    this.set("community", Value.fromString(value));
-  }
-
-  get amount(): BigInt {
-    let value = this.get("amount");
-    return value!.toBigInt();
-  }
-
-  set amount(value: BigInt) {
-    this.set("amount", Value.fromBigInt(value));
-  }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
   }
 }

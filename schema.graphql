@@ -18,10 +18,14 @@ type CommunityEntity @entity {
   totalManagers: Int!
   totalContributed: BigInt!
   totalClaimed: BigInt!
-  # arrays
-  managers: [ManagerEntity!]!
-  beneficiaries: [BeneficiaryEntity!]!
-  claims: [ClaimEntity!]!
+}
+
+type CommunityDailyEntity @entity {
+  id: ID! # community address + day
+  beneficiaries: Int!
+  managers: Int!
+  contributed: BigInt!
+  claimed: BigInt!
 }
 
 type ManagerEntity @entity {
@@ -32,18 +36,10 @@ type ManagerEntity @entity {
 }
 
 type BeneficiaryEntity @entity {
-  id: ID! # tx hash
+  id: ID! # tx hash if this address is added on a new community, otherwise address
   address: Bytes!
   community: CommunityEntity!
   state: Int!
   lastClaimAt: Int!
   preLastClaimAt: Int!
-}
-
-type ClaimEntity @entity {
-  id: ID! # tx hash
-  beneficiary: BeneficiaryEntity!
-  community: CommunityEntity!
-  amount: BigInt!
-  timestamp: Int!
 }

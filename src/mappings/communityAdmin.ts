@@ -42,7 +42,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 '0x0000000000000000000000000000000000000000' &&
             community.decreaseStep.equals(BigInt.fromI32(0))
         ) {
-            community.decreaseStep = BigInt.fromI32(1e16);
+            community.decreaseStep = BigInt.fromString('10000000000000000');
             community.baseInterval = previousCommunity.baseInterval / 5;
             community.incrementInterval =
                 previousCommunity.incrementInterval / 5;
@@ -53,9 +53,6 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         }
         community.claimAmount = previousCommunity.claimAmount;
         community.maxClaim = previousCommunity.maxClaim;
-        community.beneficiaries = previousCommunity.beneficiaries;
-        // community.managers = previousCommunity.managers;
-        community.claims = previousCommunity.claims;
         community.totalBeneficiaries = previousCommunity.totalBeneficiaries;
         community.totalManagers = 0;
         community.totalClaimed = previousCommunity.totalClaimed;
