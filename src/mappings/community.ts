@@ -1,11 +1,4 @@
-import { Address } from '@graphprotocol/graph-ts';
-
-import {
-    CommunityEntity,
-    ManagerEntity,
-    BeneficiaryEntity,
-    ClaimEntity,
-} from '../../generated/schema';
+import { CommunityEntity } from '../../generated/schema';
 import {
     BeneficiaryAdded,
     BeneficiaryClaim,
@@ -14,119 +7,57 @@ import {
     ManagerAdded,
     ManagerRemoved,
 } from '../../generated/templates/Community/Community';
+import {
+    genericHandleBeneficiaryAdded,
+    genericHandleBeneficiaryClaim,
+    genericHandleBeneficiaryRemoved,
+} from '../common/beneficiary';
+import {
+    genericHandleManagerAdded,
+    genericHandleManagerRemoved,
+} from '../common/manager';
 
 export function handleManagerAdded(event: ManagerAdded): void {
-    if (
-        event.params.account.notEqual(
-            Address.fromString('0x88b101c163bbfe1dc4764225248a6dad282d7a39') // community admin address
-        )
-    ) {
-        const community = CommunityEntity.load(event.address.toHex());
-        if (community) {
-            const managerId = event.params.account.toHex() + '-' + community.id;
-            let manager = ManagerEntity.load(managerId);
-            if (!manager) {
-                manager = new ManagerEntity(managerId);
-            }
-            manager.address = event.params.account;
-            manager.community = community.id;
-            manager.state = 0;
-            manager.save();
-            //
-            const _managers = community.managers;
-            _managers.push(manager.id);
-            community.managers = _managers;
-            community.totalManagers += 1;
-            community.save();
-        }
-    }
+    genericHandleManagerAdded(
+        event.address,
+        event.params.account,
+        event.transaction.hash.toHex(),
+        event.block.timestamp
+    );
 }
 
 export function handleManagerRemoved(event: ManagerRemoved): void {
-    const community = CommunityEntity.load(event.address.toHex());
-    if (community) {
-        const managerId = event.params.account.toHex() + '-' + community.id;
-        const manager = ManagerEntity.load(managerId);
-        if (manager) {
-            manager.state = 1;
-            manager.save();
-            //
-            community.totalManagers -= 1;
-            community.save();
-        }
-    }
+    genericHandleManagerRemoved(
+        event.address,
+        event.params.account,
+        event.block.timestamp
+    );
 }
 
 export function handleBeneficiaryAdded(event: BeneficiaryAdded): void {
-    const community = CommunityEntity.load(event.address.toHex());
-    if (community) {
-        const beneficiaryId =
-            event.params.beneficiary.toHex() + '-' + community.id;
-        let beneficiary = BeneficiaryEntity.load(beneficiaryId);
-        if (!beneficiary) {
-            beneficiary = new BeneficiaryEntity(beneficiaryId);
-        }
-        beneficiary.address = event.params.beneficiary;
-        beneficiary.community = community.id;
-        beneficiary.state = 0;
-        beneficiary.lastClaimAt = 0;
-        beneficiary.preLastClaimAt = 0;
-        beneficiary.save();
-        //
-        const _beneficiaries = community.beneficiaries;
-        _beneficiaries.push(beneficiary.id);
-        community.beneficiaries = _beneficiaries;
-        community.totalBeneficiaries += 1;
-        community.save();
-    }
+    genericHandleBeneficiaryAdded(
+        event.address,
+        event.params.beneficiary,
+        event.transaction.hash.toHex(),
+        event.block.timestamp
+    );
 }
 
 export function handleBeneficiaryRemoved(event: BeneficiaryRemoved): void {
-    const community = CommunityEntity.load(event.address.toHex());
-    if (community) {
-        const beneficiaryId =
-            event.params.beneficiary.toHex() + '-' + community.id;
-        const beneficiary = BeneficiaryEntity.load(beneficiaryId);
-        if (beneficiary) {
-            beneficiary.state = 1;
-            beneficiary.save();
-            //
-            community.totalBeneficiaries -= 1;
-            community.save();
-        }
-    }
+    genericHandleBeneficiaryRemoved(
+        event.address,
+        event.params.beneficiary,
+        event.block.timestamp
+    );
 }
 
 export function handleBeneficiaryClaim(event: BeneficiaryClaim): void {
-    const community = CommunityEntity.load(event.address.toHex());
-    if (community) {
-        const beneficiaryId =
-            event.params.beneficiary.toHex() + '-' + community.id;
-        const beneficiary = BeneficiaryEntity.load(beneficiaryId);
-        if (beneficiary) {
-            let claim = ClaimEntity.load(event.transaction.hash.toHex());
-            if (!claim) {
-                claim = new ClaimEntity(event.transaction.hash.toHex());
-            }
-            claim.beneficiary = beneficiary.id;
-            claim.community = community.id;
-            claim.amount = event.params.amount;
-            claim.timestamp = event.block.timestamp.toI32();
-            claim.save();
-            //
-            beneficiary.preLastClaimAt = beneficiary.lastClaimAt;
-            beneficiary.lastClaimAt = event.block.timestamp.toI32();
-            beneficiary.save();
-            //
-            const _claims = community.claims;
-            _claims.push(claim.id);
-            community.claims = _claims;
-            community.totalClaimed = community.totalClaimed.plus(
-                event.params.amount
-            );
-            community.save();
-        }
-    }
+    genericHandleBeneficiaryClaim(
+        event.address,
+        event.params.beneficiary,
+        event.params.amount,
+        event.block.timestamp
+    );
 }
 
 export function handleBeneficiaryParamsUpdated(
