@@ -21,9 +21,6 @@ export function handleCommunityAdded(event: CommunityAdded): void {
     community.totalManagers = 0;
     community.totalContributed = BigInt.fromI32(0);
     community.totalClaimed = BigInt.fromI32(0);
-    community.managers = [];
-    community.beneficiaries = [];
-    community.claims = [];
     // create community entry
     Community.create(event.params.communityAddress);
     // save entity state
@@ -48,9 +45,6 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.totalManagers = 0;
         community.totalContributed = previousCommunity.totalContributed;
         community.totalClaimed = previousCommunity.totalClaimed;
-        community.beneficiaries = previousCommunity.beneficiaries;
-        // community.managers = previousCommunity.managers;
-        community.claims = previousCommunity.claims;
         community.previous = event.params.previousCommunityAddress;
         // create community entry
         Community.create(event.params.communityAddress);

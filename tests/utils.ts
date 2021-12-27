@@ -1,17 +1,11 @@
-import {
-    Address,
-    ethereum,
-    BigInt,
-    Bytes,
-    ByteArray,
-} from '@graphprotocol/graph-ts';
+import { Address, ethereum, BigInt, Bytes } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import { CommunityAdded } from '../generated/CommunityAdmin/CommunityAdmin';
 import {
     ProposalCreated,
     ProposalQueued,
-} from '../generated/IPCTDelegator/IPCTDelegator';
+} from '../generated/PACTDelegator/PACTDelegator';
 import {
     BeneficiaryAdded,
     BeneficiaryClaim,
