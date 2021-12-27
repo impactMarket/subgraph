@@ -9,6 +9,7 @@ import {
 import {
     BeneficiaryAdded,
     BeneficiaryClaim,
+    BeneficiaryParamsUpdated,
     BeneficiaryRemoved,
     ManagerAdded,
     ManagerRemoved,
@@ -125,5 +126,19 @@ export function handleBeneficiaryClaim(event: BeneficiaryClaim): void {
             );
             community.save();
         }
+    }
+}
+
+export function handleBeneficiaryParamsUpdated(
+    event: BeneficiaryParamsUpdated
+): void {
+    const community = CommunityEntity.load(event.address.toHex());
+    if (community) {
+        community.claimAmount = event.params.newClaimAmount;
+        community.maxClaim = event.params.newMaxClaim;
+        community.incrementInterval = event.params.newIncrementInterval.toI32();
+        community.baseInterval = event.params.newBaseInterval.toI32();
+        community.decreaseStep = event.params.newDecreaseStep;
+        community.save();
     }
 }
