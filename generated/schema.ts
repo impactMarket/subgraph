@@ -15,6 +15,8 @@ export class ProposalEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
+
+    this.set("signatures", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
@@ -41,6 +43,15 @@ export class ProposalEntity extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get signatures(): Array<string> {
+    let value = this.get("signatures");
+    return value!.toStringArray();
+  }
+
+  set signatures(value: Array<string>) {
+    this.set("signatures", Value.fromStringArray(value));
   }
 
   get status(): i32 {

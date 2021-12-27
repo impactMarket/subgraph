@@ -6,76 +6,43 @@ import {
 } from '../../generated/IPCTDelegator/IPCTDelegator';
 import { ProposalEntity } from '../../generated/schema';
 
-export function handleProposalCanceled(event: ProposalCanceled): void {
-    // Entities can be loaded from the store using a string ID; this ID
-    // needs to be unique across all entities of the same type
-    let entity = ProposalEntity.load(event.params.id.toString());
-
-    // Entities only exist after they have been saved to the store;
-    // `null` checks allow to create entities on demand
-    if (!entity) {
-        entity = new ProposalEntity(event.params.id.toString());
-    }
-
-    // Entity fields can be set based on event parameters
-    entity.status = 2;
-
-    // Entities can be written to the store with `.save()`
-    entity.save();
-}
-
 export function handleProposalCreated(event: ProposalCreated): void {
-    // Entities can be loaded from the store using a string ID; this ID
-    // needs to be unique across all entities of the same type
-    let entity = ProposalEntity.load(event.params.id.toString());
-
-    // Entities only exist after they have been saved to the store;
-    // `null` checks allow to create entities on demand
-    if (!entity) {
-        entity = new ProposalEntity(event.params.id.toString());
+    let proposal = ProposalEntity.load(event.params.id.toString());
+    if (!proposal) {
+        proposal = new ProposalEntity(event.params.id.toString());
     }
-
-    // Entity fields can be set based on event parameters
-    entity.status = 0;
-    entity.endBlock = event.params.endBlock.toI32();
-
-    // Entities can be written to the store with `.save()`
-    entity.save();
+    const signatures = event.params.signatures;
+    const parsedSignatures: string[] = [];
+    for (let index = 0; index < signatures.length; index++) {
+        const s = signatures[index];
+        parsedSignatures.push(s.slice(0, s.indexOf('(')));
+    }
+    proposal.signatures = parsedSignatures;
+    proposal.status = 0;
+    proposal.endBlock = event.params.endBlock.toI32();
+    proposal.save();
 }
 
-export function handleProposalExecuted(event: ProposalExecuted): void {
-    // Entities can be loaded from the store using a string ID; this ID
-    // needs to be unique across all entities of the same type
-    let entity = ProposalEntity.load(event.params.id.toString());
-
-    // Entities only exist after they have been saved to the store;
-    // `null` checks allow to create entities on demand
-    if (!entity) {
-        entity = new ProposalEntity(event.params.id.toString());
+export function handleProposalCanceled(event: ProposalCanceled): void {
+    const proposal = ProposalEntity.load(event.params.id.toString());
+    if (proposal) {
+        proposal.status = 2;
+        proposal.save();
     }
-
-    // Entity fields can be set based on event parameters
-    entity.status = 4;
-
-    // Entities can be written to the store with `.save()`
-    entity.save();
 }
 
 export function handleProposalQueued(event: ProposalQueued): void {
-    // Entities can be loaded from the store using a string ID; this ID
-    // needs to be unique across all entities of the same type
-    let entity = ProposalEntity.load(event.params.id.toString());
-
-    // Entities only exist after they have been saved to the store;
-    // `null` checks allow to create entities on demand
-    if (!entity) {
-        entity = new ProposalEntity(event.params.id.toString());
+    const proposal = ProposalEntity.load(event.params.id.toString());
+    if (proposal) {
+        proposal.status = 3;
+        proposal.save();
     }
+}
 
-    // Entity fields can be set based on event parameters
-    entity.status = 3;
-    // entity.endBlock = parseInt(event.params.eta.toHex(), 10);
-
-    // Entities can be written to the store with `.save()`
-    entity.save();
+export function handleProposalExecuted(event: ProposalExecuted): void {
+    const proposal = ProposalEntity.load(event.params.id.toString());
+    if (proposal) {
+        proposal.status = 4;
+        proposal.save();
+    }
 }

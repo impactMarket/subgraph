@@ -8,6 +8,7 @@ import {
     BeneficiaryAdded as OldBeneficiaryAdded,
     BeneficiaryClaim as OldBeneficiaryClaim,
     BeneficiaryRemoved as OldBeneficiaryRemoved,
+    CommunityEdited,
     ManagerAdded as OldManagerAdded,
     ManagerRemoved as OldManagerRemoved,
 } from '../../../generated/templates/OldCommunity/OldCommunity';
@@ -119,5 +120,16 @@ export function handleOldBeneficiaryClaim(event: OldBeneficiaryClaim): void {
             );
             community.save();
         }
+    }
+}
+
+export function handleCommunityEdited(event: CommunityEdited): void {
+    const community = CommunityEntity.load(event.address.toHex());
+    if (community) {
+        community.claimAmount = event.params._claimAmount;
+        community.maxClaim = event.params._maxClaim;
+        community.incrementInterval = event.params._incrementInterval.toI32();
+        community.baseInterval = event.params._baseInterval.toI32();
+        community.save();
     }
 }

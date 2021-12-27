@@ -1,5 +1,6 @@
 type ProposalEntity @entity {
   id: ID! # proposal id
+  signatures: [String!]!
   status: Int!
   endBlock: Int!
 }
@@ -17,7 +18,7 @@ type CommunityEntity @entity {
   totalManagers: Int!
   totalContributed: BigInt!
   totalClaimed: BigInt!
-  # arays
+  # arrays
   managers: [ManagerEntity!]!
   beneficiaries: [BeneficiaryEntity!]!
   claims: [ClaimEntity!]!

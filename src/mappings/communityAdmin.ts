@@ -1,8 +1,9 @@
-import { BigInt } from '@graphprotocol/graph-ts';
+import { BigInt, store } from '@graphprotocol/graph-ts';
 
 import {
     CommunityAdded,
     CommunityMigrated,
+    CommunityRemoved,
 } from '../../generated/CommunityAdmin/CommunityAdmin';
 import { CommunityEntity } from '../../generated/schema';
 import { Community } from '../../generated/templates';
@@ -36,11 +37,22 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         event.params.previousCommunityAddress.toHex()
     );
     if (previousCommunity) {
+        if (
+            previousCommunity.previous.toHex() !==
+                '0x0000000000000000000000000000000000000000' &&
+            community.decreaseStep.equals(BigInt.fromI32(0))
+        ) {
+            community.decreaseStep = BigInt.fromI32(1e16);
+            community.baseInterval = previousCommunity.baseInterval / 5;
+            community.incrementInterval =
+                previousCommunity.incrementInterval / 5;
+        } else {
+            community.decreaseStep = previousCommunity.decreaseStep;
+            community.baseInterval = previousCommunity.baseInterval;
+            community.incrementInterval = previousCommunity.incrementInterval;
+        }
         community.claimAmount = previousCommunity.claimAmount;
         community.maxClaim = previousCommunity.maxClaim;
-        community.decreaseStep = previousCommunity.decreaseStep;
-        community.baseInterval = previousCommunity.baseInterval;
-        community.incrementInterval = previousCommunity.incrementInterval;
         community.beneficiaries = previousCommunity.beneficiaries;
         // community.managers = previousCommunity.managers;
         community.claims = previousCommunity.claims;
@@ -53,5 +65,13 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         Community.create(event.params.communityAddress);
         // save entity state
         community.save();
+        store.remove(
+            'Community',
+            event.params.previousCommunityAddress.toHex()
+        );
     }
+}
+
+export function handleCommunityRemoved(event: CommunityRemoved): void {
+    //
 }
