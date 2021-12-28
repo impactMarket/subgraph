@@ -8,8 +8,8 @@ import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 import {
     createBeneficiaryAddedEvent,
     createBeneficiaryClaimEvent,
-    createCommunityAddedEvent,
-} from './utils';
+} from './utils/beneficiary';
+import { createCommunityAddedEvent } from './utils/community';
 
 export { handleBeneficiaryAdded, handleBeneficiaryClaim };
 
@@ -133,6 +133,13 @@ test('add claim', () => {
         `0x1cad798788568098e51c5751fe03a8daa0c7eac6-${dayId}`,
         'beneficiaries',
         '2'
+    );
+
+    assert.fieldEquals(
+        'CommunityDailyEntity',
+        `0x1cad798788568098e51c5751fe03a8daa0c7eac6-${dayId}`,
+        'claimed',
+        '10'
     );
 
     clearStore();

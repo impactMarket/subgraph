@@ -1,41 +1,19 @@
 import { clearStore, test, assert } from 'matchstick-as/assembly/index';
 
-import { handleManagerAdded } from '../src/mappings/community';
+import {
+    handleBeneficiaryAdded,
+    handleBeneficiaryClaim,
+    handleManagerAdded,
+} from '../src/mappings/community';
 import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 import { createCommunityAddedEvent } from './utils/community';
-import { communityAddress } from './utils/constants';
 import { createManagerAddedEvent } from './utils/manager';
 
-export { handleCommunityAdded, handleManagerAdded };
+export { handleBeneficiaryAdded, handleBeneficiaryClaim };
 
-test('create community', () => {
+test('add manager', () => {
     const community = createCommunityAddedEvent(
-        communityAddress[0],
-        ['0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
-    );
-
-    handleCommunityAdded(community);
-
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'claimAmount',
-        '5'
-    );
-
-    clearStore();
-});
-
-test('add managers', () => {
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
+        '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
         ['0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'],
         '5',
         '0',
@@ -49,15 +27,15 @@ test('add managers', () => {
     handleCommunityAdded(community);
 
     const managerAddedEvent1 = createManagerAddedEvent(
-        communityAddress[0],
+        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
         '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
-        communityAddress[0]
+        '0x1cad798788568098e51c5751fe03a8daa0c7eac6'
     );
 
     const managerAddedEvent2 = createManagerAddedEvent(
-        communityAddress[0],
-        '0x88b101c163bbfe1dc4764225248a6dad282d7a39', // prevent adding community admin
-        communityAddress[0]
+        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
+        '0xa0c84e218d5fd3cf903868ceb2f043cc04480bd4',
+        '0x1cad798788568098e51c5751fe03a8daa0c7eac6'
     );
 
     handleManagerAdded(managerAddedEvent1);
@@ -72,9 +50,18 @@ test('add managers', () => {
 
     assert.fieldEquals(
         'CommunityEntity',
-        communityAddress[0],
+        '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
         'totalManagers',
-        '1'
+        '2'
+    );
+
+    const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
+
+    assert.fieldEquals(
+        'CommunityDailyEntity',
+        `0x1cad798788568098e51c5751fe03a8daa0c7eac6-${dayId}`,
+        'managers',
+        '2'
     );
 
     clearStore();

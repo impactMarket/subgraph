@@ -4,7 +4,8 @@
     "scripts": {
         "codegen": "graph codegen",
         "build": "graph build",
-        "deploy": "graph deploy --node https://api.thegraph.com/deploy/ impactmarket/subgraph",
+        "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ impactmarket/subgraph",
+        "deploy:alfajores": "graph deploy --node https://api.thegraph.com/deploy/ impactmarket/alfajores-subgraph",
         "create-local": "graph create --node http://localhost:8020/ impactmarket/subgraph",
         "remove-local": "graph remove --node http://localhost:8020/ impactmarket/subgraph",
         "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 impactmarket/subgraph",
