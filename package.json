@@ -11,8 +11,12 @@
         "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 impactmarket/subgraph",
         "prettier": "prettier --write \"./src/**/*.ts\"",
         "eslint": "eslint --fix \"./src/**/*.ts\"",
-        "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
-        "prepare:alfajores": "mustache config/alfajores.json subgraph.template.yaml > subgraph.yaml"
+        "prepare:mainnet:subgraph": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+        "prepare:mainnet:addresses": "mustache config/mainnet.json src/common/addresses.template > src/common/addresses.ts",
+        "prepare:mainnet": "yarn prepare:mainnet:subgraph && yarn prepare:mainnet:addresses",
+        "prepare:alfajores:subgraph": "mustache config/alfajores.json subgraph.template.yaml > subgraph.yaml",
+        "prepare:alfajores:addresses": "mustache config/alfajores.json src/common/addresses.template > src/common/addresses.ts",
+        "prepare:alfajores": "yarn prepare:alfajores:subgraph && yarn prepare:alfajores:addresses"
     },
     "dependencies": {
         "@graphprotocol/graph-cli": "0.25.1",
