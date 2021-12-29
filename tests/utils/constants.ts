@@ -1,14 +1,15 @@
 const communityAddress: string[] = [
     '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
-    '0x6a15Bd0445e00b1705E0f02ad2E60902C1cBcc3E',
+    '0x6a15bd0445e00b1705e0f02ad2e60902c1cbcc3e',
 ];
 const managerAddress: string[] = [
-    '0x270eC2751810DAe7A1E7377dc77F9098AC9B5BcE',
-    '0x0C60e23D0077cC284e47Fad05f133D7c50bc030d',
+    '0x270ec2751810dae7a1e7377dc77f9098ac9b5bce',
+    '0x0c60e23d0077cc284e47fad05f133d7c50bc030d',
+    '0xa0c84e218d5fd3cf903868ceb2f043cc04480bd4',
 ];
 const beneficiaryAddress: string[] = [
-    '0xEEB298432a9d38D2D4818e934e9eb325fd455dbA',
-    '0xd4f7A973b08f64B8f8B558aC8016Fc2e0B77Ad08',
+    '0xeeb298432a9d38d2d4818e934e9eb325fd455dba',
+    '0xd4f7a973b08f64b8f8b558ac8016fc2e0b77ad08',
 ];
 
 export { communityAddress, managerAddress, beneficiaryAddress };

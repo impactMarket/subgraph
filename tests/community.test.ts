@@ -3,7 +3,7 @@ import { clearStore, test, assert } from 'matchstick-as/assembly/index';
 import { handleManagerAdded } from '../src/mappings/community';
 import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 import { createCommunityAddedEvent } from './utils/community';
-import { communityAddress } from './utils/constants';
+import { communityAddress, managerAddress } from './utils/constants';
 import { createManagerAddedEvent } from './utils/manager';
 
 export { handleCommunityAdded, handleManagerAdded };
@@ -11,7 +11,7 @@ export { handleCommunityAdded, handleManagerAdded };
 test('create community', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
-        ['0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'],
+        [managerAddress[0]],
         '5',
         '0',
         '0',
@@ -36,7 +36,7 @@ test('create community', () => {
 test('add managers', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
-        ['0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'],
+        [managerAddress[0]],
         '5',
         '0',
         '0',
@@ -50,7 +50,7 @@ test('add managers', () => {
 
     const managerAddedEvent1 = createManagerAddedEvent(
         communityAddress[0],
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        managerAddress[0],
         communityAddress[0]
     );
 
@@ -65,9 +65,9 @@ test('add managers', () => {
 
     assert.fieldEquals(
         'ManagerEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        managerAddress[0],
         'address',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'
+        managerAddress[0]
     );
 
     assert.fieldEquals(

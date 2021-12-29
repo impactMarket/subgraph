@@ -10,14 +10,18 @@ import {
     createBeneficiaryClaimEvent,
 } from './utils/beneficiary';
 import { createCommunityAddedEvent } from './utils/community';
-import { communityAddress } from './utils/constants';
+import {
+    beneficiaryAddress,
+    communityAddress,
+    managerAddress,
+} from './utils/constants';
 
 export { handleBeneficiaryAdded, handleBeneficiaryClaim };
 
 test('add beneficiary', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
-        ['0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'],
+        [managerAddress[0]],
         '5',
         '0',
         '0',
@@ -30,14 +34,14 @@ test('add beneficiary', () => {
     handleCommunityAdded(community);
 
     const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
-        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        managerAddress[0],
+        beneficiaryAddress[0],
         communityAddress[0]
     );
 
     const beneficiaryAddedEvent2 = createBeneficiaryAddedEvent(
-        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
-        '0xa0c84e218d5fd3cf903868ceb2f043cc04480bd4',
+        managerAddress[0],
+        beneficiaryAddress[1],
         communityAddress[0]
     );
 
@@ -46,9 +50,9 @@ test('add beneficiary', () => {
 
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         'address',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'
+        beneficiaryAddress[0]
     );
 
     clearStore();
@@ -58,7 +62,7 @@ test('add claim', () => {
     // add community
     const community = createCommunityAddedEvent(
         communityAddress[0],
-        ['0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'],
+        [managerAddress[0]],
         '5',
         '0',
         '0',
@@ -71,13 +75,13 @@ test('add claim', () => {
 
     // add beneficiary
     const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
-        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        managerAddress[0],
+        beneficiaryAddress[0],
         communityAddress[0]
     );
     const beneficiaryAddedEvent2 = createBeneficiaryAddedEvent(
-        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
-        '0xa0c84e218d5fd3cf903868ceb2f043cc04480bd4',
+        managerAddress[0],
+        beneficiaryAddress[1],
         communityAddress[0]
     );
     handleBeneficiaryAdded(beneficiaryAddedEvent1);
@@ -85,12 +89,12 @@ test('add claim', () => {
 
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         '5',
         communityAddress[0]
     );
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
-        '0xa0c84e218d5fd3cf903868ceb2f043cc04480bd4',
+        beneficiaryAddress[1],
         '5',
         communityAddress[0]
     );
@@ -100,25 +104,25 @@ test('add claim', () => {
     // assert first claims
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         'lastClaimAt',
         beneficiaryClaimEvent1.block.timestamp.toString()
     );
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0xa0c84e218d5fd3cf903868ceb2f043cc04480bd4',
+        beneficiaryAddress[1],
         'lastClaimAt',
         beneficiaryClaimEvent2.block.timestamp.toString()
     );
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         'preLastClaimAt',
         '0'
     );
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0xa0c84e218d5fd3cf903868ceb2f043cc04480bd4',
+        beneficiaryAddress[1],
         'preLastClaimAt',
         '0'
     );
@@ -143,7 +147,7 @@ test('rotate claim timestamp', () => {
     // add community
     const community = createCommunityAddedEvent(
         communityAddress[0],
-        ['0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'],
+        [managerAddress[0]],
         '5',
         '0',
         '0',
@@ -156,22 +160,22 @@ test('rotate claim timestamp', () => {
 
     // add beneficiary
     const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
-        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        managerAddress[0],
+        beneficiaryAddress[0],
         communityAddress[0]
     );
     handleBeneficiaryAdded(beneficiaryAddedEvent1);
 
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         '5',
         communityAddress[0],
         1640716194
     );
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         '5',
         communityAddress[0],
         1640716195
@@ -181,19 +185,19 @@ test('rotate claim timestamp', () => {
     // assert first rotate
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         'lastClaimAt',
         '1640716195'
     );
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         'preLastClaimAt',
         '1640716194'
     );
 
     const beneficiaryClaimEvent3 = createBeneficiaryClaimEvent(
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         '5',
         communityAddress[0],
         1640716196
@@ -203,13 +207,13 @@ test('rotate claim timestamp', () => {
     // assert second rotate
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         'lastClaimAt',
         '1640716196'
     );
     assert.fieldEquals(
         'BeneficiaryEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        beneficiaryAddress[0],
         'preLastClaimAt',
         '1640716195'
     );

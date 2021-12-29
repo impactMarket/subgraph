@@ -7,14 +7,15 @@ import {
 } from '../src/mappings/community';
 import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 import { createCommunityAddedEvent } from './utils/community';
+import { communityAddress, managerAddress } from './utils/constants';
 import { createManagerAddedEvent } from './utils/manager';
 
 export { handleBeneficiaryAdded, handleBeneficiaryClaim };
 
 test('add manager', () => {
     const community = createCommunityAddedEvent(
-        '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
-        ['0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'],
+        communityAddress[0],
+        [managerAddress[0]],
         '5',
         '0',
         '0',
@@ -27,15 +28,15 @@ test('add manager', () => {
     handleCommunityAdded(community);
 
     const managerAddedEvent1 = createManagerAddedEvent(
-        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
-        '0x1cad798788568098e51c5751fe03a8daa0c7eac6'
+        managerAddress[0],
+        managerAddress[1],
+        communityAddress[0]
     );
 
     const managerAddedEvent2 = createManagerAddedEvent(
-        '0x372a0400D646CF5e5e7fED74755EC87bA9D4b135',
-        '0xa0c84e218d5fd3cf903868ceb2f043cc04480bd4',
-        '0x1cad798788568098e51c5751fe03a8daa0c7eac6'
+        managerAddress[0],
+        managerAddress[2],
+        communityAddress[0]
     );
 
     handleManagerAdded(managerAddedEvent1);
@@ -43,14 +44,14 @@ test('add manager', () => {
 
     assert.fieldEquals(
         'ManagerEntity',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f',
+        managerAddress[1],
         'address',
-        '0x7110b4df915cb92f53bc01cc9ab15f51e5dbb52f'
+        managerAddress[1]
     );
 
     assert.fieldEquals(
         'CommunityEntity',
-        '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
+        communityAddress[0],
         'totalManagers',
         '2'
     );
@@ -59,7 +60,7 @@ test('add manager', () => {
 
     assert.fieldEquals(
         'CommunityDailyEntity',
-        `0x1cad798788568098e51c5751fe03a8daa0c7eac6-${dayId}`,
+        `${communityAddress[0]}-${dayId}`,
         'managers',
         '2'
     );

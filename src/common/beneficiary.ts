@@ -1,4 +1,4 @@
-import { Address, BigInt, log } from '@graphprotocol/graph-ts';
+import { Address, BigInt } from '@graphprotocol/graph-ts';
 
 import { BeneficiaryEntity, CommunityEntity } from '../../generated/schema';
 import { loadOrCreateCommunityDaily } from './community';
