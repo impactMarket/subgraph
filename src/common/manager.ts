@@ -1,6 +1,7 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 
 import { CommunityEntity, ManagerEntity } from '../../generated/schema';
+import { communityAdminAddress } from './addresses';
 import { loadOrCreateCommunityDaily } from './community';
 
 export function genericHandleManagerAdded(
@@ -11,7 +12,7 @@ export function genericHandleManagerAdded(
 ): void {
     if (
         _manager.notEqual(
-            Address.fromString('0x88b101c163bbfe1dc4764225248a6dad282d7a39') // community admin address
+            Address.fromString(communityAdminAddress) // community admin address
         )
     ) {
         const community = CommunityEntity.load(_community.toHex());

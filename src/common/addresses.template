@@ -1,0 +1,3 @@
+const communityAdminAddress: string = '{{CommunityAdmin}}';
+
+export { communityAdminAddress };
