@@ -11,5 +11,9 @@ const beneficiaryAddress: string[] = [
     '0xeeb298432a9d38d2d4818e934e9eb325fd455dba',
     '0xd4f7a973b08f64b8f8b558ac8016fc2e0b77ad08',
 ];
+const userAddress: string[] = [
+    '0xba889d87b9aac1ac322e9ffc01040bdd16681e42',
+    '0x505d61759efff407939606b47ca721e2a18f3ea2',
+];
 
-export { communityAddress, managerAddress, beneficiaryAddress };
+export { communityAddress, managerAddress, beneficiaryAddress, userAddress };
