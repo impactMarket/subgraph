@@ -70,6 +70,26 @@ dataSources:
         - event: CommunityAdded(indexed address,indexed address,uint256,uint256,uint256,uint256)
           handler: handleOldCommunityAdded
       file: ./src/mappings/old/impactMarket.ts
+  - kind: ethereum/contract
+    name: CeloDollar
+    network: celo-alfajores
+    source:
+      address: "{{CeloDollar}}"
+      abi: CeloDollar
+      startBlock: {{startBlockAlpha}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - CeloDollarEntity
+      abis:
+        - name: CeloDollar
+          file: ./abis/BaseERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferCeloDollar
+      file: ./src/mappings/transfer.ts
 templates:
   - name: Community
     kind: ethereum/contract

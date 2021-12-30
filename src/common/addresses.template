@@ -1,3 +1,4 @@
 const communityAdminAddress: string = '{{CommunityAdmin}}';
+const treasuryAddress: string = '{{Treasury}}';
 
-export { communityAdminAddress };
+export { communityAdminAddress, treasuryAddress };
