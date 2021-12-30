@@ -277,6 +277,150 @@ export class CommunityDailyEntity extends Entity {
   }
 }
 
+export class UBIEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("contributed", Value.fromBigInt(BigInt.zero()));
+    this.set("claimed", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save UBIEntity entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save UBIEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("UBIEntity", id.toString(), this);
+    }
+  }
+
+  static load(id: string): UBIEntity | null {
+    return changetype<UBIEntity | null>(store.get("UBIEntity", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get beneficiaries(): i32 {
+    let value = this.get("beneficiaries");
+    return value!.toI32();
+  }
+
+  set beneficiaries(value: i32) {
+    this.set("beneficiaries", Value.fromI32(value));
+  }
+
+  get managers(): i32 {
+    let value = this.get("managers");
+    return value!.toI32();
+  }
+
+  set managers(value: i32) {
+    this.set("managers", Value.fromI32(value));
+  }
+
+  get contributed(): BigInt {
+    let value = this.get("contributed");
+    return value!.toBigInt();
+  }
+
+  set contributed(value: BigInt) {
+    this.set("contributed", Value.fromBigInt(value));
+  }
+
+  get claimed(): BigInt {
+    let value = this.get("claimed");
+    return value!.toBigInt();
+  }
+
+  set claimed(value: BigInt) {
+    this.set("claimed", Value.fromBigInt(value));
+  }
+}
+
+export class UBIDailyEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("contributed", Value.fromBigInt(BigInt.zero()));
+    this.set("claimed", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save UBIDailyEntity entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save UBIDailyEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("UBIDailyEntity", id.toString(), this);
+    }
+  }
+
+  static load(id: string): UBIDailyEntity | null {
+    return changetype<UBIDailyEntity | null>(store.get("UBIDailyEntity", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get beneficiaries(): i32 {
+    let value = this.get("beneficiaries");
+    return value!.toI32();
+  }
+
+  set beneficiaries(value: i32) {
+    this.set("beneficiaries", Value.fromI32(value));
+  }
+
+  get managers(): i32 {
+    let value = this.get("managers");
+    return value!.toI32();
+  }
+
+  set managers(value: i32) {
+    this.set("managers", Value.fromI32(value));
+  }
+
+  get contributed(): BigInt {
+    let value = this.get("contributed");
+    return value!.toBigInt();
+  }
+
+  set contributed(value: BigInt) {
+    this.set("contributed", Value.fromBigInt(value));
+  }
+
+  get claimed(): BigInt {
+    let value = this.get("claimed");
+    return value!.toBigInt();
+  }
+
+  set claimed(value: BigInt) {
+    this.set("claimed", Value.fromBigInt(value));
+  }
+}
+
 export class ManagerEntity extends Entity {
   constructor(id: string) {
     super();

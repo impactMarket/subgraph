@@ -1,7 +1,12 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 
-import { BeneficiaryEntity, CommunityEntity } from '../../generated/schema';
+import {
+    BeneficiaryEntity,
+    CommunityEntity,
+    UBIEntity,
+} from '../../generated/schema';
 import { loadOrCreateCommunityDaily } from './community';
+import { loadOrCreateDailyUbi } from './ubi';
 
 export function genericHandleBeneficiaryAdded(
     _community: Address,
@@ -40,6 +45,14 @@ export function genericHandleBeneficiaryAdded(
         beneficiary.lastClaimAt = 0;
         beneficiary.preLastClaimAt = 0;
         beneficiary.save();
+        // update ubi
+        const ubi = UBIEntity.load('0')!;
+        ubi.beneficiaries += 1;
+        ubi.save();
+        // update daily ubi
+        const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+        ubiDaily.beneficiaries += 1;
+        ubiDaily.save();
         // update community
         community.totalBeneficiaries += 1;
         community.save();
@@ -62,6 +75,14 @@ export function genericHandleBeneficiaryRemoved(
                 _community,
                 _blockTimestamp
             );
+            // update ubi
+            const ubi = UBIEntity.load('0')!;
+            ubi.beneficiaries -= 1;
+            ubi.save();
+            // update daily ubi
+            const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+            ubiDaily.beneficiaries -= 1;
+            ubiDaily.save();
             // update beneficiary
             beneficiary.state = 1;
             beneficiary.save();
@@ -89,6 +110,14 @@ export function genericHandleBeneficiaryClaim(
                 _community,
                 _blockTimestamp
             );
+            // update ubi
+            const ubi = UBIEntity.load('0')!;
+            ubi.claimed = ubi.claimed.plus(_amount);
+            ubi.save();
+            // update daily ubi
+            const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+            ubiDaily.claimed = ubiDaily.claimed.plus(_amount);
+            ubiDaily.save();
             // update beneficiary
             beneficiary.preLastClaimAt = beneficiary.lastClaimAt;
             beneficiary.lastClaimAt = _blockTimestamp.toI32();
