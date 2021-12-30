@@ -1,6 +1,10 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 
-import { CommunityDailyEntity, CommunityEntity } from '../../generated/schema';
+import {
+    CommunityDailyEntity,
+    CommunityEntity,
+    UBIEntity,
+} from '../../generated/schema';
 
 export function loadOrCreateCommunityDaily(
     _community: Address,
@@ -43,4 +47,14 @@ export function generiHandleCommunityAdded(
     community.totalContributed = BigInt.fromI32(0);
     community.totalClaimed = BigInt.fromI32(0);
     community.save();
+    // create ubi if it doesn't exist
+    const ubi = UBIEntity.load('0');
+    if (!ubi) {
+        const ubiEntity = new UBIEntity('0');
+        ubiEntity.beneficiaries = 0;
+        ubiEntity.managers = 0;
+        ubiEntity.contributed = BigInt.fromI32(0);
+        ubiEntity.claimed = BigInt.fromI32(0);
+        ubiEntity.save();
+    }
 }

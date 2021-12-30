@@ -65,5 +65,8 @@ test('add manager', () => {
         '2'
     );
 
+    // assert ubi daily data
+    assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'managers', '2');
+
     clearStore();
 });

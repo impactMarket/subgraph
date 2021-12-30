@@ -140,6 +140,10 @@ test('add claim', () => {
         'totalBeneficiaries',
         '2'
     );
+
+    // assert ubi data
+    assert.fieldEquals('UBIEntity', '0', 'claimed', '10');
+    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
     clearStore();
 });
 

@@ -1,8 +1,13 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 
-import { CommunityEntity, ManagerEntity } from '../../generated/schema';
+import {
+    CommunityEntity,
+    ManagerEntity,
+    UBIEntity,
+} from '../../generated/schema';
 import { communityAdminAddress } from './addresses';
 import { loadOrCreateCommunityDaily } from './community';
+import { loadOrCreateDailyUbi } from './ubi';
 
 export function genericHandleManagerAdded(
     _community: Address,
@@ -36,6 +41,14 @@ export function genericHandleManagerAdded(
                 previousManager.state = manager.state;
                 previousManager.save();
             }
+            // update ubi
+            const ubi = UBIEntity.load('0')!;
+            ubi.managers += 1;
+            ubi.save();
+            // update daily ubi
+            const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+            ubiDaily.managers += 1;
+            ubiDaily.save();
             // add manager
             manager.address = _manager;
             manager.community = community.id;
@@ -65,6 +78,14 @@ export function genericHandleManagerRemoved(
         const managerId = _manager.toHex();
         const manager = ManagerEntity.load(managerId);
         if (manager) {
+            // update ubi
+            const ubi = UBIEntity.load('0')!;
+            ubi.managers += 1;
+            ubi.save();
+            // update daily ubi
+            const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+            ubiDaily.managers += 1;
+            ubiDaily.save();
             // update manager
             manager.state = 1;
             manager.save();

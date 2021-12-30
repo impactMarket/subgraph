@@ -28,6 +28,22 @@ type CommunityDailyEntity @entity {
   claimed: BigInt!
 }
 
+type UBIEntity @entity {
+  id: ID! # 0, there's only one
+  beneficiaries: Int!
+  managers: Int!
+  contributed: BigInt!
+  claimed: BigInt!
+}
+
+type UBIDailyEntity @entity {
+  id: ID! # day id
+  beneficiaries: Int!
+  managers: Int!
+  contributed: BigInt!
+  claimed: BigInt!
+}
+
 type ManagerEntity @entity {
   id: ID! # tx hash
   address: Bytes!
