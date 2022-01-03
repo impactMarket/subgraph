@@ -1,7 +1,11 @@
+/* global changetype */
 import { Address, ethereum, BigInt } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
-import { CommunityAdded } from '../../generated/CommunityAdmin/CommunityAdmin';
+import {
+    CommunityAdded,
+    CommunityRemoved,
+} from '../../generated/CommunityAdmin/CommunityAdmin';
 
 export function createCommunityAddedEvent(
     communityAddress: string,
@@ -15,7 +19,7 @@ export function createCommunityAddedEvent(
     maxTranche: string
 ): CommunityAdded {
     const communityAddedEvent = changetype<CommunityAdded>(newMockEvent());
-    communityAddedEvent.parameters = new Array();
+    communityAddedEvent.parameters = [];
     const communityAddressParam = new ethereum.EventParam(
         'communityAddress',
         ethereum.Value.fromAddress(Address.fromString(communityAddress))
@@ -64,4 +68,19 @@ export function createCommunityAddedEvent(
     communityAddedEvent.parameters.push(maxTrancheParam);
 
     return communityAddedEvent;
+}
+
+export function createCommunityRemovedEvent(
+    communityAddress: string
+): CommunityRemoved {
+    const communityRemovedEvent = changetype<CommunityRemoved>(newMockEvent());
+    communityRemovedEvent.parameters = [];
+    const communityAddressParam = new ethereum.EventParam(
+        'communityAddress',
+        ethereum.Value.fromAddress(Address.fromString(communityAddress))
+    );
+
+    communityRemovedEvent.parameters.push(communityAddressParam);
+
+    return communityRemovedEvent;
 }

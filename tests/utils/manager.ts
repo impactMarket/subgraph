@@ -1,3 +1,4 @@
+/* global changetype */
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
@@ -12,7 +13,7 @@ export function createManagerAddedEvent(
     fromCommunityAddress: string
 ): ManagerAdded {
     const managerAddedEvent = changetype<ManagerAdded>(newMockEvent());
-    managerAddedEvent.parameters = new Array();
+    managerAddedEvent.parameters = [];
     managerAddedEvent.address = Address.fromString(fromCommunityAddress);
     const managerParam = new ethereum.EventParam(
         'manager',
@@ -35,7 +36,7 @@ export function createManagerRemovedEvent(
     fromCommunityAddress: string
 ): ManagerRemoved {
     const managerRemovedEvent = changetype<ManagerRemoved>(newMockEvent());
-    managerRemovedEvent.parameters = new Array();
+    managerRemovedEvent.parameters = [];
     managerRemovedEvent.address = Address.fromString(fromCommunityAddress);
     const managerParam = new ethereum.EventParam(
         'manager',

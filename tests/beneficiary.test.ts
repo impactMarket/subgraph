@@ -128,16 +128,11 @@ test('add claim', () => {
     );
 
     // assert community data
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'claimed', '10');
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'totalClaimed',
-        '10'
-    );
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'totalBeneficiaries',
+        'beneficiaries',
         '2'
     );
 

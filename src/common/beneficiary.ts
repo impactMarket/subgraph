@@ -54,7 +54,7 @@ export function genericHandleBeneficiaryAdded(
         ubiDaily.beneficiaries += 1;
         ubiDaily.save();
         // update community
-        community.totalBeneficiaries += 1;
+        community.beneficiaries += 1;
         community.save();
         // update community daily
         communityDaily.beneficiaries += 1;
@@ -87,12 +87,25 @@ export function genericHandleBeneficiaryRemoved(
             beneficiary.state = 1;
             beneficiary.save();
             // update community
-            community.totalBeneficiaries -= 1;
+            community.beneficiaries -= 1;
+            community.removedBeneficiaries += 1;
             community.save();
             // update community daily
             communityDaily.beneficiaries -= 1;
             communityDaily.save();
         }
+    }
+}
+
+export function genericHandleBeneficiaryJoined(
+    _community: Address,
+    _beneficiary: Address
+): void {
+    const beneficiary = BeneficiaryEntity.load(_beneficiary.toHex());
+    if (beneficiary) {
+        // update beneficiary
+        beneficiary.community = _community.toHex();
+        beneficiary.save();
     }
 }
 
@@ -123,7 +136,7 @@ export function genericHandleBeneficiaryClaim(
             beneficiary.lastClaimAt = _blockTimestamp.toI32();
             beneficiary.save();
             // update community
-            community.totalClaimed = community.totalClaimed.plus(_amount);
+            community.claimed = community.claimed.plus(_amount);
             community.save();
             // update community daily
             communityDaily.claimed = communityDaily.claimed.plus(_amount);
@@ -131,3 +144,5 @@ export function genericHandleBeneficiaryClaim(
         }
     }
 }
+
+// TODO: handle beneficiary joined, changing the beneficiary community registry

@@ -49,12 +49,7 @@ test('add manager', () => {
         managerAddress[1]
     );
 
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'totalManagers',
-        '2'
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '2');
 
     const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
 

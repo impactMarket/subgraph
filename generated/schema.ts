@@ -82,8 +82,8 @@ export class CommunityEntity extends Entity {
     this.set("claimAmount", Value.fromBigInt(BigInt.zero()));
     this.set("maxClaim", Value.fromBigInt(BigInt.zero()));
     this.set("decreaseStep", Value.fromBigInt(BigInt.zero()));
-    this.set("totalContributed", Value.fromBigInt(BigInt.zero()));
-    this.set("totalClaimed", Value.fromBigInt(BigInt.zero()));
+    this.set("contributed", Value.fromBigInt(BigInt.zero()));
+    this.set("claimed", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -110,6 +110,24 @@ export class CommunityEntity extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get startDayId(): i32 {
+    let value = this.get("startDayId");
+    return value!.toI32();
+  }
+
+  set startDayId(value: i32) {
+    this.set("startDayId", Value.fromI32(value));
+  }
+
+  get state(): i32 {
+    let value = this.get("state");
+    return value!.toI32();
+  }
+
+  set state(value: i32) {
+    this.set("state", Value.fromI32(value));
   }
 
   get previous(): Bytes {
@@ -166,40 +184,58 @@ export class CommunityEntity extends Entity {
     this.set("incrementInterval", Value.fromI32(value));
   }
 
-  get totalBeneficiaries(): i32 {
-    let value = this.get("totalBeneficiaries");
+  get beneficiaries(): i32 {
+    let value = this.get("beneficiaries");
     return value!.toI32();
   }
 
-  set totalBeneficiaries(value: i32) {
-    this.set("totalBeneficiaries", Value.fromI32(value));
+  set beneficiaries(value: i32) {
+    this.set("beneficiaries", Value.fromI32(value));
   }
 
-  get totalManagers(): i32 {
-    let value = this.get("totalManagers");
+  get removedBeneficiaries(): i32 {
+    let value = this.get("removedBeneficiaries");
     return value!.toI32();
   }
 
-  set totalManagers(value: i32) {
-    this.set("totalManagers", Value.fromI32(value));
+  set removedBeneficiaries(value: i32) {
+    this.set("removedBeneficiaries", Value.fromI32(value));
   }
 
-  get totalContributed(): BigInt {
-    let value = this.get("totalContributed");
+  get managers(): i32 {
+    let value = this.get("managers");
+    return value!.toI32();
+  }
+
+  set managers(value: i32) {
+    this.set("managers", Value.fromI32(value));
+  }
+
+  get removedManagers(): i32 {
+    let value = this.get("removedManagers");
+    return value!.toI32();
+  }
+
+  set removedManagers(value: i32) {
+    this.set("removedManagers", Value.fromI32(value));
+  }
+
+  get contributed(): BigInt {
+    let value = this.get("contributed");
     return value!.toBigInt();
   }
 
-  set totalContributed(value: BigInt) {
-    this.set("totalContributed", Value.fromBigInt(value));
+  set contributed(value: BigInt) {
+    this.set("contributed", Value.fromBigInt(value));
   }
 
-  get totalClaimed(): BigInt {
-    let value = this.get("totalClaimed");
+  get claimed(): BigInt {
+    let value = this.get("claimed");
     return value!.toBigInt();
   }
 
-  set totalClaimed(value: BigInt) {
-    this.set("totalClaimed", Value.fromBigInt(value));
+  set claimed(value: BigInt) {
+    this.set("claimed", Value.fromBigInt(value));
   }
 }
 
@@ -208,6 +244,7 @@ export class CommunityDailyEntity extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("community", Value.fromString(""));
     this.set("contributed", Value.fromBigInt(BigInt.zero()));
     this.set("claimed", Value.fromBigInt(BigInt.zero()));
   }
@@ -238,6 +275,24 @@ export class CommunityDailyEntity extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get community(): string {
+    let value = this.get("community");
+    return value!.toString();
+  }
+
+  set community(value: string) {
+    this.set("community", Value.fromString(value));
+  }
+
+  get dayId(): i32 {
+    let value = this.get("dayId");
+    return value!.toI32();
+  }
+
+  set dayId(value: i32) {
+    this.set("dayId", Value.fromI32(value));
   }
 
   get beneficiaries(): i32 {
@@ -312,6 +367,15 @@ export class UBIEntity extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get communities(): i32 {
+    let value = this.get("communities");
+    return value!.toI32();
+  }
+
+  set communities(value: i32) {
+    this.set("communities", Value.fromI32(value));
+  }
+
   get beneficiaries(): i32 {
     let value = this.get("beneficiaries");
     return value!.toI32();
@@ -382,6 +446,15 @@ export class UBIDailyEntity extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get communities(): i32 {
+    let value = this.get("communities");
+    return value!.toI32();
+  }
+
+  set communities(value: i32) {
+    this.set("communities", Value.fromI32(value));
   }
 
   get beneficiaries(): i32 {
@@ -482,6 +555,24 @@ export class ManagerEntity extends Entity {
   set state(value: i32) {
     this.set("state", Value.fromI32(value));
   }
+
+  get added(): i32 {
+    let value = this.get("added");
+    return value!.toI32();
+  }
+
+  set added(value: i32) {
+    this.set("added", Value.fromI32(value));
+  }
+
+  get removed(): i32 {
+    let value = this.get("removed");
+    return value!.toI32();
+  }
+
+  set removed(value: i32) {
+    this.set("removed", Value.fromI32(value));
+  }
 }
 
 export class BeneficiaryEntity extends Entity {
@@ -564,5 +655,93 @@ export class BeneficiaryEntity extends Entity {
 
   set preLastClaimAt(value: i32) {
     this.set("preLastClaimAt", Value.fromI32(value));
+  }
+}
+
+export class BeneficiaryActivityEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("beneficiary", Value.fromBytes(Bytes.empty()));
+    this.set("manager", Value.fromBytes(Bytes.empty()));
+    this.set("community", Value.fromString(""));
+    this.set("activity", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save BeneficiaryActivityEntity entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save BeneficiaryActivityEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("BeneficiaryActivityEntity", id.toString(), this);
+    }
+  }
+
+  static load(id: string): BeneficiaryActivityEntity | null {
+    return changetype<BeneficiaryActivityEntity | null>(
+      store.get("BeneficiaryActivityEntity", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get beneficiary(): Bytes {
+    let value = this.get("beneficiary");
+    return value!.toBytes();
+  }
+
+  set beneficiary(value: Bytes) {
+    this.set("beneficiary", Value.fromBytes(value));
+  }
+
+  get manager(): Bytes {
+    let value = this.get("manager");
+    return value!.toBytes();
+  }
+
+  set manager(value: Bytes) {
+    this.set("manager", Value.fromBytes(value));
+  }
+
+  get community(): string {
+    let value = this.get("community");
+    return value!.toString();
+  }
+
+  set community(value: string) {
+    this.set("community", Value.fromString(value));
+  }
+
+  get timestamp(): i32 {
+    let value = this.get("timestamp");
+    return value!.toI32();
+  }
+
+  set timestamp(value: i32) {
+    this.set("timestamp", Value.fromI32(value));
+  }
+
+  get activity(): string {
+    let value = this.get("activity");
+    return value!.toString();
+  }
+
+  set activity(value: string) {
+    this.set("activity", Value.fromString(value));
   }
 }

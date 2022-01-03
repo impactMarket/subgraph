@@ -2,6 +2,7 @@ import { CommunityEntity } from '../../generated/schema';
 import {
     BeneficiaryAdded,
     BeneficiaryClaim,
+    BeneficiaryJoined,
     BeneficiaryParamsUpdated,
     BeneficiaryRemoved,
     ManagerAdded,
@@ -10,6 +11,7 @@ import {
 import {
     genericHandleBeneficiaryAdded,
     genericHandleBeneficiaryClaim,
+    genericHandleBeneficiaryJoined,
     genericHandleBeneficiaryRemoved,
 } from '../common/beneficiary';
 import {
@@ -32,6 +34,10 @@ export function handleManagerRemoved(event: ManagerRemoved): void {
         event.params.account,
         event.block.timestamp
     );
+}
+
+export function handleBeneficiaryJoined(event: BeneficiaryJoined): void {
+    genericHandleBeneficiaryJoined(event.address, event.params.beneficiary);
 }
 
 export function handleBeneficiaryAdded(event: BeneficiaryAdded): void {

@@ -55,7 +55,7 @@ export function genericHandleManagerAdded(
             manager.state = 0;
             manager.save();
             // update community
-            community.totalManagers += 1;
+            community.managers += 1;
             community.save();
             // update community daily
             communityDaily.managers += 1;
@@ -80,17 +80,18 @@ export function genericHandleManagerRemoved(
         if (manager) {
             // update ubi
             const ubi = UBIEntity.load('0')!;
-            ubi.managers += 1;
+            ubi.managers -= 1;
             ubi.save();
             // update daily ubi
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
-            ubiDaily.managers += 1;
+            ubiDaily.managers -= 1;
             ubiDaily.save();
             // update manager
             manager.state = 1;
             manager.save();
             // update community
-            community.totalManagers -= 1;
+            community.managers -= 1;
+            community.removedManagers += 1;
             community.save();
             // update community daily
             communityDaily.managers -= 1;

@@ -47,6 +47,8 @@ dataSources:
       eventHandlers:
         - event: CommunityAdded(indexed address,address[],uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleCommunityAdded
+        - event: CommunityRemoved(indexed address)
+          handler: handleCommunityRemoved
         - event: CommunityMigrated(address[],indexed address,indexed address)
           handler: handleCommunityMigrated
       file: ./src/mappings/communityAdmin.ts
@@ -69,6 +71,8 @@ dataSources:
       eventHandlers:
         - event: CommunityAdded(indexed address,indexed address,uint256,uint256,uint256,uint256)
           handler: handleOldCommunityAdded
+        - event: CommunityRemoved(indexed address)
+          handler: handleOldCommunityRemoved
       file: ./src/mappings/old/impactMarket.ts
   - kind: ethereum/contract
     name: CeloDollar
@@ -118,6 +122,8 @@ templates:
           handler: handleBeneficiaryRemoved
         - event: BeneficiaryClaim(indexed address,uint256)
           handler: handleBeneficiaryClaim
+        - event: BeneficiaryJoined(indexed address)
+          handler: handleBeneficiaryJoined
       file: ./src/mappings/community.ts
   - name: OldCommunity
     kind: ethereum/contract
