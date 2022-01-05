@@ -4,6 +4,7 @@ import {
     BeneficiaryEntity,
     CommunityEntity,
     UBIEntity,
+    UserActivityEntity,
 } from '../../generated/schema';
 import { loadOrCreateCommunityDaily } from './community';
 import { loadOrCreateDailyUbi } from './ubi';
@@ -11,6 +12,7 @@ import { loadOrCreateDailyUbi } from './ubi';
 export function genericHandleBeneficiaryAdded(
     _community: Address,
     _beneficiary: Address,
+    _by: Address,
     _hash: string,
     _blockTimestamp: BigInt
 ): void {
@@ -45,6 +47,13 @@ export function genericHandleBeneficiaryAdded(
         beneficiary.lastClaimAt = 0;
         beneficiary.preLastClaimAt = 0;
         beneficiary.save();
+        // add beneficiary activity
+        const activity = new UserActivityEntity(_hash);
+        activity.user = _beneficiary;
+        activity.by = _by;
+        activity.community = community.id;
+        activity.timestamp = _blockTimestamp.toI32();
+        activity.activity = 'added';
         // update ubi
         const ubi = UBIEntity.load('0')!;
         ubi.beneficiaries += 1;
@@ -65,6 +74,8 @@ export function genericHandleBeneficiaryAdded(
 export function genericHandleBeneficiaryRemoved(
     _community: Address,
     _beneficiary: Address,
+    _by: Address,
+    _hash: string,
     _blockTimestamp: BigInt
 ): void {
     const community = CommunityEntity.load(_community.toHex());
@@ -86,6 +97,13 @@ export function genericHandleBeneficiaryRemoved(
             // update beneficiary
             beneficiary.state = 1;
             beneficiary.save();
+            // add beneficiary activity
+            const activity = new UserActivityEntity(_hash);
+            activity.user = _beneficiary;
+            activity.by = _by;
+            activity.community = community.id;
+            activity.timestamp = _blockTimestamp.toI32();
+            activity.activity = 'removed';
             // update community
             community.beneficiaries -= 1;
             community.removedBeneficiaries += 1;

@@ -42,6 +42,7 @@ export function generiHandleCommunityAdded(
         community = new CommunityEntity(communityId);
     }
     community.state = 0;
+    community.startDayId = _blockTimestamp.toI32() / 86400;
     community.claimAmount = _claimAmount;
     community.maxClaim = _maxClaim;
     community.decreaseStep = _decreaseStep;

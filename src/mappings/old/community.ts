@@ -21,6 +21,7 @@ export function handleOldManagerAdded(event: OldManagerAdded): void {
     genericHandleManagerAdded(
         event.address,
         event.params._account,
+        event.transaction.from,
         event.transaction.hash.toHex(),
         event.block.timestamp
     );
@@ -30,6 +31,8 @@ export function handleOldManagerRemoved(event: OldManagerRemoved): void {
     genericHandleManagerRemoved(
         event.address,
         event.params._account,
+        event.transaction.from,
+        event.transaction.hash.toHex(),
         event.block.timestamp
     );
 }
@@ -38,6 +41,7 @@ export function handleOldBeneficiaryAdded(event: OldBeneficiaryAdded): void {
     genericHandleBeneficiaryAdded(
         event.address,
         event.params._account,
+        event.transaction.from,
         event.transaction.hash.toHex(),
         event.block.timestamp
     );
@@ -49,6 +53,8 @@ export function handleOldBeneficiaryRemoved(
     genericHandleBeneficiaryRemoved(
         event.address,
         event.params._account,
+        event.transaction.from,
+        event.transaction.hash.toHex(),
         event.block.timestamp
     );
 }

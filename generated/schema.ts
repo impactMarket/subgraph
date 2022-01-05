@@ -658,36 +658,33 @@ export class BeneficiaryEntity extends Entity {
   }
 }
 
-export class BeneficiaryActivityEntity extends Entity {
+export class UserActivityEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("beneficiary", Value.fromBytes(Bytes.empty()));
-    this.set("manager", Value.fromBytes(Bytes.empty()));
+    this.set("user", Value.fromBytes(Bytes.empty()));
+    this.set("by", Value.fromBytes(Bytes.empty()));
     this.set("community", Value.fromString(""));
     this.set("activity", Value.fromString(""));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save BeneficiaryActivityEntity entity without an ID"
-    );
+    assert(id != null, "Cannot save UserActivityEntity entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save BeneficiaryActivityEntity entity with non-string ID. " +
+        "Cannot save UserActivityEntity entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("BeneficiaryActivityEntity", id.toString(), this);
+      store.set("UserActivityEntity", id.toString(), this);
     }
   }
 
-  static load(id: string): BeneficiaryActivityEntity | null {
-    return changetype<BeneficiaryActivityEntity | null>(
-      store.get("BeneficiaryActivityEntity", id)
+  static load(id: string): UserActivityEntity | null {
+    return changetype<UserActivityEntity | null>(
+      store.get("UserActivityEntity", id)
     );
   }
 
@@ -700,22 +697,22 @@ export class BeneficiaryActivityEntity extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get beneficiary(): Bytes {
-    let value = this.get("beneficiary");
+  get user(): Bytes {
+    let value = this.get("user");
     return value!.toBytes();
   }
 
-  set beneficiary(value: Bytes) {
-    this.set("beneficiary", Value.fromBytes(value));
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
   }
 
-  get manager(): Bytes {
-    let value = this.get("manager");
+  get by(): Bytes {
+    let value = this.get("by");
     return value!.toBytes();
   }
 
-  set manager(value: Bytes) {
-    this.set("manager", Value.fromBytes(value));
+  set by(value: Bytes) {
+    this.set("by", Value.fromBytes(value));
   }
 
   get community(): string {

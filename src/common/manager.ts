@@ -4,6 +4,7 @@ import {
     CommunityEntity,
     ManagerEntity,
     UBIEntity,
+    UserActivityEntity,
 } from '../../generated/schema';
 import { communityAdminAddress } from './addresses';
 import { loadOrCreateCommunityDaily } from './community';
@@ -12,6 +13,7 @@ import { loadOrCreateDailyUbi } from './ubi';
 export function genericHandleManagerAdded(
     _community: Address,
     _manager: Address,
+    _by: Address,
     _hash: string,
     _blockTimestamp: BigInt
 ): void {
@@ -32,7 +34,10 @@ export function genericHandleManagerAdded(
                 manager = new ManagerEntity(managerId);
             } else if (
                 manager &&
-                Address.fromString(manager.community).notEqual(_community)
+                Address.fromString(manager.community).notEqual(_community) &&
+                Address.fromString(manager.community).notEqual(
+                    community.previous
+                )
             ) {
                 // save previous entry of manager in another community
                 const previousManager = new ManagerEntity(_hash);
@@ -54,6 +59,13 @@ export function genericHandleManagerAdded(
             manager.community = community.id;
             manager.state = 0;
             manager.save();
+            // add beneficiary activity
+            const activity = new UserActivityEntity(_hash);
+            activity.user = _manager;
+            activity.by = _by;
+            activity.community = community.id;
+            activity.timestamp = _blockTimestamp.toI32();
+            activity.activity = 'added';
             // update community
             community.managers += 1;
             community.save();
@@ -67,6 +79,8 @@ export function genericHandleManagerAdded(
 export function genericHandleManagerRemoved(
     _community: Address,
     _manager: Address,
+    _by: Address,
+    _hash: string,
     _blockTimestamp: BigInt
 ): void {
     const community = CommunityEntity.load(_community.toHex());
@@ -89,6 +103,13 @@ export function genericHandleManagerRemoved(
             // update manager
             manager.state = 1;
             manager.save();
+            // add beneficiary activity
+            const activity = new UserActivityEntity(_hash);
+            activity.user = _manager;
+            activity.by = _by;
+            activity.community = community.id;
+            activity.timestamp = _blockTimestamp.toI32();
+            activity.activity = 'removed';
             // update community
             community.managers -= 1;
             community.removedManagers += 1;
