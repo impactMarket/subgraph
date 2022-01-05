@@ -30,3 +30,6 @@ test('create community', () => {
 
     clearStore();
 });
+
+// TODO: add tests for community removed
+// TODO: add tests for community migrated

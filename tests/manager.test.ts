@@ -65,3 +65,6 @@ test('add manager', () => {
 
     clearStore();
 });
+
+// TODO: test manager removed
+// TODO: test manager on migrated community

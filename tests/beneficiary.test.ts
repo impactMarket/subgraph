@@ -55,6 +55,13 @@ test('add beneficiary', () => {
         beneficiaryAddress[0]
     );
 
+    assert.fieldEquals(
+        'UserActivityEntity',
+        beneficiaryAddedEvent1.transaction.hash.toHex(),
+        'activity',
+        'added'
+    );
+
     clearStore();
 });
 
@@ -219,3 +226,7 @@ test('rotate claim timestamp', () => {
 
     clearStore();
 });
+
+// TODO: test remove beneficiary
+// TODO: test beneficiary joined
+// TODO: test beneficiary beind added on another community

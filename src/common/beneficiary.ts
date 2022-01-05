@@ -54,6 +54,7 @@ export function genericHandleBeneficiaryAdded(
         activity.community = community.id;
         activity.timestamp = _blockTimestamp.toI32();
         activity.activity = 'added';
+        activity.save();
         // update ubi
         const ubi = UBIEntity.load('0')!;
         ubi.beneficiaries += 1;
@@ -104,6 +105,7 @@ export function genericHandleBeneficiaryRemoved(
             activity.community = community.id;
             activity.timestamp = _blockTimestamp.toI32();
             activity.activity = 'removed';
+            activity.save();
             // update community
             community.beneficiaries -= 1;
             community.removedBeneficiaries += 1;
