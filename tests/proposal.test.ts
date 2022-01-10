@@ -37,8 +37,13 @@ test('create proposal', () => {
 
     handleProposalCreated(community);
 
-    assert.fieldEquals('ProposalEntity', '1', 'signatures', '[addCommunity]');
-    assert.fieldEquals('ProposalEntity', '1', 'status', '0');
+    assert.fieldEquals(
+        'CommunityProposalEntity',
+        '1',
+        'calldata',
+        '0x74d4f7e32043f3f82c76fc501956d0f4b5da8176ff66cab4d283ef17405766c2'
+    );
+    assert.fieldEquals('CommunityProposalEntity', '1', 'status', '0');
 
     clearStore();
 });
@@ -62,8 +67,13 @@ test('queue proposal', () => {
 
     handleProposalQueued(queue);
 
-    assert.fieldEquals('ProposalEntity', '2', 'signatures', '[addCommunity]');
-    assert.fieldEquals('ProposalEntity', '2', 'status', '3');
+    assert.fieldEquals(
+        'CommunityProposalEntity',
+        '2',
+        'calldata',
+        '0x74d4f7e32043f3f82c76fc501956d0f4b5da8176ff66cab4d283ef17405766c2'
+    );
+    assert.fieldEquals('CommunityProposalEntity', '2', 'status', '3');
 
     clearStore();
 });

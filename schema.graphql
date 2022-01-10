@@ -1,6 +1,6 @@
-type ProposalEntity @entity {
+type CommunityProposalEntity @entity {
   id: ID! # proposal id
-  signatures: [String!]!
+  calldata: Bytes!
   status: Int!
   endBlock: Int!
 }

@@ -11,29 +11,34 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ProposalEntity extends Entity {
+export class CommunityProposalEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("signatures", Value.fromStringArray(new Array(0)));
+    this.set("calldata", Value.fromBytes(Bytes.empty()));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ProposalEntity entity without an ID");
+    assert(
+      id != null,
+      "Cannot save CommunityProposalEntity entity without an ID"
+    );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save ProposalEntity entity with non-string ID. " +
+        "Cannot save CommunityProposalEntity entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("ProposalEntity", id.toString(), this);
+      store.set("CommunityProposalEntity", id.toString(), this);
     }
   }
 
-  static load(id: string): ProposalEntity | null {
-    return changetype<ProposalEntity | null>(store.get("ProposalEntity", id));
+  static load(id: string): CommunityProposalEntity | null {
+    return changetype<CommunityProposalEntity | null>(
+      store.get("CommunityProposalEntity", id)
+    );
   }
 
   get id(): string {
@@ -45,13 +50,13 @@ export class ProposalEntity extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get signatures(): Array<string> {
-    let value = this.get("signatures");
-    return value!.toStringArray();
+  get calldata(): Bytes {
+    let value = this.get("calldata");
+    return value!.toBytes();
   }
 
-  set signatures(value: Array<string>) {
-    this.set("signatures", Value.fromStringArray(value));
+  set calldata(value: Bytes) {
+    this.set("calldata", Value.fromBytes(value));
   }
 
   get status(): i32 {
