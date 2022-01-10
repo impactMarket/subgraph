@@ -18,6 +18,7 @@ import {
     genericHandleManagerAdded,
     genericHandleManagerRemoved,
 } from '../common/manager';
+import { normalize } from '../utils';
 
 export function handleManagerAdded(event: ManagerAdded): void {
     genericHandleManagerAdded(
@@ -77,11 +78,15 @@ export function handleBeneficiaryParamsUpdated(
 ): void {
     const community = CommunityEntity.load(event.address.toHex());
     if (community) {
-        community.claimAmount = event.params.newClaimAmount;
-        community.maxClaim = event.params.newMaxClaim;
+        community.claimAmount = normalize(
+            event.params.newClaimAmount.toString()
+        );
+        community.maxClaim = normalize(event.params.newMaxClaim.toString());
         community.incrementInterval = event.params.newIncrementInterval.toI32();
         community.baseInterval = event.params.newBaseInterval.toI32();
-        community.decreaseStep = event.params.newDecreaseStep;
+        community.decreaseStep = normalize(
+            event.params.newDecreaseStep.toString()
+        );
         community.save();
     }
 }

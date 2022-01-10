@@ -10,9 +10,9 @@ type CommunityEntity @entity {
   startDayId: Int! # only useful to update daily entities when migrating
   state: Int!
   previous: Bytes!
-  claimAmount: BigInt!
-  maxClaim: BigInt!
-  decreaseStep: BigInt!
+  claimAmount: BigDecimal!
+  maxClaim: BigDecimal!
+  decreaseStep: BigDecimal!
   baseInterval: Int!
   incrementInterval: Int!
   # totals
@@ -20,8 +20,8 @@ type CommunityEntity @entity {
   removedBeneficiaries: Int!
   managers: Int!
   removedManagers: Int!
-  contributed: BigInt!
-  claimed: BigInt!
+  contributed: BigDecimal!
+  claimed: BigDecimal!
 }
 
 type CommunityDailyEntity @entity {
@@ -30,8 +30,8 @@ type CommunityDailyEntity @entity {
   dayId: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigInt!
-  claimed: BigInt!
+  contributed: BigDecimal!
+  claimed: BigDecimal!
 }
 
 type UBIEntity @entity {
@@ -39,8 +39,8 @@ type UBIEntity @entity {
   communities: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigInt!
-  claimed: BigInt!
+  contributed: BigDecimal!
+  claimed: BigDecimal!
 }
 
 type UBIDailyEntity @entity {
@@ -48,8 +48,8 @@ type UBIDailyEntity @entity {
   communities: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigInt!
-  claimed: BigInt!
+  contributed: BigDecimal!
+  claimed: BigDecimal!
 }
 
 type ManagerEntity @entity {

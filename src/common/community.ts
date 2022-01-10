@@ -1,10 +1,11 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 import {
     CommunityDailyEntity,
     CommunityEntity,
     UBIEntity,
 } from '../../generated/schema';
+import { normalize } from '../utils';
 import { loadOrCreateDailyUbi } from './ubi';
 
 export function loadOrCreateCommunityDaily(
@@ -21,8 +22,8 @@ export function loadOrCreateCommunityDaily(
         communityDaily.dayId = dayId;
         communityDaily.beneficiaries = 0;
         communityDaily.managers = 0;
-        communityDaily.contributed = BigInt.fromI32(0);
-        communityDaily.claimed = BigInt.fromI32(0);
+        communityDaily.contributed = BigDecimal.fromString('0');
+        communityDaily.claimed = BigDecimal.fromString('0');
     }
     return communityDaily;
 }
@@ -43,17 +44,17 @@ export function generiHandleCommunityAdded(
     }
     community.state = 0;
     community.startDayId = _blockTimestamp.toI32() / 86400;
-    community.claimAmount = _claimAmount;
-    community.maxClaim = _maxClaim;
-    community.decreaseStep = _decreaseStep;
+    community.claimAmount = normalize(_claimAmount.toString());
+    community.maxClaim = normalize(_maxClaim.toString());
+    community.decreaseStep = normalize(_decreaseStep.toString());
     community.baseInterval = _baseInterval;
     community.incrementInterval = _incrementInterval;
     community.beneficiaries = 0;
     community.removedBeneficiaries = 0;
     community.managers = 0;
     community.removedManagers = 0;
-    community.contributed = BigInt.fromI32(0);
-    community.claimed = BigInt.fromI32(0);
+    community.contributed = BigDecimal.fromString('0');
+    community.claimed = BigDecimal.fromString('0');
     community.save();
     // create ubi if it doesn't exist
     const ubi = UBIEntity.load('0');
@@ -62,8 +63,8 @@ export function generiHandleCommunityAdded(
         ubiEntity.communities = 1; // one already!
         ubiEntity.beneficiaries = 0;
         ubiEntity.managers = 0;
-        ubiEntity.contributed = BigInt.fromI32(0);
-        ubiEntity.claimed = BigInt.fromI32(0);
+        ubiEntity.contributed = BigDecimal.fromString('0');
+        ubiEntity.claimed = BigDecimal.fromString('0');
         ubiEntity.save();
     }
     // update daily ubi

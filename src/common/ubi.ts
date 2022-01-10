@@ -1,4 +1,4 @@
-import { BigInt } from '@graphprotocol/graph-ts';
+import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 import { UBIDailyEntity } from '../../generated/schema';
 
@@ -13,8 +13,8 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
         ubiDaily.communities = 0;
         ubiDaily.beneficiaries = 0;
         ubiDaily.managers = 0;
-        ubiDaily.contributed = BigInt.fromI32(0);
-        ubiDaily.claimed = BigInt.fromI32(0);
+        ubiDaily.contributed = BigDecimal.fromString('0');
+        ubiDaily.claimed = BigDecimal.fromString('0');
     }
     return ubiDaily;
 }

@@ -12,6 +12,7 @@ import {
     communityAddress,
     communityProps,
     managerAddress,
+    normalize,
 } from './utils/constants';
 
 export { handleCommunityAdded, handleCommunityRemoved };
@@ -22,16 +23,20 @@ test('create community', () => {
         [managerAddress[0]],
         communityProps[0]
     );
-
     handleCommunityAdded(community);
 
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
         'claimAmount',
-        communityProps[0].get('claimAmount')
+        normalize(communityProps[0].get('claimAmount')).toString()
     );
-
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[0],
+        'decreaseStep',
+        normalize(communityProps[0].get('decreaseStep')).toString()
+    );
     assert.fieldEquals('UBIEntity', '0', 'communities', '1');
 
     clearStore();
@@ -43,28 +48,10 @@ test('remove community', () => {
         [managerAddress[0]],
         communityProps[0]
     );
-
     handleCommunityAdded(community);
 
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'claimAmount',
-        communityProps[0].get('claimAmount')
-    );
-
-    assert.fieldEquals('UBIEntity', '0', 'communities', '1');
-
     const communityRemove = createCommunityRemovedEvent(communityAddress[0]);
-
     handleCommunityRemoved(communityRemove);
-
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'claimAmount',
-        communityProps[0].get('claimAmount')
-    );
 
     assert.fieldEquals('UBIEntity', '0', 'communities', '0');
 

@@ -21,6 +21,7 @@ import {
     communityProps,
     fiveCents,
     managerAddress,
+    normalize,
 } from './utils/constants';
 
 export {
@@ -140,10 +141,12 @@ test('add claim', () => {
         'CommunityEntity',
         communityAddress[0],
         'claimed',
-        BigInt.fromString(communityProps[0].get('claimAmount'))
-            .times(BigInt.fromI32(2))
-            .plus(fiveCents.times(BigInt.fromI32(2)))
-            .toString()
+        normalize(
+            BigInt.fromString(communityProps[0].get('claimAmount'))
+                .times(BigInt.fromI32(2))
+                .plus(fiveCents.times(BigInt.fromI32(2)))
+                .toString()
+        ).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
@@ -157,10 +160,12 @@ test('add claim', () => {
         'UBIEntity',
         '0',
         'claimed',
-        BigInt.fromString(communityProps[0].get('claimAmount'))
-            .times(BigInt.fromI32(2))
-            .plus(fiveCents.times(BigInt.fromI32(2)))
-            .toString()
+        normalize(
+            BigInt.fromString(communityProps[0].get('claimAmount'))
+                .times(BigInt.fromI32(2))
+                .plus(fiveCents.times(BigInt.fromI32(2)))
+                .toString()
+        ).toString()
     );
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
     clearStore();

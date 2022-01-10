@@ -84,11 +84,11 @@ export class CommunityEntity extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("previous", Value.fromBytes(Bytes.empty()));
-    this.set("claimAmount", Value.fromBigInt(BigInt.zero()));
-    this.set("maxClaim", Value.fromBigInt(BigInt.zero()));
-    this.set("decreaseStep", Value.fromBigInt(BigInt.zero()));
-    this.set("contributed", Value.fromBigInt(BigInt.zero()));
-    this.set("claimed", Value.fromBigInt(BigInt.zero()));
+    this.set("claimAmount", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("maxClaim", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("decreaseStep", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -144,31 +144,31 @@ export class CommunityEntity extends Entity {
     this.set("previous", Value.fromBytes(value));
   }
 
-  get claimAmount(): BigInt {
+  get claimAmount(): BigDecimal {
     let value = this.get("claimAmount");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set claimAmount(value: BigInt) {
-    this.set("claimAmount", Value.fromBigInt(value));
+  set claimAmount(value: BigDecimal) {
+    this.set("claimAmount", Value.fromBigDecimal(value));
   }
 
-  get maxClaim(): BigInt {
+  get maxClaim(): BigDecimal {
     let value = this.get("maxClaim");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set maxClaim(value: BigInt) {
-    this.set("maxClaim", Value.fromBigInt(value));
+  set maxClaim(value: BigDecimal) {
+    this.set("maxClaim", Value.fromBigDecimal(value));
   }
 
-  get decreaseStep(): BigInt {
+  get decreaseStep(): BigDecimal {
     let value = this.get("decreaseStep");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set decreaseStep(value: BigInt) {
-    this.set("decreaseStep", Value.fromBigInt(value));
+  set decreaseStep(value: BigDecimal) {
+    this.set("decreaseStep", Value.fromBigDecimal(value));
   }
 
   get baseInterval(): i32 {
@@ -225,22 +225,22 @@ export class CommunityEntity extends Entity {
     this.set("removedManagers", Value.fromI32(value));
   }
 
-  get contributed(): BigInt {
+  get contributed(): BigDecimal {
     let value = this.get("contributed");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set contributed(value: BigInt) {
-    this.set("contributed", Value.fromBigInt(value));
+  set contributed(value: BigDecimal) {
+    this.set("contributed", Value.fromBigDecimal(value));
   }
 
-  get claimed(): BigInt {
+  get claimed(): BigDecimal {
     let value = this.get("claimed");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set claimed(value: BigInt) {
-    this.set("claimed", Value.fromBigInt(value));
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
   }
 }
 
@@ -250,8 +250,8 @@ export class CommunityDailyEntity extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("community", Value.fromString(""));
-    this.set("contributed", Value.fromBigInt(BigInt.zero()));
-    this.set("claimed", Value.fromBigInt(BigInt.zero()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -318,22 +318,22 @@ export class CommunityDailyEntity extends Entity {
     this.set("managers", Value.fromI32(value));
   }
 
-  get contributed(): BigInt {
+  get contributed(): BigDecimal {
     let value = this.get("contributed");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set contributed(value: BigInt) {
-    this.set("contributed", Value.fromBigInt(value));
+  set contributed(value: BigDecimal) {
+    this.set("contributed", Value.fromBigDecimal(value));
   }
 
-  get claimed(): BigInt {
+  get claimed(): BigDecimal {
     let value = this.get("claimed");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set claimed(value: BigInt) {
-    this.set("claimed", Value.fromBigInt(value));
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
   }
 }
 
@@ -342,8 +342,8 @@ export class UBIEntity extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("contributed", Value.fromBigInt(BigInt.zero()));
-    this.set("claimed", Value.fromBigInt(BigInt.zero()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -399,22 +399,22 @@ export class UBIEntity extends Entity {
     this.set("managers", Value.fromI32(value));
   }
 
-  get contributed(): BigInt {
+  get contributed(): BigDecimal {
     let value = this.get("contributed");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set contributed(value: BigInt) {
-    this.set("contributed", Value.fromBigInt(value));
+  set contributed(value: BigDecimal) {
+    this.set("contributed", Value.fromBigDecimal(value));
   }
 
-  get claimed(): BigInt {
+  get claimed(): BigDecimal {
     let value = this.get("claimed");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set claimed(value: BigInt) {
-    this.set("claimed", Value.fromBigInt(value));
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
   }
 }
 
@@ -423,8 +423,8 @@ export class UBIDailyEntity extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("contributed", Value.fromBigInt(BigInt.zero()));
-    this.set("claimed", Value.fromBigInt(BigInt.zero()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -480,22 +480,22 @@ export class UBIDailyEntity extends Entity {
     this.set("managers", Value.fromI32(value));
   }
 
-  get contributed(): BigInt {
+  get contributed(): BigDecimal {
     let value = this.get("contributed");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set contributed(value: BigInt) {
-    this.set("contributed", Value.fromBigInt(value));
+  set contributed(value: BigDecimal) {
+    this.set("contributed", Value.fromBigDecimal(value));
   }
 
-  get claimed(): BigInt {
+  get claimed(): BigDecimal {
     let value = this.get("claimed");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set claimed(value: BigInt) {
-    this.set("claimed", Value.fromBigInt(value));
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
   }
 }
 

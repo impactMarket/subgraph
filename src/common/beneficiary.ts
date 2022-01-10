@@ -6,10 +6,9 @@ import {
     UBIEntity,
     UserActivityEntity,
 } from '../../generated/schema';
+import { fiveCents, normalize } from '../utils';
 import { loadOrCreateCommunityDaily } from './community';
 import { loadOrCreateDailyUbi } from './ubi';
-
-const fiveCents = BigInt.fromString('50000000000000000');
 
 export function genericHandleBeneficiaryAdded(
     _community: Address,
@@ -178,23 +177,25 @@ export function genericHandleBeneficiaryClaim(
                 _community,
                 _blockTimestamp
             );
+            const normalizedAmount = normalize(_amount.toString());
             // update ubi
             const ubi = UBIEntity.load('0')!;
-            ubi.claimed = ubi.claimed.plus(_amount);
+            ubi.claimed = ubi.claimed.plus(normalizedAmount);
             ubi.save();
             // update daily ubi
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
-            ubiDaily.claimed = ubiDaily.claimed.plus(_amount);
+            ubiDaily.claimed = ubiDaily.claimed.plus(normalizedAmount);
             ubiDaily.save();
             // update beneficiary
             beneficiary.preLastClaimAt = beneficiary.lastClaimAt;
             beneficiary.lastClaimAt = _blockTimestamp.toI32();
             beneficiary.save();
             // update community
-            community.claimed = community.claimed.plus(_amount);
+            community.claimed = community.claimed.plus(normalizedAmount);
             community.save();
             // update community daily
-            communityDaily.claimed = communityDaily.claimed.plus(_amount);
+            communityDaily.claimed =
+                communityDaily.claimed.plus(normalizedAmount);
             communityDaily.save();
         }
     }

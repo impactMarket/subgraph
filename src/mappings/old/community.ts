@@ -16,6 +16,7 @@ import {
     genericHandleManagerAdded,
     genericHandleManagerRemoved,
 } from '../../common/manager';
+import { normalize } from '../../utils';
 
 export function handleOldManagerAdded(event: OldManagerAdded): void {
     genericHandleManagerAdded(
@@ -71,8 +72,8 @@ export function handleOldBeneficiaryClaim(event: OldBeneficiaryClaim): void {
 export function handleCommunityEdited(event: CommunityEdited): void {
     const community = CommunityEntity.load(event.address.toHex());
     if (community) {
-        community.claimAmount = event.params._claimAmount;
-        community.maxClaim = event.params._maxClaim;
+        community.claimAmount = normalize(event.params._claimAmount.toString());
+        community.maxClaim = normalize(event.params._maxClaim.toString());
         community.incrementInterval = event.params._incrementInterval.toI32();
         community.baseInterval = event.params._baseInterval.toI32();
         community.save();
