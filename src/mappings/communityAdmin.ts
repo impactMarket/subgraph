@@ -12,6 +12,7 @@ import {
     generiHandleCommunityRemoved,
 } from '../common/community';
 
+// TODO: add five cents to first managers
 export function handleCommunityAdded(event: CommunityAdded): void {
     generiHandleCommunityAdded(
         event.params.communityAddress,

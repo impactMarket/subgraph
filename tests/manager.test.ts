@@ -1,28 +1,22 @@
 import { clearStore, test, assert } from 'matchstick-as/assembly/index';
 
-import {
-    handleBeneficiaryAdded,
-    handleBeneficiaryClaim,
-    handleManagerAdded,
-} from '../src/mappings/community';
+import { handleManagerAdded } from '../src/mappings/community';
 import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 import { createCommunityAddedEvent } from './utils/community';
-import { communityAddress, managerAddress } from './utils/constants';
+import {
+    communityAddress,
+    communityProps,
+    managerAddress,
+} from './utils/constants';
 import { createManagerAddedEvent } from './utils/manager';
 
-export { handleBeneficiaryAdded, handleBeneficiaryClaim };
+export { handleCommunityAdded, handleManagerAdded };
 
 test('add manager', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);

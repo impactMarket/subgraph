@@ -59,6 +59,7 @@ type ManagerEntity @entity {
   state: Int!
   added: Int! # total beneficiaries added
   removed: Int! # total beneficiaries removed
+  activity: [UserActivityEntity!]!
 }
 
 type BeneficiaryEntity @entity {
@@ -68,6 +69,7 @@ type BeneficiaryEntity @entity {
   state: Int!
   lastClaimAt: Int!
   preLastClaimAt: Int!
+  activity: [UserActivityEntity!]!
 }
 
 enum ActivityCode {

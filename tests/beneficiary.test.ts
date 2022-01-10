@@ -1,3 +1,4 @@
+import { BigInt } from '@graphprotocol/graph-ts';
 import { clearStore, test, assert } from 'matchstick-as/assembly/index';
 
 import {
@@ -13,22 +14,18 @@ import { createCommunityAddedEvent } from './utils/community';
 import {
     beneficiaryAddress,
     communityAddress,
+    communityProps,
+    fiveCents,
     managerAddress,
 } from './utils/constants';
 
-export { handleBeneficiaryAdded, handleBeneficiaryClaim };
+export { handleCommunityAdded, handleBeneficiaryAdded, handleBeneficiaryClaim };
 
 test('add beneficiary', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);
@@ -70,13 +67,7 @@ test('add claim', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
     handleCommunityAdded(community);
 
@@ -97,12 +88,12 @@ test('add claim', () => {
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0]
     );
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[1],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0]
     );
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
@@ -135,7 +126,15 @@ test('add claim', () => {
     );
 
     // assert community data
-    assert.fieldEquals('CommunityEntity', communityAddress[0], 'claimed', '10');
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[0],
+        'claimed',
+        BigInt.fromString(communityProps[0].get('claimAmount'))
+            .times(BigInt.fromI32(2))
+            .plus(fiveCents.times(BigInt.fromI32(2)))
+            .toString()
+    );
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
@@ -144,7 +143,15 @@ test('add claim', () => {
     );
 
     // assert ubi data
-    assert.fieldEquals('UBIEntity', '0', 'claimed', '10');
+    assert.fieldEquals(
+        'UBIEntity',
+        '0',
+        'claimed',
+        BigInt.fromString(communityProps[0].get('claimAmount'))
+            .times(BigInt.fromI32(2))
+            .plus(fiveCents.times(BigInt.fromI32(2)))
+            .toString()
+    );
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
     clearStore();
 });
@@ -154,13 +161,7 @@ test('rotate claim timestamp', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
     handleCommunityAdded(community);
 
@@ -175,14 +176,14 @@ test('rotate claim timestamp', () => {
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0],
         1640716194
     );
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0],
         1640716195
     );
@@ -204,7 +205,7 @@ test('rotate claim timestamp', () => {
 
     const beneficiaryClaimEvent3 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0],
         1640716196
     );

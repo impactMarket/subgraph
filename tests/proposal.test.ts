@@ -4,7 +4,10 @@ import {
     handleProposalCreated,
     handleProposalQueued,
 } from '../src/mappings/proposals';
-import { createProposalCreatedEvent, createProposalQueuedEvent } from './utils';
+import {
+    createProposalCreatedEvent,
+    createProposalQueuedEvent,
+} from './utils/proposals';
 
 export { handleProposalCreated };
 

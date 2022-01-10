@@ -38,6 +38,7 @@ export function genericHandleManagerAdded(
                 manager.state = 0;
                 manager.added = 0;
                 manager.removed = 0;
+                manager.activity = [];
             } else {
                 if (
                     Address.fromString(manager.community).equals(
@@ -45,6 +46,14 @@ export function genericHandleManagerAdded(
                     )
                 ) {
                     manager.community = community.id;
+                    const activities = manager.activity;
+                    for (let index = 0; index < activities.length; index++) {
+                        const activity = UserActivityEntity.load(
+                            activities[index]
+                        )!;
+                        activity.community = _community.toHex();
+                        activity.save();
+                    }
                     isNewManager = false;
                 } else if (
                     Address.fromString(manager.community).notEqual(_community)
@@ -56,6 +65,7 @@ export function genericHandleManagerAdded(
                     previousManager.state = manager.state;
                     previousManager.added = manager.added;
                     previousManager.removed = manager.removed;
+                    previousManager.activity = manager.activity;
                     previousManager.save();
                     //
                     manager.address = _manager;
@@ -63,10 +73,9 @@ export function genericHandleManagerAdded(
                     manager.state = 0;
                     manager.added = 0;
                     manager.removed = 0;
+                    manager.activity = [];
                 }
             }
-            // update or add manager;
-            manager.save();
             if (isNewManager) {
                 // update ubi
                 const ubi = UBIEntity.load('0')!;
@@ -76,7 +85,13 @@ export function genericHandleManagerAdded(
                 const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
                 ubiDaily.managers += 1;
                 ubiDaily.save();
-                // add beneficiary activity
+                // update community
+                community.managers += 1;
+                community.save();
+                // update community daily
+                communityDaily.managers += 1;
+                communityDaily.save();
+                // add manager activity
                 const activity = new UserActivityEntity(_hash);
                 activity.user = _manager;
                 activity.by = _by;
@@ -84,13 +99,12 @@ export function genericHandleManagerAdded(
                 activity.timestamp = _blockTimestamp.toI32();
                 activity.activity = 'added';
                 activity.save();
-                // update community
-                community.managers += 1;
-                community.save();
-                // update community daily
-                communityDaily.managers += 1;
-                communityDaily.save();
+                // update activities
+                const activities = manager.activity;
+                activities.push(activity.id);
+                manager.activity = activities;
             }
+            manager.save();
         }
     }
 }
@@ -119,9 +133,6 @@ export function genericHandleManagerRemoved(
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
             ubiDaily.managers -= 1;
             ubiDaily.save();
-            // update manager
-            manager.state = 1;
-            manager.save();
             // add beneficiary activity
             const activity = new UserActivityEntity(_hash);
             activity.user = _manager;
@@ -130,6 +141,12 @@ export function genericHandleManagerRemoved(
             activity.timestamp = _blockTimestamp.toI32();
             activity.activity = 'removed';
             activity.save();
+            // update manager
+            manager.state = 1;
+            const activities = manager.activity;
+            activities.push(activity.id);
+            manager.activity = activities;
+            manager.save();
             // update community
             community.managers -= 1;
             community.removedManagers += 1;

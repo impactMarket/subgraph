@@ -501,6 +501,7 @@ export class ManagerEntity extends Entity {
 
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("community", Value.fromString(""));
+    this.set("activity", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
@@ -573,6 +574,15 @@ export class ManagerEntity extends Entity {
   set removed(value: i32) {
     this.set("removed", Value.fromI32(value));
   }
+
+  get activity(): Array<string> {
+    let value = this.get("activity");
+    return value!.toStringArray();
+  }
+
+  set activity(value: Array<string>) {
+    this.set("activity", Value.fromStringArray(value));
+  }
 }
 
 export class BeneficiaryEntity extends Entity {
@@ -582,6 +592,7 @@ export class BeneficiaryEntity extends Entity {
 
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("community", Value.fromString(""));
+    this.set("activity", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
@@ -655,6 +666,15 @@ export class BeneficiaryEntity extends Entity {
 
   set preLastClaimAt(value: i32) {
     this.set("preLastClaimAt", Value.fromI32(value));
+  }
+
+  get activity(): Array<string> {
+    let value = this.get("activity");
+    return value!.toStringArray();
+  }
+
+  set activity(value: Array<string>) {
+    this.set("activity", Value.fromStringArray(value));
   }
 }
 

@@ -6,6 +6,7 @@ import { handleTransferCeloDollar } from '../src/mappings/transfer';
 import { createCommunityAddedEvent } from './utils/community';
 import {
     communityAddress,
+    communityProps,
     managerAddress,
     userAddress,
 } from './utils/constants';
@@ -17,13 +18,7 @@ test('contribute cusd to community', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);
@@ -64,13 +59,7 @@ test('contribute cusd to treasury', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);
@@ -104,13 +93,7 @@ test('contribute cusd to treasury and community', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);

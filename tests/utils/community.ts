@@ -10,13 +10,7 @@ import {
 export function createCommunityAddedEvent(
     communityAddress: string,
     managers: string[],
-    claimAmount: string,
-    maxClaim: string,
-    decreaseStep: string,
-    baseInterval: string,
-    incrementInterval: string,
-    minTranche: string,
-    maxTranche: string
+    props: Map<string, string>
 ): CommunityAdded {
     const communityAddedEvent = changetype<CommunityAdded>(newMockEvent());
     communityAddedEvent.parameters = [];
@@ -30,31 +24,45 @@ export function createCommunityAddedEvent(
     );
     const claimAmountParam = new ethereum.EventParam(
         'claimAmount',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(claimAmount))
+        ethereum.Value.fromUnsignedBigInt(
+            BigInt.fromString(props.get('claimAmount'))
+        )
     );
     const maxClaimParam = new ethereum.EventParam(
         'maxClaim',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(maxClaim))
+        ethereum.Value.fromUnsignedBigInt(
+            BigInt.fromString(props.get('maxClaim'))
+        )
     );
     const decreaseStepParam = new ethereum.EventParam(
         'decreaseStep',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(decreaseStep))
+        ethereum.Value.fromUnsignedBigInt(
+            BigInt.fromString(props.get('decreaseStep'))
+        )
     );
     const baseIntervalParam = new ethereum.EventParam(
         'baseInterval',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(baseInterval))
+        ethereum.Value.fromUnsignedBigInt(
+            BigInt.fromString(props.get('baseInterval'))
+        )
     );
     const incrementIntervalParam = new ethereum.EventParam(
         'incrementInterval',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(incrementInterval))
+        ethereum.Value.fromUnsignedBigInt(
+            BigInt.fromString(props.get('incrementInterval'))
+        )
     );
     const minTrancheParam = new ethereum.EventParam(
         'minTranche',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(minTranche))
+        ethereum.Value.fromUnsignedBigInt(
+            BigInt.fromString(props.get('minTranche'))
+        )
     );
     const maxTrancheParam = new ethereum.EventParam(
         'maxTranche',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(maxTranche))
+        ethereum.Value.fromUnsignedBigInt(
+            BigInt.fromString(props.get('maxTranche'))
+        )
     );
 
     communityAddedEvent.parameters.push(communityAddressParam);
