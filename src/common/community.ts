@@ -57,15 +57,18 @@ export function generiHandleCommunityAdded(
     community.claimed = BigDecimal.fromString('0');
     community.save();
     // create ubi if it doesn't exist
-    const ubi = UBIEntity.load('0');
+    let ubi = UBIEntity.load('0');
     if (!ubi) {
-        const ubiEntity = new UBIEntity('0');
-        ubiEntity.communities = 1; // one already!
-        ubiEntity.beneficiaries = 0;
-        ubiEntity.managers = 0;
-        ubiEntity.contributed = BigDecimal.fromString('0');
-        ubiEntity.claimed = BigDecimal.fromString('0');
-        ubiEntity.save();
+        ubi = new UBIEntity('0');
+        ubi.communities = 1; // one already!
+        ubi.beneficiaries = 0;
+        ubi.managers = 0;
+        ubi.contributed = BigDecimal.fromString('0');
+        ubi.claimed = BigDecimal.fromString('0');
+        ubi.save();
+    } else {
+        ubi.communities += 1; // one already!
+        ubi.save();
     }
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
