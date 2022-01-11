@@ -97,7 +97,7 @@ export function genericHandleManagerAdded(
                 activity.by = _by;
                 activity.community = community.id;
                 activity.timestamp = _blockTimestamp.toI32();
-                activity.activity = 'added';
+                activity.activity = 'ADDED';
                 activity.save();
                 // update activities
                 const activities = manager.activity;
@@ -139,7 +139,7 @@ export function genericHandleManagerRemoved(
             activity.by = _by;
             activity.community = community.id;
             activity.timestamp = _blockTimestamp.toI32();
-            activity.activity = 'removed';
+            activity.activity = 'REMOVED';
             activity.save();
             // update manager
             manager.state = 1;

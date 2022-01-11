@@ -65,7 +65,7 @@ export function genericHandleBeneficiaryAdded(
         activity.by = _by;
         activity.community = community.id;
         activity.timestamp = _blockTimestamp.toI32();
-        activity.activity = 'added';
+        activity.activity = 'ADDED';
         activity.save();
         // add beneficiary
         const activities = beneficiary.activity;
@@ -123,7 +123,7 @@ export function genericHandleBeneficiaryRemoved(
             activity.by = _by;
             activity.community = community.id;
             activity.timestamp = _blockTimestamp.toI32();
-            activity.activity = 'removed';
+            activity.activity = 'REMOVED';
             activity.save();
             // update beneficiary
             beneficiary.state = 1;
