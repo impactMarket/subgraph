@@ -1,29 +1,28 @@
+import { BigInt } from '@graphprotocol/graph-ts';
 import { clearStore, test, assert } from 'matchstick-as/assembly/index';
 
 import { treasuryAddress } from '../src/common/addresses';
 import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 import { handleTransferCeloDollar } from '../src/mappings/transfer';
+import { normalize } from '../src/utils';
 import { createCommunityAddedEvent } from './utils/community';
 import {
     communityAddress,
+    communityProps,
     managerAddress,
+    toToken,
     userAddress,
 } from './utils/constants';
 import { createTransferEvent } from './utils/transfer';
 
 export { handleTransferCeloDollar };
 
+const fiveDollars = toToken('5');
 test('contribute cusd to community', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);
@@ -31,13 +30,13 @@ test('contribute cusd to community', () => {
     const transferEvent1 = createTransferEvent(
         userAddress[0],
         communityAddress[0],
-        '5'
+        fiveDollars.toString()
     );
 
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
-        '5'
+        fiveDollars.toString()
     );
 
     handleTransferCeloDollar(transferEvent1);
@@ -49,12 +48,22 @@ test('contribute cusd to community', () => {
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId}`,
         'contributed',
-        '10'
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
 
     // assert ubi daily data
-    assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'contributed', '10');
-    assert.fieldEquals('UBIEntity', '0', 'contributed', '10');
+    assert.fieldEquals(
+        'UBIDailyEntity',
+        dayId.toString(),
+        'contributed',
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
+    );
+    assert.fieldEquals(
+        'UBIEntity',
+        '0',
+        'contributed',
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
+    );
 
     clearStore();
 });
@@ -64,13 +73,7 @@ test('contribute cusd to treasury', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);
@@ -79,13 +82,13 @@ test('contribute cusd to treasury', () => {
     const transferEvent1 = createTransferEvent(
         userAddress[0],
         treasuryAddress,
-        '5'
+        fiveDollars.toString()
     );
 
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         treasuryAddress,
-        '5'
+        fiveDollars.toString()
     );
 
     handleTransferCeloDollar(transferEvent1);
@@ -94,8 +97,18 @@ test('contribute cusd to treasury', () => {
     const dayId = transferEvent1.block.timestamp.toI32() / 86400;
 
     // assert ubi daily data
-    assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'contributed', '10');
-    assert.fieldEquals('UBIEntity', '0', 'contributed', '10');
+    assert.fieldEquals(
+        'UBIDailyEntity',
+        dayId.toString(),
+        'contributed',
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
+    );
+    assert.fieldEquals(
+        'UBIEntity',
+        '0',
+        'contributed',
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
+    );
 
     clearStore();
 });
@@ -104,13 +117,7 @@ test('contribute cusd to treasury and community', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);
@@ -119,28 +126,28 @@ test('contribute cusd to treasury and community', () => {
     const transferEvent1 = createTransferEvent(
         userAddress[0],
         treasuryAddress,
-        '5'
+        fiveDollars.toString()
     );
 
     // to treasury
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         treasuryAddress,
-        '5'
+        fiveDollars.toString()
     );
 
     // to community
     const transferEvent3 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
-        '5'
+        fiveDollars.toString()
     );
 
     // from treasury to community
     const transferEvent4 = createTransferEvent(
         treasuryAddress,
         communityAddress[0],
-        '5'
+        fiveDollars.toString()
     );
 
     handleTransferCeloDollar(transferEvent1);
@@ -154,12 +161,22 @@ test('contribute cusd to treasury and community', () => {
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId}`,
         'contributed',
-        '10'
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
 
     // assert ubi daily data
-    assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'contributed', '15');
-    assert.fieldEquals('UBIEntity', '0', 'contributed', '15');
+    assert.fieldEquals(
+        'UBIDailyEntity',
+        dayId.toString(),
+        'contributed',
+        normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
+    );
+    assert.fieldEquals(
+        'UBIEntity',
+        '0',
+        'contributed',
+        normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
+    );
 
     clearStore();
 });

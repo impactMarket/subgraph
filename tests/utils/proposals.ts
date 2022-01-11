@@ -1,3 +1,4 @@
+/* global changetype */
 import { Address, ethereum, BigInt, Bytes } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
@@ -18,7 +19,7 @@ export function createProposalCreatedEvent(
     description: string
 ): ProposalCreated {
     const proposalCreatedEvent = changetype<ProposalCreated>(newMockEvent());
-    proposalCreatedEvent.parameters = new Array();
+    proposalCreatedEvent.parameters = [];
     const idParam = new ethereum.EventParam(
         'id',
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(id))
@@ -85,7 +86,7 @@ export function createProposalCreatedEvent(
 
 export function createProposalQueuedEvent(id: i32): ProposalQueued {
     const proposalCreatedEvent = changetype<ProposalQueued>(newMockEvent());
-    proposalCreatedEvent.parameters = new Array();
+    proposalCreatedEvent.parameters = [];
     const idParam = new ethereum.EventParam(
         'id',
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(id))

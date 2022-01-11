@@ -1,54 +1,65 @@
-type ProposalEntity @entity {
+type CommunityProposalEntity @entity {
   id: ID! # proposal id
-  signatures: [String!]!
+  calldata: Bytes!
   status: Int!
   endBlock: Int!
 }
 
 type CommunityEntity @entity {
   id: ID! # community address
+  startDayId: Int! # only useful to update daily entities when migrating
+  state: Int!
   previous: Bytes!
-  claimAmount: BigInt!
-  maxClaim: BigInt!
-  decreaseStep: BigInt!
+  claimAmount: BigDecimal!
+  maxClaim: BigDecimal!
+  decreaseStep: BigDecimal!
   baseInterval: Int!
   incrementInterval: Int!
-  # total
-  totalBeneficiaries: Int!
-  totalManagers: Int!
-  totalContributed: BigInt!
-  totalClaimed: BigInt!
+  # totals
+  beneficiaries: Int!
+  removedBeneficiaries: Int!
+  managers: Int!
+  removedManagers: Int!
+  contributed: BigDecimal!
+  claimed: BigDecimal!
 }
 
 type CommunityDailyEntity @entity {
   id: ID! # community address + day
+  community: CommunityEntity!
+  dayId: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigInt!
-  claimed: BigInt!
+  contributed: BigDecimal!
+  claimed: BigDecimal!
 }
 
 type UBIEntity @entity {
   id: ID! # 0, there's only one
+  communities: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigInt!
-  claimed: BigInt!
+  contributed: BigDecimal!
+  claimed: BigDecimal!
 }
 
 type UBIDailyEntity @entity {
   id: ID! # day id
+  communities: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigInt!
-  claimed: BigInt!
+  contributed: BigDecimal!
+  claimed: BigDecimal!
 }
 
 type ManagerEntity @entity {
-  id: ID! # tx hash
+  id: ID! # tx hash if this address is added on a new community, otherwise address
   address: Bytes!
   community: CommunityEntity!
   state: Int!
+  added: Int! # total beneficiaries added
+  removed: Int! # total beneficiaries removed
+  activity: [UserActivityEntity!]!
 }
 
 type BeneficiaryEntity @entity {
@@ -58,4 +69,20 @@ type BeneficiaryEntity @entity {
   state: Int!
   lastClaimAt: Int!
   preLastClaimAt: Int!
+  activity: [UserActivityEntity!]!
+}
+
+enum ActivityCode {
+  ADDED
+  REMOVED
+}
+
+# registry beneficiry or manager activity
+type UserActivityEntity @entity {
+  id: ID! # tx hash
+  user: Bytes! # user address
+  by: Bytes! # address of the user who did the activity
+  community: CommunityEntity!
+  timestamp: Int!
+  activity: ActivityCode!
 }

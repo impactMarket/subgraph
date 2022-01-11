@@ -1,3 +1,4 @@
+/* global changetype */
 import { Address, ethereum, BigInt } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
@@ -9,7 +10,7 @@ export function createTransferEvent(
     amount: string
 ): Transfer {
     const transferEvent = changetype<Transfer>(newMockEvent());
-    transferEvent.parameters = new Array();
+    transferEvent.parameters = [];
     const fromParam = new ethereum.EventParam(
         'from',
         ethereum.Value.fromAddress(Address.fromString(from))

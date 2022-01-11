@@ -1,8 +1,14 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 
-import { CommunityAdded as OldCommunityAdded } from '../../../generated/OldImpactMarket/OldImpactMarket';
+import {
+    CommunityAdded as OldCommunityAdded,
+    CommunityRemoved as OldCommunityRemoved,
+} from '../../../generated/OldImpactMarket/OldImpactMarket';
 import { OldCommunity } from '../../../generated/templates';
-import { generiHandleCommunityAdded } from '../../common/community';
+import {
+    generiHandleCommunityAdded,
+    generiHandleCommunityRemoved,
+} from '../../common/community';
 
 export function handleOldCommunityAdded(event: OldCommunityAdded): void {
     generiHandleCommunityAdded(
@@ -11,8 +17,16 @@ export function handleOldCommunityAdded(event: OldCommunityAdded): void {
         event.params._maxClaim,
         BigInt.fromI32(0),
         event.params._baseInterval.toI32(),
-        event.params._incrementInterval.toI32()
+        event.params._incrementInterval.toI32(),
+        event.block.timestamp
     );
     // create community entry
     OldCommunity.create(event.params._communityAddress);
+}
+
+export function handleOldCommunityRemoved(event: OldCommunityRemoved): void {
+    generiHandleCommunityRemoved(
+        event.params._communityAddress,
+        event.block.timestamp
+    );
 }

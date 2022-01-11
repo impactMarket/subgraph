@@ -1,34 +1,42 @@
+import { BigInt } from '@graphprotocol/graph-ts';
 import { clearStore, test, assert } from 'matchstick-as/assembly/index';
 
 import {
     handleBeneficiaryAdded,
     handleBeneficiaryClaim,
+    handleBeneficiaryJoined,
+    handleBeneficiaryRemoved,
 } from '../src/mappings/community';
 import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 import {
     createBeneficiaryAddedEvent,
     createBeneficiaryClaimEvent,
+    createBeneficiaryJoinedEvent,
+    createBeneficiaryRemovedEvent,
 } from './utils/beneficiary';
 import { createCommunityAddedEvent } from './utils/community';
 import {
     beneficiaryAddress,
     communityAddress,
+    communityProps,
+    fiveCents,
     managerAddress,
+    normalize,
 } from './utils/constants';
 
-export { handleBeneficiaryAdded, handleBeneficiaryClaim };
+export {
+    handleCommunityAdded,
+    handleBeneficiaryAdded,
+    handleBeneficiaryRemoved,
+    handleBeneficiaryClaim,
+    handleBeneficiaryJoined,
+};
 
 test('add beneficiary', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
 
     handleCommunityAdded(community);
@@ -55,6 +63,13 @@ test('add beneficiary', () => {
         beneficiaryAddress[0]
     );
 
+    assert.fieldEquals(
+        'UserActivityEntity',
+        beneficiaryAddedEvent1.transaction.hash.toHex(),
+        'activity',
+        'added'
+    );
+
     clearStore();
 });
 
@@ -63,13 +78,7 @@ test('add claim', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
     handleCommunityAdded(community);
 
@@ -90,12 +99,12 @@ test('add claim', () => {
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0]
     );
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[1],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0]
     );
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
@@ -131,18 +140,33 @@ test('add claim', () => {
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'totalClaimed',
-        '10'
+        'claimed',
+        normalize(
+            BigInt.fromString(communityProps[0].get('claimAmount'))
+                .times(BigInt.fromI32(2))
+                .plus(fiveCents.times(BigInt.fromI32(2)))
+                .toString()
+        ).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'totalBeneficiaries',
+        'beneficiaries',
         '2'
     );
 
     // assert ubi data
-    assert.fieldEquals('UBIEntity', '0', 'claimed', '10');
+    assert.fieldEquals(
+        'UBIEntity',
+        '0',
+        'claimed',
+        normalize(
+            BigInt.fromString(communityProps[0].get('claimAmount'))
+                .times(BigInt.fromI32(2))
+                .plus(fiveCents.times(BigInt.fromI32(2)))
+                .toString()
+        ).toString()
+    );
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
     clearStore();
 });
@@ -152,13 +176,7 @@ test('rotate claim timestamp', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
-        '5',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0'
+        communityProps[0]
     );
     handleCommunityAdded(community);
 
@@ -173,14 +191,14 @@ test('rotate claim timestamp', () => {
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0],
         1640716194
     );
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0],
         1640716195
     );
@@ -202,7 +220,7 @@ test('rotate claim timestamp', () => {
 
     const beneficiaryClaimEvent3 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        '5',
+        communityProps[0].get('claimAmount'),
         communityAddress[0],
         1640716196
     );
@@ -221,6 +239,211 @@ test('rotate claim timestamp', () => {
         'preLastClaimAt',
         '1640716195'
     );
+
+    clearStore();
+});
+
+test('remove beneficiary', () => {
+    const community = createCommunityAddedEvent(
+        communityAddress[0],
+        [managerAddress[0]],
+        communityProps[0]
+    );
+
+    handleCommunityAdded(community);
+
+    const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+
+    const beneficiaryAddedEvent2 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[1],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryAdded(beneficiaryAddedEvent1);
+    handleBeneficiaryAdded(beneficiaryAddedEvent2);
+
+    assert.fieldEquals(
+        'BeneficiaryEntity',
+        beneficiaryAddress[0],
+        'address',
+        beneficiaryAddress[0]
+    );
+
+    assert.fieldEquals(
+        'UserActivityEntity',
+        beneficiaryAddedEvent1.transaction.hash.toHex(),
+        'activity',
+        'added'
+    );
+
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[0],
+        'beneficiaries',
+        '2'
+    );
+
+    const beneficiaryRemovedEvent1 = createBeneficiaryRemovedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryRemoved(beneficiaryRemovedEvent1);
+
+    assert.fieldEquals(
+        'BeneficiaryEntity',
+        beneficiaryAddress[0],
+        'state',
+        '1'
+    );
+
+    assert.fieldEquals(
+        'UserActivityEntity',
+        beneficiaryRemovedEvent1.transaction.hash.toHex(),
+        'activity',
+        'removed'
+    );
+
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[0],
+        'beneficiaries',
+        '1'
+    );
+
+    clearStore();
+});
+
+test('beneficiary joined', () => {
+    const community = createCommunityAddedEvent(
+        communityAddress[0],
+        [managerAddress[0]],
+        communityProps[0]
+    );
+
+    const community2 = createCommunityAddedEvent(
+        communityAddress[1],
+        [managerAddress[1]],
+        communityProps[0]
+    );
+
+    handleCommunityAdded(community);
+    handleCommunityAdded(community2);
+
+    const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+
+    const beneficiaryAddedEvent2 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[1],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryAdded(beneficiaryAddedEvent1);
+    handleBeneficiaryAdded(beneficiaryAddedEvent2);
+
+    const beneficiaryJoinedEvent1 = createBeneficiaryJoinedEvent(
+        beneficiaryAddress[0],
+        communityAddress[1]
+    );
+
+    handleBeneficiaryJoined(beneficiaryJoinedEvent1);
+
+    assert.fieldEquals(
+        'BeneficiaryEntity',
+        beneficiaryAddress[0],
+        'community',
+        communityAddress[1]
+    );
+
+    assert.fieldEquals(
+        'UserActivityEntity',
+        beneficiaryAddedEvent1.transaction.hash.toHex(),
+        'community',
+        communityAddress[1]
+    );
+
+    clearStore();
+});
+
+test('beneficiary joined other community after removed', () => {
+    const community = createCommunityAddedEvent(
+        communityAddress[0],
+        [managerAddress[0]],
+        communityProps[0]
+    );
+
+    const community2 = createCommunityAddedEvent(
+        communityAddress[1],
+        [managerAddress[1]],
+        communityProps[0]
+    );
+
+    handleCommunityAdded(community);
+    handleCommunityAdded(community2);
+
+    const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+
+    const beneficiaryAddedEvent2 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[1],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryAdded(beneficiaryAddedEvent1);
+    handleBeneficiaryAdded(beneficiaryAddedEvent2);
+
+    const beneficiaryRemovedEvent1 = createBeneficiaryRemovedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryRemoved(beneficiaryRemovedEvent1);
+
+    const beneficiaryAddedEvent3 = createBeneficiaryAddedEvent(
+        managerAddress[1],
+        beneficiaryAddress[0],
+        communityAddress[1]
+    );
+
+    handleBeneficiaryAdded(beneficiaryAddedEvent3);
+
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[0],
+        'beneficiaries',
+        '1'
+    );
+
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[0],
+        'removedBeneficiaries',
+        '1'
+    );
+
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[1],
+        'beneficiaries',
+        '1'
+    );
+
+    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
 
     clearStore();
 });

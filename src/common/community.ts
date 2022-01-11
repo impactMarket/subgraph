@@ -1,10 +1,12 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 import {
     CommunityDailyEntity,
     CommunityEntity,
     UBIEntity,
 } from '../../generated/schema';
+import { normalize } from '../utils';
+import { loadOrCreateDailyUbi } from './ubi';
 
 export function loadOrCreateCommunityDaily(
     _community: Address,
@@ -16,10 +18,12 @@ export function loadOrCreateCommunityDaily(
     let communityDaily = CommunityDailyEntity.load(communityDailyId);
     if (!communityDaily) {
         communityDaily = new CommunityDailyEntity(communityDailyId);
+        communityDaily.community = _community.toHex();
+        communityDaily.dayId = dayId;
         communityDaily.beneficiaries = 0;
         communityDaily.managers = 0;
-        communityDaily.contributed = BigInt.fromI32(0);
-        communityDaily.claimed = BigInt.fromI32(0);
+        communityDaily.contributed = BigDecimal.fromString('0');
+        communityDaily.claimed = BigDecimal.fromString('0');
     }
     return communityDaily;
 }
@@ -30,31 +34,67 @@ export function generiHandleCommunityAdded(
     _maxClaim: BigInt,
     _decreaseStep: BigInt,
     _baseInterval: i32,
-    _incrementInterval: i32
+    _incrementInterval: i32,
+    _blockTimestamp: BigInt
 ): void {
     const communityId = _communityAddress.toHex();
     let community = CommunityEntity.load(communityId);
     if (!community) {
         community = new CommunityEntity(communityId);
     }
-    community.claimAmount = _claimAmount;
-    community.maxClaim = _maxClaim;
-    community.decreaseStep = _decreaseStep;
+    community.state = 0;
+    community.startDayId = _blockTimestamp.toI32() / 86400;
+    community.claimAmount = normalize(_claimAmount.toString());
+    community.maxClaim = normalize(_maxClaim.toString());
+    community.decreaseStep = normalize(_decreaseStep.toString());
     community.baseInterval = _baseInterval;
     community.incrementInterval = _incrementInterval;
-    community.totalBeneficiaries = 0;
-    community.totalManagers = 0;
-    community.totalContributed = BigInt.fromI32(0);
-    community.totalClaimed = BigInt.fromI32(0);
+    community.beneficiaries = 0;
+    community.removedBeneficiaries = 0;
+    community.managers = 0;
+    community.removedManagers = 0;
+    community.contributed = BigDecimal.fromString('0');
+    community.claimed = BigDecimal.fromString('0');
     community.save();
     // create ubi if it doesn't exist
-    const ubi = UBIEntity.load('0');
+    let ubi = UBIEntity.load('0');
     if (!ubi) {
-        const ubiEntity = new UBIEntity('0');
-        ubiEntity.beneficiaries = 0;
-        ubiEntity.managers = 0;
-        ubiEntity.contributed = BigInt.fromI32(0);
-        ubiEntity.claimed = BigInt.fromI32(0);
-        ubiEntity.save();
+        ubi = new UBIEntity('0');
+        ubi.communities = 1; // one already!
+        ubi.beneficiaries = 0;
+        ubi.managers = 0;
+        ubi.contributed = BigDecimal.fromString('0');
+        ubi.claimed = BigDecimal.fromString('0');
+        ubi.save();
+    } else {
+        ubi.communities += 1; // one already!
+        ubi.save();
     }
+    // update daily ubi
+    const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+    ubiDaily.communities += 1;
+    ubiDaily.save();
+}
+
+export function generiHandleCommunityRemoved(
+    _communityAddress: Address,
+    _blockTimestamp: BigInt
+): void {
+    const communityId = _communityAddress.toHex();
+    let community = CommunityEntity.load(communityId);
+    if (!community) {
+        community = new CommunityEntity(communityId);
+    }
+    community.state = 1;
+    community.save();
+    // update ubi
+    const ubi = UBIEntity.load('0')!;
+    ubi.communities -= 1;
+    ubi.beneficiaries -= community.beneficiaries;
+    ubi.save();
+    // update daily ubi
+    const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+    ubiDaily.communities -= 1;
+    ubiDaily.beneficiaries -= community.beneficiaries;
+    ubiDaily.save();
 }

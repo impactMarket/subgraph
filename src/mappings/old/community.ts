@@ -16,11 +16,13 @@ import {
     genericHandleManagerAdded,
     genericHandleManagerRemoved,
 } from '../../common/manager';
+import { normalize } from '../../utils';
 
 export function handleOldManagerAdded(event: OldManagerAdded): void {
     genericHandleManagerAdded(
         event.address,
         event.params._account,
+        event.transaction.from,
         event.transaction.hash.toHex(),
         event.block.timestamp
     );
@@ -30,6 +32,8 @@ export function handleOldManagerRemoved(event: OldManagerRemoved): void {
     genericHandleManagerRemoved(
         event.address,
         event.params._account,
+        event.transaction.from,
+        event.transaction.hash.toHex(),
         event.block.timestamp
     );
 }
@@ -38,6 +42,7 @@ export function handleOldBeneficiaryAdded(event: OldBeneficiaryAdded): void {
     genericHandleBeneficiaryAdded(
         event.address,
         event.params._account,
+        event.transaction.from,
         event.transaction.hash.toHex(),
         event.block.timestamp
     );
@@ -49,6 +54,8 @@ export function handleOldBeneficiaryRemoved(
     genericHandleBeneficiaryRemoved(
         event.address,
         event.params._account,
+        event.transaction.from,
+        event.transaction.hash.toHex(),
         event.block.timestamp
     );
 }
@@ -65,8 +72,8 @@ export function handleOldBeneficiaryClaim(event: OldBeneficiaryClaim): void {
 export function handleCommunityEdited(event: CommunityEdited): void {
     const community = CommunityEntity.load(event.address.toHex());
     if (community) {
-        community.claimAmount = event.params._claimAmount;
-        community.maxClaim = event.params._maxClaim;
+        community.claimAmount = normalize(event.params._claimAmount.toString());
+        community.maxClaim = normalize(event.params._maxClaim.toString());
         community.incrementInterval = event.params._incrementInterval.toI32();
         community.baseInterval = event.params._baseInterval.toI32();
         community.save();
