@@ -69,6 +69,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
             }
             dayId++;
         }
+        community.startDayId = previousCommunity.startDayId;
         community.state = previousCommunity.state;
         community.claimAmount = previousCommunity.claimAmount;
         community.maxClaim = previousCommunity.maxClaim;
