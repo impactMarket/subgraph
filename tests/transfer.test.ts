@@ -1,23 +1,24 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { clearStore, test, assert } from 'matchstick-as/assembly/index';
+import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import { treasuryAddress } from '../src/common/addresses';
-import { handleCommunityAdded } from '../src/mappings/communityAdmin';
-import { handleTransferCeloDollar } from '../src/mappings/transfer';
-import { normalize } from '../src/utils';
-import { createCommunityAddedEvent } from './utils/community';
 import {
     communityAddress,
     communityProps,
     managerAddress,
     toToken,
-    userAddress,
+    userAddress
 } from './utils/constants';
+import { createCommunityAddedEvent } from './utils/community';
 import { createTransferEvent } from './utils/transfer';
+import { handleCommunityAdded } from '../src/mappings/communityAdmin';
+import { handleTransferCeloDollar } from '../src/mappings/transfer';
+import { normalize } from '../src/utils';
+import { treasuryAddress } from '../src/common/addresses';
 
 export { handleTransferCeloDollar };
 
 const fiveDollars = toToken('5');
+
 test('contribute cusd to community', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],

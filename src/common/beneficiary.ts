@@ -4,7 +4,7 @@ import {
     BeneficiaryEntity,
     CommunityEntity,
     UBIEntity,
-    UserActivityEntity,
+    UserActivityEntity
 } from '../../generated/schema';
 import { fiveCents, normalize } from '../utils';
 import { loadOrCreateCommunityDaily } from './community';
@@ -18,6 +18,7 @@ export function genericHandleBeneficiaryAdded(
     _blockTimestamp: BigInt
 ): void {
     const community = CommunityEntity.load(_community.toHex());
+
     if (community) {
         const communityDaily = loadOrCreateCommunityDaily(
             _community,
@@ -26,6 +27,7 @@ export function genericHandleBeneficiaryAdded(
         // load beneficiary
         const beneficiaryId = _beneficiary.toHex();
         let beneficiary = BeneficiaryEntity.load(beneficiaryId);
+
         if (!beneficiary) {
             beneficiary = new BeneficiaryEntity(beneficiaryId);
             beneficiary.address = _beneficiary;
@@ -40,6 +42,7 @@ export function genericHandleBeneficiaryAdded(
         ) {
             // save previous entry of beneficiary in another community
             const previousBeneficiary = new BeneficiaryEntity(_hash);
+
             previousBeneficiary.address = beneficiary.address;
             previousBeneficiary.community = beneficiary.community;
             previousBeneficiary.state = beneficiary.state;
@@ -61,6 +64,7 @@ export function genericHandleBeneficiaryAdded(
         }
         // add beneficiary activity
         const activity = new UserActivityEntity(_hash);
+
         activity.user = _beneficiary;
         activity.by = _by;
         activity.community = community.id;
@@ -69,16 +73,19 @@ export function genericHandleBeneficiaryAdded(
         activity.save();
         // add beneficiary
         const activities = beneficiary.activity;
+
         activities.push(activity.id);
         beneficiary.activity = activities;
         beneficiary.save();
         // update ubi
         const ubi = UBIEntity.load('0')!;
+
         ubi.beneficiaries += 1;
         ubi.claimed = ubi.claimed.plus(fiveCents);
         ubi.save();
         // update daily ubi
         const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+
         ubiDaily.beneficiaries += 1;
         ubiDaily.claimed = ubiDaily.claimed.plus(fiveCents);
         ubiDaily.save();
@@ -94,6 +101,7 @@ export function genericHandleBeneficiaryAdded(
     }
 }
 
+// eslint-disable-next-line max-params
 export function genericHandleBeneficiaryRemoved(
     _community: Address,
     _beneficiary: Address,
@@ -102,8 +110,10 @@ export function genericHandleBeneficiaryRemoved(
     _blockTimestamp: BigInt
 ): void {
     const community = CommunityEntity.load(_community.toHex());
+
     if (community) {
         const beneficiary = BeneficiaryEntity.load(_beneficiary.toHex());
+
         if (beneficiary) {
             const communityDaily = loadOrCreateCommunityDaily(
                 _community,
@@ -111,14 +121,17 @@ export function genericHandleBeneficiaryRemoved(
             );
             // update ubi
             const ubi = UBIEntity.load('0')!;
+
             ubi.beneficiaries -= 1;
             ubi.save();
             // update daily ubi
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+
             ubiDaily.beneficiaries -= 1;
             ubiDaily.save();
             // add beneficiary activity
             const activity = new UserActivityEntity(_hash);
+
             activity.user = _beneficiary;
             activity.by = _by;
             activity.community = community.id;
@@ -128,6 +141,7 @@ export function genericHandleBeneficiaryRemoved(
             // update beneficiary
             beneficiary.state = 1;
             const activities = beneficiary.activity;
+
             activities.push(activity.id);
             beneficiary.activity = activities;
             beneficiary.save();
@@ -150,12 +164,15 @@ export function genericHandleBeneficiaryJoined(
     _beneficiary: Address
 ): void {
     const beneficiary = BeneficiaryEntity.load(_beneficiary.toHex());
+
     if (beneficiary) {
         // update beneficiary
         beneficiary.community = _community.toHex();
         const activities = beneficiary.activity;
+
         for (let index = 0; index < activities.length; index++) {
             const activity = UserActivityEntity.load(activities[index])!;
+
             activity.community = _community.toHex();
             activity.save();
         }
@@ -170,8 +187,10 @@ export function genericHandleBeneficiaryClaim(
     _blockTimestamp: BigInt
 ): void {
     const community = CommunityEntity.load(_community.toHex());
+
     if (community) {
         const beneficiary = BeneficiaryEntity.load(_beneficiary.toHex());
+
         if (beneficiary) {
             const communityDaily = loadOrCreateCommunityDaily(
                 _community,
@@ -180,10 +199,12 @@ export function genericHandleBeneficiaryClaim(
             const normalizedAmount = normalize(_amount.toString());
             // update ubi
             const ubi = UBIEntity.load('0')!;
+
             ubi.claimed = ubi.claimed.plus(normalizedAmount);
             ubi.save();
             // update daily ubi
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+
             ubiDaily.claimed = ubiDaily.claimed.plus(normalizedAmount);
             ubiDaily.save();
             // update beneficiary

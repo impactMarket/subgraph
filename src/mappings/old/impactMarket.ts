@@ -1,13 +1,13 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 
-import {
-    CommunityAdded as OldCommunityAdded,
-    CommunityRemoved as OldCommunityRemoved,
-} from '../../../generated/OldImpactMarket/OldImpactMarket';
 import { OldCommunity } from '../../../generated/templates';
 import {
+    CommunityAdded as OldCommunityAdded,
+    CommunityRemoved as OldCommunityRemoved
+} from '../../../generated/OldImpactMarket/OldImpactMarket';
+import {
     generiHandleCommunityAdded,
-    generiHandleCommunityRemoved,
+    generiHandleCommunityRemoved
 } from '../../common/community';
 
 export function handleOldCommunityAdded(event: OldCommunityAdded): void {

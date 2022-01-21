@@ -17,6 +17,8 @@ export class CommunityProposalEntity extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("calldata", Value.fromBytes(Bytes.empty()));
+    this.set("status", Value.fromI32(0));
+    this.set("endBlock", Value.fromI32(0));
   }
 
   save(): void {
@@ -83,10 +85,18 @@ export class CommunityEntity extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("startDayId", Value.fromI32(0));
+    this.set("state", Value.fromI32(0));
     this.set("previous", Value.fromBytes(Bytes.empty()));
     this.set("claimAmount", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("maxClaim", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("decreaseStep", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("baseInterval", Value.fromI32(0));
+    this.set("incrementInterval", Value.fromI32(0));
+    this.set("beneficiaries", Value.fromI32(0));
+    this.set("removedBeneficiaries", Value.fromI32(0));
+    this.set("managers", Value.fromI32(0));
+    this.set("removedManagers", Value.fromI32(0));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -250,6 +260,9 @@ export class CommunityDailyEntity extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("community", Value.fromString(""));
+    this.set("dayId", Value.fromI32(0));
+    this.set("beneficiaries", Value.fromI32(0));
+    this.set("managers", Value.fromI32(0));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -342,6 +355,9 @@ export class UBIEntity extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("communities", Value.fromI32(0));
+    this.set("beneficiaries", Value.fromI32(0));
+    this.set("managers", Value.fromI32(0));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -423,6 +439,9 @@ export class UBIDailyEntity extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("communities", Value.fromI32(0));
+    this.set("beneficiaries", Value.fromI32(0));
+    this.set("managers", Value.fromI32(0));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -506,6 +525,9 @@ export class ManagerEntity extends Entity {
 
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("community", Value.fromString(""));
+    this.set("state", Value.fromI32(0));
+    this.set("added", Value.fromI32(0));
+    this.set("removed", Value.fromI32(0));
     this.set("activity", Value.fromStringArray(new Array(0)));
   }
 
@@ -597,6 +619,9 @@ export class BeneficiaryEntity extends Entity {
 
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("community", Value.fromString(""));
+    this.set("state", Value.fromI32(0));
+    this.set("lastClaimAt", Value.fromI32(0));
+    this.set("preLastClaimAt", Value.fromI32(0));
     this.set("activity", Value.fromStringArray(new Array(0)));
   }
 
@@ -691,6 +716,7 @@ export class UserActivityEntity extends Entity {
     this.set("user", Value.fromBytes(Bytes.empty()));
     this.set("by", Value.fromBytes(Bytes.empty()));
     this.set("community", Value.fromString(""));
+    this.set("timestamp", Value.fromI32(0));
     this.set("activity", Value.fromString(""));
   }
 

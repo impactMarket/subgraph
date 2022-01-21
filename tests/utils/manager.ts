@@ -4,7 +4,7 @@ import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import {
     ManagerAdded,
-    ManagerRemoved,
+    ManagerRemoved
 } from '../../generated/templates/Community/Community';
 
 export function createManagerAddedEvent(
@@ -13,6 +13,7 @@ export function createManagerAddedEvent(
     fromCommunityAddress: string
 ): ManagerAdded {
     const managerAddedEvent = changetype<ManagerAdded>(newMockEvent());
+
     managerAddedEvent.parameters = [];
     managerAddedEvent.address = Address.fromString(fromCommunityAddress);
     const managerParam = new ethereum.EventParam(
@@ -36,6 +37,7 @@ export function createManagerRemovedEvent(
     fromCommunityAddress: string
 ): ManagerRemoved {
     const managerRemovedEvent = changetype<ManagerRemoved>(newMockEvent());
+
     managerRemovedEvent.parameters = [];
     managerRemovedEvent.address = Address.fromString(fromCommunityAddress);
     const managerParam = new ethereum.EventParam(

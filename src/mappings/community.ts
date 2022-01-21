@@ -1,4 +1,3 @@
-import { CommunityEntity } from '../../generated/schema';
 import {
     BeneficiaryAdded,
     BeneficiaryClaim,
@@ -6,17 +5,18 @@ import {
     BeneficiaryParamsUpdated,
     BeneficiaryRemoved,
     ManagerAdded,
-    ManagerRemoved,
+    ManagerRemoved
 } from '../../generated/templates/Community/Community';
+import { CommunityEntity } from '../../generated/schema';
 import {
     genericHandleBeneficiaryAdded,
     genericHandleBeneficiaryClaim,
     genericHandleBeneficiaryJoined,
-    genericHandleBeneficiaryRemoved,
+    genericHandleBeneficiaryRemoved
 } from '../common/beneficiary';
 import {
     genericHandleManagerAdded,
-    genericHandleManagerRemoved,
+    genericHandleManagerRemoved
 } from '../common/manager';
 import { normalize } from '../utils';
 
@@ -77,6 +77,7 @@ export function handleBeneficiaryParamsUpdated(
     event: BeneficiaryParamsUpdated
 ): void {
     const community = CommunityEntity.load(event.address.toHex());
+
     if (community) {
         community.claimAmount = normalize(
             event.params.newClaimAmount.toString()

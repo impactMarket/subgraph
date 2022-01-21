@@ -1,15 +1,15 @@
 import { store } from '@graphprotocol/graph-ts';
 
+import { Community } from '../../generated/templates';
 import {
     CommunityAdded,
     CommunityMigrated,
-    CommunityRemoved,
+    CommunityRemoved
 } from '../../generated/CommunityAdmin/CommunityAdmin';
 import { CommunityDailyEntity, CommunityEntity } from '../../generated/schema';
-import { Community } from '../../generated/templates';
 import {
     generiHandleCommunityAdded,
-    generiHandleCommunityRemoved,
+    generiHandleCommunityRemoved
 } from '../common/community';
 
 // TODO: add five cents to first managers
@@ -36,26 +36,31 @@ export function handleCommunityRemoved(event: CommunityRemoved): void {
 
 export function handleCommunityMigrated(event: CommunityMigrated): void {
     let community = CommunityEntity.load(event.params.communityAddress.toHex());
+
     if (!community) {
         community = new CommunityEntity(event.params.communityAddress.toHex());
     }
     const previousCommunity = CommunityEntity.load(
         event.params.previousCommunityAddress.toHex()
     );
+
     if (previousCommunity) {
         // read start day id and update all community daily
         const todayDayId = event.block.timestamp.toI32() / 86400;
         let dayId = previousCommunity.startDayId;
+
         while (dayId <= todayDayId) {
             const previousCommunityDailyId = `${event.params.previousCommunityAddress.toHex()}-${dayId}`;
             const previousCommunityDaily = CommunityDailyEntity.load(
                 previousCommunityDailyId
             );
+
             if (previousCommunityDaily) {
                 const communityDailyId = `${event.params.communityAddress.toHex()}-${dayId}`;
                 const communityDaily = new CommunityDailyEntity(
                     communityDailyId
                 );
+
                 communityDaily.community =
                     event.params.communityAddress.toHex();
                 communityDaily.dayId = previousCommunityDaily.dayId;

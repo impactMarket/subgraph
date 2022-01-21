@@ -1,19 +1,22 @@
+import { CommunityProposalEntity } from '../../generated/schema';
 import {
     ProposalCanceled,
     ProposalCreated,
     ProposalExecuted,
-    ProposalQueued,
+    ProposalQueued
 } from '../../generated/PACTDelegator/PACTDelegator';
-import { CommunityProposalEntity } from '../../generated/schema';
 
 export function handleProposalCreated(event: ProposalCreated): void {
     const signatures = event.params.signatures;
+
     for (let index = 0; index < signatures.length; index++) {
         const s = signatures[index];
+
         if (s.indexOf('addCommunity') !== -1) {
             // TODO: what if there's more than one in a given proposal?
             const id = `${event.params.id.toString()}`;
             let proposal = CommunityProposalEntity.load(id);
+
             if (!proposal) {
                 proposal = new CommunityProposalEntity(id);
             }
@@ -27,6 +30,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
 
 export function handleProposalCanceled(event: ProposalCanceled): void {
     const proposal = CommunityProposalEntity.load(event.params.id.toString());
+
     if (proposal) {
         proposal.status = 2;
         proposal.save();
@@ -35,6 +39,7 @@ export function handleProposalCanceled(event: ProposalCanceled): void {
 
 export function handleProposalQueued(event: ProposalQueued): void {
     const proposal = CommunityProposalEntity.load(event.params.id.toString());
+
     if (proposal) {
         proposal.status = 3;
         proposal.save();
@@ -43,6 +48,7 @@ export function handleProposalQueued(event: ProposalQueued): void {
 
 export function handleProposalExecuted(event: ProposalExecuted): void {
     const proposal = CommunityProposalEntity.load(event.params.id.toString());
+
     if (proposal) {
         proposal.status = 4;
         proposal.save();

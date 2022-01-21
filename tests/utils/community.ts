@@ -1,10 +1,10 @@
 /* global changetype */
-import { Address, ethereum, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import {
     CommunityAdded,
-    CommunityRemoved,
+    CommunityRemoved
 } from '../../generated/CommunityAdmin/CommunityAdmin';
 
 export function createCommunityAddedEvent(
@@ -13,6 +13,7 @@ export function createCommunityAddedEvent(
     props: Map<string, string>
 ): CommunityAdded {
     const communityAddedEvent = changetype<CommunityAdded>(newMockEvent());
+
     communityAddedEvent.parameters = [];
     const communityAddressParam = new ethereum.EventParam(
         'communityAddress',
@@ -82,6 +83,7 @@ export function createCommunityRemovedEvent(
     communityAddress: string
 ): CommunityRemoved {
     const communityRemovedEvent = changetype<CommunityRemoved>(newMockEvent());
+
     communityRemovedEvent.parameters = [];
     const communityAddressParam = new ethereum.EventParam(
         'communityAddress',

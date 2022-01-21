@@ -1,35 +1,35 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { clearStore, test, assert } from 'matchstick-as/assembly/index';
+import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import {
-    handleBeneficiaryAdded,
-    handleBeneficiaryClaim,
-    handleBeneficiaryJoined,
-    handleBeneficiaryRemoved,
-} from '../src/mappings/community';
-import { handleCommunityAdded } from '../src/mappings/communityAdmin';
-import {
-    createBeneficiaryAddedEvent,
-    createBeneficiaryClaimEvent,
-    createBeneficiaryJoinedEvent,
-    createBeneficiaryRemovedEvent,
-} from './utils/beneficiary';
-import { createCommunityAddedEvent } from './utils/community';
 import {
     beneficiaryAddress,
     communityAddress,
     communityProps,
     fiveCents,
     managerAddress,
-    normalize,
+    normalize
 } from './utils/constants';
+import {
+    createBeneficiaryAddedEvent,
+    createBeneficiaryClaimEvent,
+    createBeneficiaryJoinedEvent,
+    createBeneficiaryRemovedEvent
+} from './utils/beneficiary';
+import { createCommunityAddedEvent } from './utils/community';
+import {
+    handleBeneficiaryAdded,
+    handleBeneficiaryClaim,
+    handleBeneficiaryJoined,
+    handleBeneficiaryRemoved
+} from '../src/mappings/community';
+import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 
 export {
     handleCommunityAdded,
     handleBeneficiaryAdded,
     handleBeneficiaryRemoved,
     handleBeneficiaryClaim,
-    handleBeneficiaryJoined,
+    handleBeneficiaryJoined
 };
 
 test('add beneficiary', () => {
@@ -67,7 +67,7 @@ test('add beneficiary', () => {
         'UserActivityEntity',
         beneficiaryAddedEvent1.transaction.hash.toHex(),
         'activity',
-        'added'
+        'ADDED'
     );
 
     clearStore();
@@ -80,6 +80,7 @@ test('add claim', () => {
         [managerAddress[0]],
         communityProps[0]
     );
+
     handleCommunityAdded(community);
 
     // add beneficiary
@@ -93,6 +94,7 @@ test('add claim', () => {
         beneficiaryAddress[1],
         communityAddress[0]
     );
+
     handleBeneficiaryAdded(beneficiaryAddedEvent1);
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
@@ -107,6 +109,7 @@ test('add claim', () => {
         communityProps[0].get('claimAmount'),
         communityAddress[0]
     );
+
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
     handleBeneficiaryClaim(beneficiaryClaimEvent2);
 
@@ -178,6 +181,7 @@ test('rotate claim timestamp', () => {
         [managerAddress[0]],
         communityProps[0]
     );
+
     handleCommunityAdded(community);
 
     // add beneficiary
@@ -186,6 +190,7 @@ test('rotate claim timestamp', () => {
         beneficiaryAddress[0],
         communityAddress[0]
     );
+
     handleBeneficiaryAdded(beneficiaryAddedEvent1);
 
     // add claim
@@ -195,6 +200,7 @@ test('rotate claim timestamp', () => {
         communityAddress[0],
         1640716194
     );
+
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
@@ -202,6 +208,7 @@ test('rotate claim timestamp', () => {
         communityAddress[0],
         1640716195
     );
+
     handleBeneficiaryClaim(beneficiaryClaimEvent2);
 
     // assert first rotate
@@ -224,6 +231,7 @@ test('rotate claim timestamp', () => {
         communityAddress[0],
         1640716196
     );
+
     handleBeneficiaryClaim(beneficiaryClaimEvent3);
 
     // assert second rotate
@@ -278,7 +286,7 @@ test('remove beneficiary', () => {
         'UserActivityEntity',
         beneficiaryAddedEvent1.transaction.hash.toHex(),
         'activity',
-        'added'
+        'ADDED'
     );
 
     assert.fieldEquals(
@@ -307,7 +315,7 @@ test('remove beneficiary', () => {
         'UserActivityEntity',
         beneficiaryRemovedEvent1.transaction.hash.toHex(),
         'activity',
-        'removed'
+        'REMOVED'
     );
 
     assert.fieldEquals(

@@ -1,10 +1,10 @@
 /* global changetype */
-import { Address, ethereum, BigInt, Bytes } from '@graphprotocol/graph-ts';
+import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import {
     ProposalCreated,
-    ProposalQueued,
+    ProposalQueued
 } from '../../generated/PACTDelegator/PACTDelegator';
 
 export function createProposalCreatedEvent(
@@ -19,6 +19,7 @@ export function createProposalCreatedEvent(
     description: string
 ): ProposalCreated {
     const proposalCreatedEvent = changetype<ProposalCreated>(newMockEvent());
+
     proposalCreatedEvent.parameters = [];
     const idParam = new ethereum.EventParam(
         'id',
@@ -29,6 +30,7 @@ export function createProposalCreatedEvent(
         ethereum.Value.fromAddress(Address.fromString(proposer))
     );
     const _targets: Address[] = [];
+
     for (let index = 0; index < targets.length; index++) {
         _targets.push(Address.fromString(targets[index]));
     }
@@ -37,6 +39,7 @@ export function createProposalCreatedEvent(
         ethereum.Value.fromAddressArray(_targets)
     );
     const _values: BigInt[] = [];
+
     for (let index = 0; index < values.length; index++) {
         _values.push(BigInt.fromI32(values[index]));
     }
@@ -49,6 +52,7 @@ export function createProposalCreatedEvent(
         ethereum.Value.fromStringArray(signatures)
     );
     const _calldatas: Bytes[] = [];
+
     for (let index = 0; index < calldatas.length; index++) {
         _calldatas.push(
             Bytes.fromByteArray(Bytes.fromHexString(calldatas[index]))
@@ -86,6 +90,7 @@ export function createProposalCreatedEvent(
 
 export function createProposalQueuedEvent(id: i32): ProposalQueued {
     const proposalCreatedEvent = changetype<ProposalQueued>(newMockEvent());
+
     proposalCreatedEvent.parameters = [];
     const idParam = new ethereum.EventParam(
         'id',

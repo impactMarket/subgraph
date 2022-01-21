@@ -1,9 +1,14 @@
 // .eslintrc.js
 module.exports = {
-    extends: ['universe/node', 'prettier', 'prettier/@typescript-eslint'],
     env: {
-        mocha: true,
-        node: true,
         es2020: true,
+        mocha: true,
+        node: true
     },
+    extends: ['impact-market/node', 'prettier'],
+    rules: {
+        'max-params': ['error', 9],
+        'no-underscore-dangle': 'off',
+        'prefer-destructuring': 'off'
+    }
 };

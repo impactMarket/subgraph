@@ -1,12 +1,12 @@
 /* global changetype */
-import { Address, ethereum, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import {
     BeneficiaryAdded,
     BeneficiaryClaim,
     BeneficiaryJoined,
-    BeneficiaryRemoved,
+    BeneficiaryRemoved
 } from '../../generated/templates/Community/Community';
 
 const addTimestamp: i32 = 1640716190;
@@ -18,6 +18,7 @@ export function createBeneficiaryAddedEvent(
     fromCommunityAddress: string
 ): BeneficiaryAdded {
     const beneficiaryAddedEvent = changetype<BeneficiaryAdded>(newMockEvent());
+
     beneficiaryAddedEvent.parameters = [];
     beneficiaryAddedEvent.address = Address.fromString(fromCommunityAddress);
     beneficiaryAddedEvent.block.timestamp = BigInt.fromI32(addTimestamp);
@@ -44,6 +45,7 @@ export function createBeneficiaryRemovedEvent(
     const beneficiaryRemovedEvent = changetype<BeneficiaryRemoved>(
         newMockEvent()
     );
+
     beneficiaryRemovedEvent.parameters = [];
     beneficiaryRemovedEvent.address = Address.fromString(fromCommunityAddress);
     beneficiaryRemovedEvent.block.timestamp = BigInt.fromI32(addTimestamp);
@@ -69,6 +71,7 @@ export function createBeneficiaryJoinedEvent(
     const beneficiaryJoinedEvent = changetype<BeneficiaryJoined>(
         newMockEvent()
     );
+
     beneficiaryJoinedEvent.parameters = [];
     beneficiaryJoinedEvent.address = Address.fromString(communityAddress);
     beneficiaryJoinedEvent.block.timestamp = BigInt.fromI32(addTimestamp);
@@ -89,6 +92,7 @@ export function createBeneficiaryClaimEvent(
     timestamp: i32 = 1640716193
 ): BeneficiaryClaim {
     const beneficiaryClaimEvent = changetype<BeneficiaryClaim>(newMockEvent());
+
     beneficiaryClaimEvent.parameters = [];
     beneficiaryClaimEvent.address = Address.fromString(fromCommunityAddress);
     // timestamp++;

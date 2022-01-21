@@ -1,20 +1,20 @@
-import { CommunityEntity } from '../../../generated/schema';
 import {
+    CommunityEdited,
     BeneficiaryAdded as OldBeneficiaryAdded,
     BeneficiaryClaim as OldBeneficiaryClaim,
     BeneficiaryRemoved as OldBeneficiaryRemoved,
-    CommunityEdited,
     ManagerAdded as OldManagerAdded,
-    ManagerRemoved as OldManagerRemoved,
+    ManagerRemoved as OldManagerRemoved
 } from '../../../generated/templates/OldCommunity/OldCommunity';
+import { CommunityEntity } from '../../../generated/schema';
 import {
     genericHandleBeneficiaryAdded,
     genericHandleBeneficiaryClaim,
-    genericHandleBeneficiaryRemoved,
+    genericHandleBeneficiaryRemoved
 } from '../../common/beneficiary';
 import {
     genericHandleManagerAdded,
-    genericHandleManagerRemoved,
+    genericHandleManagerRemoved
 } from '../../common/manager';
 import { normalize } from '../../utils';
 
@@ -71,6 +71,7 @@ export function handleOldBeneficiaryClaim(event: OldBeneficiaryClaim): void {
 
 export function handleCommunityEdited(event: CommunityEdited): void {
     const community = CommunityEntity.load(event.address.toHex());
+
     if (community) {
         community.claimAmount = normalize(event.params._claimAmount.toString());
         community.maxClaim = normalize(event.params._maxClaim.toString());

@@ -6,6 +6,7 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
     let ubiDaily = UBIDailyEntity.load(
         (_blockTimestamp.toI32() / 86400).toString()
     );
+
     if (!ubiDaily) {
         ubiDaily = new UBIDailyEntity(
             (_blockTimestamp.toI32() / 86400).toString()
@@ -16,5 +17,6 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
         ubiDaily.contributed = BigDecimal.fromString('0');
         ubiDaily.claimed = BigDecimal.fromString('0');
     }
+
     return ubiDaily;
 }

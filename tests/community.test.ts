@@ -1,19 +1,19 @@
-import { clearStore, test, assert } from 'matchstick-as/assembly/index';
+import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import {
-    handleCommunityAdded,
-    handleCommunityRemoved,
-} from '../src/mappings/communityAdmin';
-import {
-    createCommunityAddedEvent,
-    createCommunityRemovedEvent,
-} from './utils/community';
 import {
     communityAddress,
     communityProps,
     managerAddress,
-    normalize,
+    normalize
 } from './utils/constants';
+import {
+    createCommunityAddedEvent,
+    createCommunityRemovedEvent
+} from './utils/community';
+import {
+    handleCommunityAdded,
+    handleCommunityRemoved
+} from '../src/mappings/communityAdmin';
 
 export { handleCommunityAdded, handleCommunityRemoved };
 
@@ -23,6 +23,7 @@ test('create community', () => {
         [managerAddress[0]],
         communityProps[0]
     );
+
     handleCommunityAdded(community);
 
     assert.fieldEquals(
@@ -48,9 +49,11 @@ test('remove community', () => {
         [managerAddress[0]],
         communityProps[0]
     );
+
     handleCommunityAdded(community);
 
     const communityRemove = createCommunityRemovedEvent(communityAddress[0]);
+
     handleCommunityRemoved(communityRemove);
 
     assert.fieldEquals('UBIEntity', '0', 'communities', '0');
