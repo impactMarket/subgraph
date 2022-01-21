@@ -74,6 +74,8 @@ type BeneficiaryEntity @entity {
   state: Int!
   lastClaimAt: Int!
   preLastClaimAt: Int!
+  claims: Int!
+  claimed: BigDecimal!
   activity: [UserActivityEntity!]!
 }
 
