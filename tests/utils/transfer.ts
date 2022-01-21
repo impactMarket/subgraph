@@ -1,5 +1,5 @@
 /* global changetype */
-import { Address, ethereum, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import { Transfer } from '../../generated/CeloDollar/CeloDollar';
@@ -10,6 +10,7 @@ export function createTransferEvent(
     amount: string
 ): Transfer {
     const transferEvent = changetype<Transfer>(newMockEvent());
+
     transferEvent.parameters = [];
     const fromParam = new ethereum.EventParam(
         'from',

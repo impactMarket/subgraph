@@ -1,20 +1,20 @@
-import { clearStore, test, assert } from 'matchstick-as/assembly/index';
+import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import {
-    handleManagerAdded,
-    handleManagerRemoved,
-} from '../src/mappings/community';
-import { handleCommunityAdded } from '../src/mappings/communityAdmin';
-import { createCommunityAddedEvent } from './utils/community';
 import {
     communityAddress,
     communityProps,
-    managerAddress,
+    managerAddress
 } from './utils/constants';
+import { createCommunityAddedEvent } from './utils/community';
 import {
     createManagerAddedEvent,
-    createManagerRemovedEvent,
+    createManagerRemovedEvent
 } from './utils/manager';
+import { handleCommunityAdded } from '../src/mappings/communityAdmin';
+import {
+    handleManagerAdded,
+    handleManagerRemoved
+} from '../src/mappings/community';
 
 export { handleCommunityAdded, handleManagerAdded };
 

@@ -10,7 +10,7 @@
         "remove-local": "graph remove --node http://localhost:8020/ impactmarket/subgraph",
         "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 impactmarket/subgraph",
         "prettier": "prettier --write \"./src/**/*.ts\"",
-        "eslint": "eslint --fix \"./src/**/*.ts\"",
+        "eslint": "eslint --fix \"./{src,tests}/**/*.ts\"",
         "prepare:mainnet:subgraph": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
         "prepare:mainnet:addresses": "mustache config/mainnet.json src/common/addresses.template > src/common/addresses.ts",
         "prepare:mainnet": "yarn prepare:mainnet:subgraph && yarn prepare:mainnet:addresses",
@@ -19,18 +19,16 @@
         "prepare:alfajores": "yarn prepare:alfajores:subgraph && yarn prepare:alfajores:addresses"
     },
     "dependencies": {
-        "@graphprotocol/graph-cli": "0.25.1",
+        "@graphprotocol/graph-cli": "0.26.0",
         "@graphprotocol/graph-ts": "0.24.1",
-        "matchstick-as": "0.2.2"
+        "matchstick-as": "0.2.3"
     },
     "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "3.4.0",
-        "@typescript-eslint/parser": "3.4.0",
-        "eslint": "7.3.1",
-        "eslint-config-prettier": "6.11.0",
-        "eslint-config-universe": "4.0.0",
+        "@babel/core": "^7.16.10",
+        "eslint": "^7.3.1",
+        "eslint-config-impact-market": "impactMarket/eslint-config-impact-market",
         "mustache": "4.2.0",
-        "prettier": "2.4.1",
-        "typescript": "4.5.2"
+        "prettier": "^2.4.1",
+        "typescript": "~4.1.6"
     }
 }

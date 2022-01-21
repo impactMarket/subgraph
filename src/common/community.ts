@@ -3,10 +3,10 @@ import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import {
     CommunityDailyEntity,
     CommunityEntity,
-    UBIEntity,
+    UBIEntity
 } from '../../generated/schema';
-import { normalize } from '../utils';
 import { loadOrCreateDailyUbi } from './ubi';
+import { normalize } from '../utils';
 
 export function loadOrCreateCommunityDaily(
     _community: Address,
@@ -16,6 +16,7 @@ export function loadOrCreateCommunityDaily(
     const dayId = _blockTimestamp.toI32() / 86400;
     const communityDailyId = `${_community.toHex()}-${dayId}`;
     let communityDaily = CommunityDailyEntity.load(communityDailyId);
+
     if (!communityDaily) {
         communityDaily = new CommunityDailyEntity(communityDailyId);
         communityDaily.community = _community.toHex();
@@ -25,6 +26,7 @@ export function loadOrCreateCommunityDaily(
         communityDaily.contributed = BigDecimal.fromString('0');
         communityDaily.claimed = BigDecimal.fromString('0');
     }
+
     return communityDaily;
 }
 
@@ -39,6 +41,7 @@ export function generiHandleCommunityAdded(
 ): void {
     const communityId = _communityAddress.toHex();
     let community = CommunityEntity.load(communityId);
+
     if (!community) {
         community = new CommunityEntity(communityId);
     }
@@ -58,20 +61,24 @@ export function generiHandleCommunityAdded(
     community.save();
     // create ubi if it doesn't exist
     let ubi = UBIEntity.load('0');
+
     if (!ubi) {
         ubi = new UBIEntity('0');
-        ubi.communities = 1; // one already!
+        // one already!
+        ubi.communities = 1;
         ubi.beneficiaries = 0;
         ubi.managers = 0;
         ubi.contributed = BigDecimal.fromString('0');
         ubi.claimed = BigDecimal.fromString('0');
         ubi.save();
     } else {
-        ubi.communities += 1; // one already!
+        // one already!
+        ubi.communities += 1;
         ubi.save();
     }
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+
     ubiDaily.communities += 1;
     ubiDaily.save();
 }
@@ -82,6 +89,7 @@ export function generiHandleCommunityRemoved(
 ): void {
     const communityId = _communityAddress.toHex();
     let community = CommunityEntity.load(communityId);
+
     if (!community) {
         community = new CommunityEntity(communityId);
     }
@@ -89,11 +97,13 @@ export function generiHandleCommunityRemoved(
     community.save();
     // update ubi
     const ubi = UBIEntity.load('0')!;
+
     ubi.communities -= 1;
     ubi.beneficiaries -= community.beneficiaries;
     ubi.save();
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+
     ubiDaily.communities -= 1;
     ubiDaily.beneficiaries -= community.beneficiaries;
     ubiDaily.save();
