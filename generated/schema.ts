@@ -97,8 +97,9 @@ export class CommunityEntity extends Entity {
     this.set("removedBeneficiaries", Value.fromI32(0));
     this.set("managers", Value.fromI32(0));
     this.set("removedManagers", Value.fromI32(0));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributors", Value.fromI32(0));
   }
 
   save(): void {
@@ -235,6 +236,15 @@ export class CommunityEntity extends Entity {
     this.set("removedManagers", Value.fromI32(value));
   }
 
+  get claimed(): BigDecimal {
+    let value = this.get("claimed");
+    return value!.toBigDecimal();
+  }
+
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
+  }
+
   get contributed(): BigDecimal {
     let value = this.get("contributed");
     return value!.toBigDecimal();
@@ -244,13 +254,13 @@ export class CommunityEntity extends Entity {
     this.set("contributed", Value.fromBigDecimal(value));
   }
 
-  get claimed(): BigDecimal {
-    let value = this.get("claimed");
-    return value!.toBigDecimal();
+  get contributors(): i32 {
+    let value = this.get("contributors");
+    return value!.toI32();
   }
 
-  set claimed(value: BigDecimal) {
-    this.set("claimed", Value.fromBigDecimal(value));
+  set contributors(value: i32) {
+    this.set("contributors", Value.fromI32(value));
   }
 }
 
@@ -263,8 +273,9 @@ export class CommunityDailyEntity extends Entity {
     this.set("dayId", Value.fromI32(0));
     this.set("beneficiaries", Value.fromI32(0));
     this.set("managers", Value.fromI32(0));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributors", Value.fromI32(0));
   }
 
   save(): void {
@@ -331,6 +342,15 @@ export class CommunityDailyEntity extends Entity {
     this.set("managers", Value.fromI32(value));
   }
 
+  get claimed(): BigDecimal {
+    let value = this.get("claimed");
+    return value!.toBigDecimal();
+  }
+
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
+  }
+
   get contributed(): BigDecimal {
     let value = this.get("contributed");
     return value!.toBigDecimal();
@@ -340,13 +360,13 @@ export class CommunityDailyEntity extends Entity {
     this.set("contributed", Value.fromBigDecimal(value));
   }
 
-  get claimed(): BigDecimal {
-    let value = this.get("claimed");
-    return value!.toBigDecimal();
+  get contributors(): i32 {
+    let value = this.get("contributors");
+    return value!.toI32();
   }
 
-  set claimed(value: BigDecimal) {
-    this.set("claimed", Value.fromBigDecimal(value));
+  set contributors(value: i32) {
+    this.set("contributors", Value.fromI32(value));
   }
 }
 
@@ -358,8 +378,9 @@ export class UBIEntity extends Entity {
     this.set("communities", Value.fromI32(0));
     this.set("beneficiaries", Value.fromI32(0));
     this.set("managers", Value.fromI32(0));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributors", Value.fromI32(0));
   }
 
   save(): void {
@@ -415,6 +436,15 @@ export class UBIEntity extends Entity {
     this.set("managers", Value.fromI32(value));
   }
 
+  get claimed(): BigDecimal {
+    let value = this.get("claimed");
+    return value!.toBigDecimal();
+  }
+
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
+  }
+
   get contributed(): BigDecimal {
     let value = this.get("contributed");
     return value!.toBigDecimal();
@@ -424,13 +454,13 @@ export class UBIEntity extends Entity {
     this.set("contributed", Value.fromBigDecimal(value));
   }
 
-  get claimed(): BigDecimal {
-    let value = this.get("claimed");
-    return value!.toBigDecimal();
+  get contributors(): i32 {
+    let value = this.get("contributors");
+    return value!.toI32();
   }
 
-  set claimed(value: BigDecimal) {
-    this.set("claimed", Value.fromBigDecimal(value));
+  set contributors(value: i32) {
+    this.set("contributors", Value.fromI32(value));
   }
 }
 
@@ -442,8 +472,9 @@ export class UBIDailyEntity extends Entity {
     this.set("communities", Value.fromI32(0));
     this.set("beneficiaries", Value.fromI32(0));
     this.set("managers", Value.fromI32(0));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributors", Value.fromI32(0));
   }
 
   save(): void {
@@ -499,6 +530,15 @@ export class UBIDailyEntity extends Entity {
     this.set("managers", Value.fromI32(value));
   }
 
+  get claimed(): BigDecimal {
+    let value = this.get("claimed");
+    return value!.toBigDecimal();
+  }
+
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
+  }
+
   get contributed(): BigDecimal {
     let value = this.get("contributed");
     return value!.toBigDecimal();
@@ -508,13 +548,13 @@ export class UBIDailyEntity extends Entity {
     this.set("contributed", Value.fromBigDecimal(value));
   }
 
-  get claimed(): BigDecimal {
-    let value = this.get("claimed");
-    return value!.toBigDecimal();
+  get contributors(): i32 {
+    let value = this.get("contributors");
+    return value!.toI32();
   }
 
-  set claimed(value: BigDecimal) {
-    this.set("claimed", Value.fromBigDecimal(value));
+  set contributors(value: i32) {
+    this.set("contributors", Value.fromI32(value));
   }
 }
 
@@ -791,5 +831,150 @@ export class UserActivityEntity extends Entity {
 
   set activity(value: string) {
     this.set("activity", Value.fromString(value));
+  }
+}
+
+export class ContributorContributionsEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("to", Value.fromBytes(Bytes.empty()));
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributions", Value.fromI32(0));
+    this.set("lastContribution", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save ContributorContributionsEntity entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ContributorContributionsEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ContributorContributionsEntity", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ContributorContributionsEntity | null {
+    return changetype<ContributorContributionsEntity | null>(
+      store.get("ContributorContributionsEntity", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get to(): Bytes {
+    let value = this.get("to");
+    return value!.toBytes();
+  }
+
+  set to(value: Bytes) {
+    this.set("to", Value.fromBytes(value));
+  }
+
+  get contributed(): BigDecimal {
+    let value = this.get("contributed");
+    return value!.toBigDecimal();
+  }
+
+  set contributed(value: BigDecimal) {
+    this.set("contributed", Value.fromBigDecimal(value));
+  }
+
+  get contributions(): i32 {
+    let value = this.get("contributions");
+    return value!.toI32();
+  }
+
+  set contributions(value: i32) {
+    this.set("contributions", Value.fromI32(value));
+  }
+
+  get lastContribution(): i32 {
+    let value = this.get("lastContribution");
+    return value!.toI32();
+  }
+
+  set lastContribution(value: i32) {
+    this.set("lastContribution", Value.fromI32(value));
+  }
+}
+
+export class ContributorEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("contributions", Value.fromI32(0));
+    this.set("lastContribution", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ContributorEntity entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ContributorEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ContributorEntity", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ContributorEntity | null {
+    return changetype<ContributorEntity | null>(
+      store.get("ContributorEntity", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get contributed(): BigDecimal {
+    let value = this.get("contributed");
+    return value!.toBigDecimal();
+  }
+
+  set contributed(value: BigDecimal) {
+    this.set("contributed", Value.fromBigDecimal(value));
+  }
+
+  get contributions(): i32 {
+    let value = this.get("contributions");
+    return value!.toI32();
+  }
+
+  set contributions(value: i32) {
+    this.set("contributions", Value.fromI32(value));
+  }
+
+  get lastContribution(): i32 {
+    let value = this.get("lastContribution");
+    return value!.toI32();
+  }
+
+  set lastContribution(value: i32) {
+    this.set("lastContribution", Value.fromI32(value));
   }
 }

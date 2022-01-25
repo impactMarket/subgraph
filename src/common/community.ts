@@ -23,8 +23,9 @@ export function loadOrCreateCommunityDaily(
         communityDaily.dayId = dayId;
         communityDaily.beneficiaries = 0;
         communityDaily.managers = 0;
-        communityDaily.contributed = BigDecimal.fromString('0');
         communityDaily.claimed = BigDecimal.fromString('0');
+        communityDaily.contributed = BigDecimal.fromString('0');
+        communityDaily.contributors = 0;
     }
 
     return communityDaily;
@@ -56,8 +57,9 @@ export function generiHandleCommunityAdded(
     community.removedBeneficiaries = 0;
     community.managers = 0;
     community.removedManagers = 0;
-    community.contributed = BigDecimal.fromString('0');
     community.claimed = BigDecimal.fromString('0');
+    community.contributed = BigDecimal.fromString('0');
+    community.contributors = 0;
     community.save();
     // create ubi if it doesn't exist
     let ubi = UBIEntity.load('0');
@@ -68,8 +70,9 @@ export function generiHandleCommunityAdded(
         ubi.communities = 1;
         ubi.beneficiaries = 0;
         ubi.managers = 0;
-        ubi.contributed = BigDecimal.fromString('0');
         ubi.claimed = BigDecimal.fromString('0');
+        ubi.contributed = BigDecimal.fromString('0');
+        ubi.contributors = 0;
         ubi.save();
     } else {
         // one already!

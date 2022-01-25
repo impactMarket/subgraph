@@ -67,8 +67,10 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 communityDaily.beneficiaries =
                     previousCommunityDaily.beneficiaries;
                 communityDaily.managers = previousCommunityDaily.managers;
-                communityDaily.contributed = previousCommunityDaily.contributed;
                 communityDaily.claimed = previousCommunityDaily.claimed;
+                communityDaily.contributed = previousCommunityDaily.contributed;
+                communityDaily.contributors =
+                    previousCommunityDaily.contributors;
                 communityDaily.save();
                 store.remove('CommunityDailyEntity', previousCommunityDailyId);
             }
@@ -85,8 +87,9 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.removedBeneficiaries = previousCommunity.removedBeneficiaries;
         community.managers = 0;
         community.removedManagers = 0;
-        community.contributed = previousCommunity.contributed;
         community.claimed = previousCommunity.claimed;
+        community.contributed = previousCommunity.contributed;
+        community.contributors = previousCommunity.contributors;
         community.previous = event.params.previousCommunityAddress;
         // create community entry
         Community.create(event.params.communityAddress);
