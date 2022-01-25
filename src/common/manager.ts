@@ -25,7 +25,7 @@ export function genericHandleManagerAdded(
                 _community,
                 _blockTimestamp
             );
-            let isNewManager = true;
+            let isManagerMigrated = false;
             const managerId = _manager.toHex();
             let manager = ManagerEntity.load(managerId);
 
@@ -51,7 +51,7 @@ export function genericHandleManagerAdded(
                     activity.community = _community.toHex();
                     activity.save();
                 }
-                isNewManager = false;
+                isManagerMigrated = true;
             } else if (
                 Address.fromString(manager.community).notEqual(_community)
             ) {
@@ -72,8 +72,14 @@ export function genericHandleManagerAdded(
                 manager.added = 0;
                 manager.removed = 0;
                 manager.activity = [];
+            } else if (
+                Address.fromString(manager.community).equals(_community)
+            ) {
+                // manager rejoining same community from where has left
+                manager.state = 0;
+                community.removedManagers -= 1;
             }
-            if (isNewManager) {
+            if (!isManagerMigrated) {
                 // update ubi
                 const ubi = UBIEntity.load('0')!;
 

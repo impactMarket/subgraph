@@ -115,4 +115,5 @@ test('remove manager', () => {
     clearStore();
 });
 
+// TODO: remove and readd manager
 // TODO: test manager on migrated community
