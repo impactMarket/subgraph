@@ -128,6 +128,12 @@ test('add claim', () => {
     );
     assert.fieldEquals(
         'BeneficiaryEntity',
+        beneficiaryAddress[1],
+        'claims',
+        '1'
+    );
+    assert.fieldEquals(
+        'BeneficiaryEntity',
         beneficiaryAddress[0],
         'preLastClaimAt',
         '0'
@@ -246,6 +252,13 @@ test('rotate claim timestamp', () => {
         beneficiaryAddress[0],
         'preLastClaimAt',
         '1640716195'
+    );
+
+    assert.fieldEquals(
+        'BeneficiaryEntity',
+        beneficiaryAddress[0],
+        'claims',
+        '3'
     );
 
     clearStore();
