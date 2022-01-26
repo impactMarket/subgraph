@@ -12,7 +12,7 @@ import { createCommunityAddedEvent } from './utils/community';
 import { createTransferEvent } from './utils/transfer';
 import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 import { handleTransferCeloDollar } from '../src/mappings/transfer';
-import { normalize } from '../src/utils';
+import { normalize } from '../src/utils/index';
 import { treasuryAddress } from '../src/common/addresses';
 
 export { handleTransferCeloDollar };
