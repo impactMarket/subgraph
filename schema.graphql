@@ -20,8 +20,10 @@ type CommunityEntity @entity {
   removedBeneficiaries: Int!
   managers: Int!
   removedManagers: Int!
-  contributed: BigDecimal!
   claimed: BigDecimal!
+  contributed: BigDecimal!
+  contributors: Int!
+  contributions: [ContributorContributionsEntity!]!
 }
 
 type CommunityDailyEntity @entity {
@@ -30,8 +32,9 @@ type CommunityDailyEntity @entity {
   dayId: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigDecimal!
   claimed: BigDecimal!
+  contributed: BigDecimal!
+  contributors: Int!
 }
 
 type UBIEntity @entity {
@@ -39,8 +42,9 @@ type UBIEntity @entity {
   communities: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigDecimal!
   claimed: BigDecimal!
+  contributed: BigDecimal!
+  contributors: Int!
 }
 
 type UBIDailyEntity @entity {
@@ -48,8 +52,9 @@ type UBIDailyEntity @entity {
   communities: Int!
   beneficiaries: Int!
   managers: Int!
-  contributed: BigDecimal!
   claimed: BigDecimal!
+  contributed: BigDecimal!
+  contributors: Int!
 }
 
 type ManagerEntity @entity {
@@ -85,4 +90,19 @@ type UserActivityEntity @entity {
   community: CommunityEntity!
   timestamp: Int!
   activity: ActivityCode!
+}
+
+type ContributorContributionsEntity @entity {
+  id: ID! # contributor address + to address
+  to: Bytes! # community address or treasury address
+  contributed: BigDecimal!
+  contributions: Int!
+  lastContribution: Int! # day id
+}
+
+type ContributorEntity @entity {
+  id: ID! # address
+  contributed: BigDecimal!
+  contributions: Int!
+  lastContribution: Int! # day id
 }
