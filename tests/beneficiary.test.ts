@@ -134,6 +134,14 @@ test('add claim', () => {
     );
     assert.fieldEquals(
         'BeneficiaryEntity',
+        beneficiaryAddress[1],
+        'claimed',
+        normalize(
+            BigInt.fromString(communityProps[0].get('claimAmount')).toString()
+        ).toString()
+    );
+    assert.fieldEquals(
+        'BeneficiaryEntity',
         beneficiaryAddress[0],
         'preLastClaimAt',
         '0'
@@ -259,6 +267,16 @@ test('rotate claim timestamp', () => {
         beneficiaryAddress[0],
         'claims',
         '3'
+    );
+    assert.fieldEquals(
+        'BeneficiaryEntity',
+        beneficiaryAddress[0],
+        'claimed',
+        normalize(
+            BigInt.fromString(communityProps[0].get('claimAmount'))
+                .times(BigInt.fromI32(3))
+                .toString()
+        ).toString()
     );
 
     clearStore();
