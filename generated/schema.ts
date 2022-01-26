@@ -100,6 +100,7 @@ export class CommunityEntity extends Entity {
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
+    this.set("contributions", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
@@ -261,6 +262,15 @@ export class CommunityEntity extends Entity {
 
   set contributors(value: i32) {
     this.set("contributors", Value.fromI32(value));
+  }
+
+  get contributions(): Array<string> {
+    let value = this.get("contributions");
+    return value!.toStringArray();
+  }
+
+  set contributions(value: Array<string>) {
+    this.set("contributions", Value.fromStringArray(value));
   }
 }
 

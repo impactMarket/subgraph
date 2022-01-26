@@ -6,7 +6,11 @@ import {
     CommunityMigrated,
     CommunityRemoved
 } from '../../generated/CommunityAdmin/CommunityAdmin';
-import { CommunityDailyEntity, CommunityEntity } from '../../generated/schema';
+import {
+    CommunityDailyEntity,
+    CommunityEntity,
+    ContributorContributionsEntity
+} from '../../generated/schema';
 import {
     generiHandleCommunityAdded,
     generiHandleCommunityRemoved
@@ -75,6 +79,33 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 store.remove('CommunityDailyEntity', previousCommunityDailyId);
             }
             dayId++;
+        }
+        for (let index = 0; index < community.contributions.length; index++) {
+            const pastContributionId = community.contributions[index];
+            const pastContributorContributions =
+                ContributorContributionsEntity.load(pastContributionId)!;
+            const contributorContributionsId = `${pastContributionId.slice(
+                0,
+                pastContributionId.indexOf('-')
+            )}-${event.params.communityAddress.toHex()}`;
+
+            const contributorContributions = new ContributorContributionsEntity(
+                contributorContributionsId
+            );
+
+            contributorContributions.to = pastContributorContributions.to;
+            contributorContributions.contributed =
+                pastContributorContributions.contributed;
+            contributorContributions.contributions =
+                pastContributorContributions.contributions;
+            contributorContributions.lastContribution =
+                pastContributorContributions.lastContribution;
+            contributorContributions.save();
+            const contributions = community.contributions;
+
+            contributions.push(contributorContributionsId);
+            community.contributions = contributions;
+            store.remove('CommunityDailyEntity', pastContributionId);
         }
         community.startDayId = previousCommunity.startDayId;
         community.state = previousCommunity.state;

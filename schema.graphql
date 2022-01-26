@@ -23,6 +23,7 @@ type CommunityEntity @entity {
   claimed: BigDecimal!
   contributed: BigDecimal!
   contributors: Int!
+  contributions: [ContributorContributionsEntity!]!
 }
 
 type CommunityDailyEntity @entity {

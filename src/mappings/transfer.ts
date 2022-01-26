@@ -28,8 +28,8 @@ function updateContributorHelper(
 
     if (!contributor) {
         contributor = new ContributorEntity(event.params.from.toHex());
-        contributor.contributed = normalizedAmount;
-        contributor.contributions = 1;
+        contributor.contributed = BigDecimal.fromString('0');
+        contributor.contributions = 0;
         contributor.lastContribution = dayId;
         // update ubi data
         ubi.contributors += 1;
@@ -69,14 +69,18 @@ function updateContributorContributionsHelper(
             contributorContributionsId
         );
         contributorContributions.to = event.params.to;
-        contributorContributions.contributed = normalizedAmount;
-        contributorContributions.contributions = 1;
+        contributorContributions.contributed = BigDecimal.fromString('0');
+        contributorContributions.contributions = 0;
         contributorContributions.lastContribution = dayId;
         // update ubi data
         ubi.contributors += 1;
         ubiDaily.contributors += 1;
         if (community) {
             community.contributors += 1;
+            const contributions = community.contributions;
+
+            contributions.push(contributorContributionsId);
+            community.contributions = contributions;
         }
         if (communityDaily) {
             communityDaily.contributors += 1;

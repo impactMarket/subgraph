@@ -181,3 +181,80 @@ test('contribute cusd to treasury and community', () => {
 
     clearStore();
 });
+
+test('contribute cusd to community and update contributor entities', () => {
+    const community = createCommunityAddedEvent(
+        communityAddress[0],
+        [managerAddress[0]],
+        communityProps[0]
+    );
+
+    handleCommunityAdded(community);
+
+    const transferEvent1 = createTransferEvent(
+        userAddress[0],
+        communityAddress[0],
+        fiveDollars.toString()
+    );
+
+    const transferEvent2 = createTransferEvent(
+        userAddress[1],
+        communityAddress[0],
+        fiveDollars.toString()
+    );
+
+    handleTransferCeloDollar(transferEvent1);
+    handleTransferCeloDollar(transferEvent2);
+
+    assert.fieldEquals(
+        'ContributorEntity',
+        userAddress[0],
+        'contributed',
+        normalize(fiveDollars.toString()).toString()
+    );
+
+    assert.fieldEquals(
+        'ContributorEntity',
+        userAddress[0],
+        'contributions',
+        '1'
+    );
+
+    const transferEvent3 = createTransferEvent(
+        userAddress[1],
+        communityAddress[0],
+        fiveDollars.toString()
+    );
+
+    handleTransferCeloDollar(transferEvent3);
+
+    assert.fieldEquals(
+        'ContributorEntity',
+        userAddress[1],
+        'contributed',
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
+    );
+
+    assert.fieldEquals(
+        'ContributorEntity',
+        userAddress[1],
+        'contributions',
+        '2'
+    );
+
+    assert.fieldEquals(
+        'ContributorContributionsEntity',
+        `${userAddress[1]}-${communityAddress[0]}`,
+        'contributed',
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
+    );
+
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[0],
+        'contributions',
+        `[${userAddress[0]}-${communityAddress[0]}, ${userAddress[1]}-${communityAddress[0]}]`
+    );
+
+    clearStore();
+});
