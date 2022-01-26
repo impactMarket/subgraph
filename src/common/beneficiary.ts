@@ -1,4 +1,4 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 import {
     BeneficiaryEntity,
@@ -35,6 +35,8 @@ export function genericHandleBeneficiaryAdded(
             beneficiary.state = 0;
             beneficiary.lastClaimAt = 0;
             beneficiary.preLastClaimAt = 0;
+            beneficiary.claims = 0;
+            beneficiary.claimed = BigDecimal.zero();
             beneficiary.activity = [];
         } else if (
             beneficiary &&
@@ -48,6 +50,8 @@ export function genericHandleBeneficiaryAdded(
             previousBeneficiary.state = beneficiary.state;
             previousBeneficiary.lastClaimAt = beneficiary.lastClaimAt;
             previousBeneficiary.preLastClaimAt = beneficiary.preLastClaimAt;
+            previousBeneficiary.claims = beneficiary.claims;
+            previousBeneficiary.claimed = beneficiary.claimed;
             previousBeneficiary.activity = beneficiary.activity;
             previousBeneficiary.save();
             //
@@ -55,6 +59,8 @@ export function genericHandleBeneficiaryAdded(
             beneficiary.state = 0;
             beneficiary.lastClaimAt = 0;
             beneficiary.preLastClaimAt = 0;
+            beneficiary.claims = 0;
+            beneficiary.claimed = BigDecimal.zero();
             beneficiary.activity = [];
         } else if (
             beneficiary &&
@@ -210,6 +216,8 @@ export function genericHandleBeneficiaryClaim(
             // update beneficiary
             beneficiary.preLastClaimAt = beneficiary.lastClaimAt;
             beneficiary.lastClaimAt = _blockTimestamp.toI32();
+            beneficiary.claims += 1;
+            beneficiary.claimed = beneficiary.claimed.plus(normalizedAmount);
             beneficiary.save();
             // update community
             community.claimed = community.claimed.plus(normalizedAmount);

@@ -672,6 +672,8 @@ export class BeneficiaryEntity extends Entity {
     this.set("state", Value.fromI32(0));
     this.set("lastClaimAt", Value.fromI32(0));
     this.set("preLastClaimAt", Value.fromI32(0));
+    this.set("claims", Value.fromI32(0));
+    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("activity", Value.fromStringArray(new Array(0)));
   }
 
@@ -746,6 +748,24 @@ export class BeneficiaryEntity extends Entity {
 
   set preLastClaimAt(value: i32) {
     this.set("preLastClaimAt", Value.fromI32(value));
+  }
+
+  get claims(): i32 {
+    let value = this.get("claims");
+    return value!.toI32();
+  }
+
+  set claims(value: i32) {
+    this.set("claims", Value.fromI32(value));
+  }
+
+  get claimed(): BigDecimal {
+    let value = this.get("claimed");
+    return value!.toBigDecimal();
+  }
+
+  set claimed(value: BigDecimal) {
+    this.set("claimed", Value.fromBigDecimal(value));
   }
 
   get activity(): Array<string> {
