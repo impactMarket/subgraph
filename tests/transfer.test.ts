@@ -362,3 +362,29 @@ test('contribute cusd to community and update contributor entities, many communi
 
     clearStore();
 });
+
+// User Transactions
+
+test('should count first time user transactions', () => {
+    // TODO:
+});
+
+test('should count multiple user transactions, same day', () => {
+    // TODO:
+});
+
+test('should count multiple user transactions, different days', () => {
+    // TODO:
+});
+
+test('should not count user transactions if none parties are a beneficiary', () => {
+    // TODO:
+});
+
+test('should not count user transactions if from forbiden address', () => {
+    // TODO:
+});
+
+test('should not count user transactions if from community', () => {
+    // TODO:
+});
