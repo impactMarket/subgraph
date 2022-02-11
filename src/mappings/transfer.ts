@@ -177,7 +177,7 @@ export function handleTransferCeloDollar(event: Transfer): void {
         (BeneficiaryEntity.load(event.params.from.toHex()) ||
             BeneficiaryEntity.load(event.params.to.toHex())) &&
         // ignore AttestationProxy
-        event.params.to.toHex() !== attestationProxyAddress &&
+        event.params.to.notEqual(Address.fromString(attestationProxyAddress)) &&
         // yeah, people without knowing make transactions to themselves! 🕊️
         event.params.from.notEqual(event.params.to) &&
         // any values >0.0009cUSD (999999999999999) [eg. cUSD fees]
