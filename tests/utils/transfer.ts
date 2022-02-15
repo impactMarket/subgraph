@@ -7,11 +7,13 @@ import { Transfer } from '../../generated/CeloDollar/CeloDollar';
 export function createTransferEvent(
     from: string,
     to: string,
-    amount: string
+    amount: string,
+    timestamp: i32 = 1640716193
 ): Transfer {
     const transferEvent = changetype<Transfer>(newMockEvent());
 
     transferEvent.parameters = [];
+    transferEvent.block.timestamp = BigInt.fromI32(timestamp);
     const fromParam = new ethereum.EventParam(
         'from',
         ethereum.Value.fromAddress(Address.fromString(from))

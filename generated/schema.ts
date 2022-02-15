@@ -286,6 +286,9 @@ export class CommunityDailyEntity extends Entity {
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
+    this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("transactions", Value.fromI32(0));
+    this.set("reach", Value.fromI32(0));
   }
 
   save(): void {
@@ -378,6 +381,33 @@ export class CommunityDailyEntity extends Entity {
   set contributors(value: i32) {
     this.set("contributors", Value.fromI32(value));
   }
+
+  get volume(): BigDecimal {
+    let value = this.get("volume");
+    return value!.toBigDecimal();
+  }
+
+  set volume(value: BigDecimal) {
+    this.set("volume", Value.fromBigDecimal(value));
+  }
+
+  get transactions(): i32 {
+    let value = this.get("transactions");
+    return value!.toI32();
+  }
+
+  set transactions(value: i32) {
+    this.set("transactions", Value.fromI32(value));
+  }
+
+  get reach(): i32 {
+    let value = this.get("reach");
+    return value!.toI32();
+  }
+
+  set reach(value: i32) {
+    this.set("reach", Value.fromI32(value));
+  }
 }
 
 export class UBIEntity extends Entity {
@@ -391,6 +421,9 @@ export class UBIEntity extends Entity {
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
+    this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("transactions", Value.fromI32(0));
+    this.set("reach", Value.fromI32(0));
   }
 
   save(): void {
@@ -472,6 +505,33 @@ export class UBIEntity extends Entity {
   set contributors(value: i32) {
     this.set("contributors", Value.fromI32(value));
   }
+
+  get volume(): BigDecimal {
+    let value = this.get("volume");
+    return value!.toBigDecimal();
+  }
+
+  set volume(value: BigDecimal) {
+    this.set("volume", Value.fromBigDecimal(value));
+  }
+
+  get transactions(): i32 {
+    let value = this.get("transactions");
+    return value!.toI32();
+  }
+
+  set transactions(value: i32) {
+    this.set("transactions", Value.fromI32(value));
+  }
+
+  get reach(): i32 {
+    let value = this.get("reach");
+    return value!.toI32();
+  }
+
+  set reach(value: i32) {
+    this.set("reach", Value.fromI32(value));
+  }
 }
 
 export class UBIDailyEntity extends Entity {
@@ -485,6 +545,9 @@ export class UBIDailyEntity extends Entity {
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
+    this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("transactions", Value.fromI32(0));
+    this.set("reach", Value.fromI32(0));
   }
 
   save(): void {
@@ -565,6 +628,33 @@ export class UBIDailyEntity extends Entity {
 
   set contributors(value: i32) {
     this.set("contributors", Value.fromI32(value));
+  }
+
+  get volume(): BigDecimal {
+    let value = this.get("volume");
+    return value!.toBigDecimal();
+  }
+
+  set volume(value: BigDecimal) {
+    this.set("volume", Value.fromBigDecimal(value));
+  }
+
+  get transactions(): i32 {
+    let value = this.get("transactions");
+    return value!.toI32();
+  }
+
+  set transactions(value: i32) {
+    this.set("transactions", Value.fromI32(value));
+  }
+
+  get reach(): i32 {
+    let value = this.get("reach");
+    return value!.toI32();
+  }
+
+  set reach(value: i32) {
+    this.set("reach", Value.fromI32(value));
   }
 }
 
@@ -861,6 +951,75 @@ export class UserActivityEntity extends Entity {
 
   set activity(value: string) {
     this.set("activity", Value.fromString(value));
+  }
+}
+
+export class UserTransactionsEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("transactions", Value.fromI32(0));
+    this.set("lastTransaction", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save UserTransactionsEntity entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save UserTransactionsEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("UserTransactionsEntity", id.toString(), this);
+    }
+  }
+
+  static load(id: string): UserTransactionsEntity | null {
+    return changetype<UserTransactionsEntity | null>(
+      store.get("UserTransactionsEntity", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get volume(): BigDecimal {
+    let value = this.get("volume");
+    return value!.toBigDecimal();
+  }
+
+  set volume(value: BigDecimal) {
+    this.set("volume", Value.fromBigDecimal(value));
+  }
+
+  get transactions(): i32 {
+    let value = this.get("transactions");
+    return value!.toI32();
+  }
+
+  set transactions(value: i32) {
+    this.set("transactions", Value.fromI32(value));
+  }
+
+  get lastTransaction(): i32 {
+    let value = this.get("lastTransaction");
+    return value!.toI32();
+  }
+
+  set lastTransaction(value: i32) {
+    this.set("lastTransaction", Value.fromI32(value));
   }
 }
 

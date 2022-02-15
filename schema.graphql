@@ -35,6 +35,9 @@ type CommunityDailyEntity @entity {
   claimed: BigDecimal!
   contributed: BigDecimal!
   contributors: Int!
+  volume: BigDecimal!
+  transactions: Int!
+  reach: Int!
 }
 
 type UBIEntity @entity {
@@ -45,6 +48,9 @@ type UBIEntity @entity {
   claimed: BigDecimal!
   contributed: BigDecimal!
   contributors: Int!
+  volume: BigDecimal!
+  transactions: Int!
+  reach: Int!
 }
 
 type UBIDailyEntity @entity {
@@ -55,6 +61,9 @@ type UBIDailyEntity @entity {
   claimed: BigDecimal!
   contributed: BigDecimal!
   contributors: Int!
+  volume: BigDecimal!
+  transactions: Int!
+  reach: Int!
 }
 
 type ManagerEntity @entity {
@@ -92,6 +101,13 @@ type UserActivityEntity @entity {
   community: CommunityEntity!
   timestamp: Int!
   activity: ActivityCode!
+}
+
+type UserTransactionsEntity @entity {
+  id: ID! # address
+  volume: BigDecimal!
+  transactions: Int!
+  lastTransaction: Int!
 }
 
 type ContributorContributionsEntity @entity {

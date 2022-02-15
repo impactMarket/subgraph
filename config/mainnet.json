@@ -6,5 +6,6 @@
     "Treasury": "0xa302dd52a4a85e6778E6A64A0E5EB0e8C76463d6",
     "CommunityAdmin": "0xd61c407c3A00dFD8C355973f7a14c55ebaFDf6F9",
     "OldImpactMarket": "0xe55C3eb4a04F93c3302A5d8058348157561BF5ca",
-    "CeloDollar": "0x765DE816845861e75A25fCA122bb6898B8B1282a"
+    "CeloDollar": "0x765DE816845861e75A25fCA122bb6898B8B1282a",
+    "AttestationProxy": "0xd787384d91a7ffac85d51c63ef71580df6c677b7"
 }
