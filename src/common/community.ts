@@ -1,17 +1,10 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
-import {
-    CommunityDailyEntity,
-    CommunityEntity,
-    UBIEntity
-} from '../../generated/schema';
+import { CommunityDailyEntity, CommunityEntity, UBIEntity } from '../../generated/schema';
 import { loadOrCreateDailyUbi } from './ubi';
 import { normalize } from '../utils';
 
-export function loadOrCreateCommunityDaily(
-    _community: Address,
-    _blockTimestamp: BigInt
-): CommunityDailyEntity {
+export function loadOrCreateCommunityDaily(_community: Address, _blockTimestamp: BigInt): CommunityDailyEntity {
     // load or create community daily
     const dayId = _blockTimestamp.toI32() / 86400;
     const communityDailyId = `${_community.toHex()}-${dayId}`;
@@ -92,10 +85,7 @@ export function generiHandleCommunityAdded(
     ubiDaily.save();
 }
 
-export function generiHandleCommunityRemoved(
-    _communityAddress: Address,
-    _blockTimestamp: BigInt
-): void {
+export function generiHandleCommunityRemoved(_communityAddress: Address, _blockTimestamp: BigInt): void {
     const communityId = _communityAddress.toHex();
     let community = CommunityEntity.load(communityId);
 

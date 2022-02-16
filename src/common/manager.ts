@@ -1,11 +1,6 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 
-import {
-    CommunityEntity,
-    ManagerEntity,
-    UBIEntity,
-    UserActivityEntity
-} from '../../generated/schema';
+import { CommunityEntity, ManagerEntity, UBIEntity, UserActivityEntity } from '../../generated/schema';
 import { communityAdminAddress } from './addresses';
 import { loadOrCreateCommunityDaily } from './community';
 import { loadOrCreateDailyUbi } from './ubi';
@@ -21,10 +16,7 @@ export function genericHandleManagerAdded(
         const community = CommunityEntity.load(_community.toHex());
 
         if (community) {
-            const communityDaily = loadOrCreateCommunityDaily(
-                _community,
-                _blockTimestamp
-            );
+            const communityDaily = loadOrCreateCommunityDaily(_community, _blockTimestamp);
             let isManagerMigrated = false;
             const managerId = _manager.toHex();
             let manager = ManagerEntity.load(managerId);
@@ -37,24 +29,18 @@ export function genericHandleManagerAdded(
                 manager.added = 0;
                 manager.removed = 0;
                 manager.activity = [];
-            } else if (
-                Address.fromString(manager.community).equals(community.previous)
-            ) {
+            } else if (Address.fromString(manager.community).equals(community.previous)) {
                 manager.community = community.id;
                 const activities = manager.activity;
 
                 for (let index = 0; index < activities.length; index++) {
-                    const activity = UserActivityEntity.load(
-                        activities[index]
-                    )!;
+                    const activity = UserActivityEntity.load(activities[index])!;
 
                     activity.community = _community.toHex();
                     activity.save();
                 }
                 isManagerMigrated = true;
-            } else if (
-                Address.fromString(manager.community).notEqual(_community)
-            ) {
+            } else if (Address.fromString(manager.community).notEqual(_community)) {
                 // save previous entry of manager in another community
                 const previousManager = new ManagerEntity(_hash);
 
@@ -72,9 +58,7 @@ export function genericHandleManagerAdded(
                 manager.added = 0;
                 manager.removed = 0;
                 manager.activity = [];
-            } else if (
-                Address.fromString(manager.community).equals(_community)
-            ) {
+            } else if (Address.fromString(manager.community).equals(_community)) {
                 // manager rejoining same community from where has left
                 manager.state = 0;
                 community.removedManagers -= 1;
@@ -126,10 +110,7 @@ export function genericHandleManagerRemoved(
     const community = CommunityEntity.load(_community.toHex());
 
     if (community) {
-        const communityDaily = loadOrCreateCommunityDaily(
-            _community,
-            _blockTimestamp
-        );
+        const communityDaily = loadOrCreateCommunityDaily(_community, _blockTimestamp);
         const managerId = _manager.toHex();
         const manager = ManagerEntity.load(managerId);
 

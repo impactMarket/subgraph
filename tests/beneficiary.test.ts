@@ -33,11 +33,7 @@ export {
 };
 
 test('add beneficiary', () => {
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -56,30 +52,16 @@ test('add beneficiary', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent1);
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'address',
-        beneficiaryAddress[0]
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'address', beneficiaryAddress[0]);
 
-    assert.fieldEquals(
-        'UserActivityEntity',
-        beneficiaryAddedEvent1.transaction.hash.toHex(),
-        'activity',
-        'ADDED'
-    );
+    assert.fieldEquals('UserActivityEntity', beneficiaryAddedEvent1.transaction.hash.toHex(), 'activity', 'ADDED');
 
     clearStore();
 });
 
 test('add claim', () => {
     // add community
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -126,32 +108,15 @@ test('add claim', () => {
         'lastClaimAt',
         beneficiaryClaimEvent2.block.timestamp.toString()
     );
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[1],
-        'claims',
-        '1'
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[1], 'claims', '1');
     assert.fieldEquals(
         'BeneficiaryEntity',
         beneficiaryAddress[1],
         'claimed',
-        normalize(
-            BigInt.fromString(communityProps[0].get('claimAmount')).toString()
-        ).toString()
+        normalize(BigInt.fromString(communityProps[0].get('claimAmount')).toString()).toString()
     );
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'preLastClaimAt',
-        '0'
-    );
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[1],
-        'preLastClaimAt',
-        '0'
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'preLastClaimAt', '0');
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[1], 'preLastClaimAt', '0');
 
     // assert community data
     assert.fieldEquals(
@@ -165,12 +130,7 @@ test('add claim', () => {
                 .toString()
         ).toString()
     );
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'beneficiaries',
-        '2'
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '2');
 
     // assert ubi data
     assert.fieldEquals(
@@ -190,11 +150,7 @@ test('add claim', () => {
 
 test('rotate claim timestamp', () => {
     // add community
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -226,18 +182,8 @@ test('rotate claim timestamp', () => {
     handleBeneficiaryClaim(beneficiaryClaimEvent2);
 
     // assert first rotate
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'lastClaimAt',
-        '1640716195'
-    );
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'preLastClaimAt',
-        '1640716194'
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'lastClaimAt', '1640716195');
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'preLastClaimAt', '1640716194');
 
     const beneficiaryClaimEvent3 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
@@ -249,33 +195,16 @@ test('rotate claim timestamp', () => {
     handleBeneficiaryClaim(beneficiaryClaimEvent3);
 
     // assert second rotate
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'lastClaimAt',
-        '1640716196'
-    );
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'preLastClaimAt',
-        '1640716195'
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'lastClaimAt', '1640716196');
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'preLastClaimAt', '1640716195');
 
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'claims',
-        '3'
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'claims', '3');
     assert.fieldEquals(
         'BeneficiaryEntity',
         beneficiaryAddress[0],
         'claimed',
         normalize(
-            BigInt.fromString(communityProps[0].get('claimAmount'))
-                .times(BigInt.fromI32(3))
-                .toString()
+            BigInt.fromString(communityProps[0].get('claimAmount')).times(BigInt.fromI32(3)).toString()
         ).toString()
     );
 
@@ -283,11 +212,7 @@ test('rotate claim timestamp', () => {
 });
 
 test('remove beneficiary', () => {
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -306,26 +231,11 @@ test('remove beneficiary', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent1);
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'address',
-        beneficiaryAddress[0]
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'address', beneficiaryAddress[0]);
 
-    assert.fieldEquals(
-        'UserActivityEntity',
-        beneficiaryAddedEvent1.transaction.hash.toHex(),
-        'activity',
-        'ADDED'
-    );
+    assert.fieldEquals('UserActivityEntity', beneficiaryAddedEvent1.transaction.hash.toHex(), 'activity', 'ADDED');
 
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'beneficiaries',
-        '2'
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '2');
 
     const beneficiaryRemovedEvent1 = createBeneficiaryRemovedEvent(
         managerAddress[0],
@@ -335,42 +245,19 @@ test('remove beneficiary', () => {
 
     handleBeneficiaryRemoved(beneficiaryRemovedEvent1);
 
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'state',
-        '1'
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '1');
 
-    assert.fieldEquals(
-        'UserActivityEntity',
-        beneficiaryRemovedEvent1.transaction.hash.toHex(),
-        'activity',
-        'REMOVED'
-    );
+    assert.fieldEquals('UserActivityEntity', beneficiaryRemovedEvent1.transaction.hash.toHex(), 'activity', 'REMOVED');
 
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'beneficiaries',
-        '1'
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
 
     clearStore();
 });
 
 test('beneficiary joined', () => {
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
-    const community2 = createCommunityAddedEvent(
-        communityAddress[1],
-        [managerAddress[1]],
-        communityProps[0]
-    );
+    const community2 = createCommunityAddedEvent(communityAddress[1], [managerAddress[1]], communityProps[0]);
 
     handleCommunityAdded(community);
     handleCommunityAdded(community2);
@@ -390,19 +277,11 @@ test('beneficiary joined', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent1);
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
-    const beneficiaryJoinedEvent1 = createBeneficiaryJoinedEvent(
-        beneficiaryAddress[0],
-        communityAddress[1]
-    );
+    const beneficiaryJoinedEvent1 = createBeneficiaryJoinedEvent(beneficiaryAddress[0], communityAddress[1]);
 
     handleBeneficiaryJoined(beneficiaryJoinedEvent1);
 
-    assert.fieldEquals(
-        'BeneficiaryEntity',
-        beneficiaryAddress[0],
-        'community',
-        communityAddress[1]
-    );
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'community', communityAddress[1]);
 
     assert.fieldEquals(
         'UserActivityEntity',
@@ -415,17 +294,9 @@ test('beneficiary joined', () => {
 });
 
 test('beneficiary joined other community after removed', () => {
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
-    const community2 = createCommunityAddedEvent(
-        communityAddress[1],
-        [managerAddress[1]],
-        communityProps[0]
-    );
+    const community2 = createCommunityAddedEvent(communityAddress[1], [managerAddress[1]], communityProps[0]);
 
     handleCommunityAdded(community);
     handleCommunityAdded(community2);
@@ -461,26 +332,11 @@ test('beneficiary joined other community after removed', () => {
 
     handleBeneficiaryAdded(beneficiaryAddedEvent3);
 
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'beneficiaries',
-        '1'
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
 
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[0],
-        'removedBeneficiaries',
-        '1'
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '1');
 
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[1],
-        'beneficiaries',
-        '1'
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'beneficiaries', '1');
 
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
 

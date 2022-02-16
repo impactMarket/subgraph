@@ -1,28 +1,13 @@
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import {
-    communityAddress,
-    communityProps,
-    managerAddress,
-    normalize
-} from './utils/constants';
-import {
-    createCommunityAddedEvent,
-    createCommunityRemovedEvent
-} from './utils/community';
-import {
-    handleCommunityAdded,
-    handleCommunityRemoved
-} from '../src/mappings/communityAdmin';
+import { communityAddress, communityProps, managerAddress, normalize } from './utils/constants';
+import { createCommunityAddedEvent, createCommunityRemovedEvent } from './utils/community';
+import { handleCommunityAdded, handleCommunityRemoved } from '../src/mappings/communityAdmin';
 
 export { handleCommunityAdded, handleCommunityRemoved };
 
 test('create community', () => {
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -44,11 +29,7 @@ test('create community', () => {
 });
 
 test('remove community', () => {
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 

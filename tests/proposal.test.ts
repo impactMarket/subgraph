@@ -1,25 +1,15 @@
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import {
-    createProposalCreatedEvent,
-    createProposalQueuedEvent
-} from './utils/proposals';
-import {
-    handleProposalCreated,
-    handleProposalQueued
-} from '../src/mappings/proposals';
+import { createProposalCreatedEvent, createProposalQueuedEvent } from './utils/proposals';
+import { handleProposalCreated, handleProposalQueued } from '../src/mappings/proposals';
 
 export { handleProposalCreated };
 
 const targets = ['0x43c25991F0f037517D174B7E0ffD8c8Ccc471c6B'];
 const values = [0];
-const signatures = [
-    'addCommunity(address[],uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
-];
+const signatures = ['addCommunity(address[],uint256,uint256,uint256,uint256,uint256,uint256,uint256)'];
 
-const calldatas = [
-    '0x74d4f7e32043f3f82c76fc501956d0f4b5da8176ff66cab4d283ef17405766c2'
-];
+const calldatas = ['0x74d4f7e32043f3f82c76fc501956d0f4b5da8176ff66cab4d283ef17405766c2'];
 const descriptions = 'description';
 
 test('create proposal', () => {

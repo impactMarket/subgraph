@@ -1458,9 +1458,9 @@ escape-string-regexp@^4.0.0:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
-eslint-config-impact-market@impactMarket/eslint-config-impact-market#feature/bump-peer-deps-and-deps:
-  version "2.0.0"
-  resolved "https://codeload.github.com/impactMarket/eslint-config-impact-market/tar.gz/7b154366d78fe5177e727c5e2f6fcfa63821710b"
+eslint-config-impact-market@impactMarket/eslint-config-impact-market:
+  version "2.0.1"
+  resolved "https://codeload.github.com/impactMarket/eslint-config-impact-market/tar.gz/b59dade87e94f305ded876ccb45d0ad2936d0861"
   dependencies:
     "@babel/eslint-parser" "^7.12.17"
     "@babel/eslint-plugin" "^7.12.13"

@@ -12,10 +12,7 @@ import {
     genericHandleBeneficiaryClaim,
     genericHandleBeneficiaryRemoved
 } from '../../common/beneficiary';
-import {
-    genericHandleManagerAdded,
-    genericHandleManagerRemoved
-} from '../../common/manager';
+import { genericHandleManagerAdded, genericHandleManagerRemoved } from '../../common/manager';
 import { normalize } from '../../utils';
 
 export function handleOldManagerAdded(event: OldManagerAdded): void {
@@ -48,9 +45,7 @@ export function handleOldBeneficiaryAdded(event: OldBeneficiaryAdded): void {
     );
 }
 
-export function handleOldBeneficiaryRemoved(
-    event: OldBeneficiaryRemoved
-): void {
+export function handleOldBeneficiaryRemoved(event: OldBeneficiaryRemoved): void {
     genericHandleBeneficiaryRemoved(
         event.address,
         event.params._account,
@@ -61,12 +56,7 @@ export function handleOldBeneficiaryRemoved(
 }
 
 export function handleOldBeneficiaryClaim(event: OldBeneficiaryClaim): void {
-    genericHandleBeneficiaryClaim(
-        event.address,
-        event.params._account,
-        event.params._amount,
-        event.block.timestamp
-    );
+    genericHandleBeneficiaryClaim(event.address, event.params._account, event.params._amount, event.block.timestamp);
 }
 
 export function handleCommunityEdited(event: CommunityEdited): void {
