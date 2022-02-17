@@ -31,7 +31,7 @@
     "devDependencies": {
         "@babel/core": "^7.16.10",
         "eslint": "^8.9.0",
-        "eslint-config-impact-market": "impactMarket/eslint-config-impact-market",
+        "eslint-config-impact-market": "impactMarket/eslint-config-impact-market#feature/cleanup-prettier",
         "mustache": "4.2.0",
         "prettier": "^2.4.1",
         "typescript": "~4.1.6"

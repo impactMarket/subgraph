@@ -5,7 +5,7 @@ module.exports = {
         mocha: true,
         node: true
     },
-    extends: ['impact-market/node', 'prettier'],
+    extends: ['impact-market/node'],
     rules: {
         'max-params': ['error', 9],
         'no-underscore-dangle': 'off',
