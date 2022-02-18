@@ -37,7 +37,7 @@ export function genericHandleBeneficiaryAdded(
             beneficiary.preLastClaimAt = 0;
             beneficiary.claims = 0;
             beneficiary.claimed = BigDecimal.zero();
-            beneficiary.activity = [];
+            beneficiary.since = _blockTimestamp.toI32();
         } else if (
             beneficiary &&
             Address.fromString(beneficiary.community).notEqual(_community)
@@ -52,7 +52,6 @@ export function genericHandleBeneficiaryAdded(
             previousBeneficiary.preLastClaimAt = beneficiary.preLastClaimAt;
             previousBeneficiary.claims = beneficiary.claims;
             previousBeneficiary.claimed = beneficiary.claimed;
-            previousBeneficiary.activity = beneficiary.activity;
             previousBeneficiary.save();
             //
             beneficiary.community = community.id;
@@ -61,8 +60,9 @@ export function genericHandleBeneficiaryAdded(
             beneficiary.preLastClaimAt = 0;
             beneficiary.claims = 0;
             beneficiary.claimed = BigDecimal.zero();
-            beneficiary.activity = [];
+            beneficiary.since = _blockTimestamp.toI32();
         } else if (
+            // readded into same community
             beneficiary &&
             Address.fromString(beneficiary.community).equals(_community)
         ) {
@@ -77,11 +77,6 @@ export function genericHandleBeneficiaryAdded(
         activity.timestamp = _blockTimestamp.toI32();
         activity.activity = 'ADDED';
         activity.save();
-        // add beneficiary
-        const activities = beneficiary.activity;
-
-        activities.push(activity.id);
-        beneficiary.activity = activities;
         beneficiary.save();
         // update ubi
         const ubi = UBIEntity.load('0')!;
@@ -146,10 +141,6 @@ export function genericHandleBeneficiaryRemoved(
             activity.save();
             // update beneficiary
             beneficiary.state = 1;
-            const activities = beneficiary.activity;
-
-            activities.push(activity.id);
-            beneficiary.activity = activities;
             beneficiary.save();
             // update community
             community.beneficiaries -= 1;
@@ -174,14 +165,6 @@ export function genericHandleBeneficiaryJoined(
     if (beneficiary) {
         // update beneficiary
         beneficiary.community = _community.toHex();
-        const activities = beneficiary.activity;
-
-        for (let index = 0; index < activities.length; index++) {
-            const activity = UserActivityEntity.load(activities[index])!;
-
-            activity.community = _community.toHex();
-            activity.save();
-        }
         beneficiary.save();
     }
 }

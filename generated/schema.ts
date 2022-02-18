@@ -87,7 +87,6 @@ export class CommunityEntity extends Entity {
 
     this.set("startDayId", Value.fromI32(0));
     this.set("state", Value.fromI32(0));
-    this.set("previous", Value.fromBytes(Bytes.empty()));
     this.set("claimAmount", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("maxClaim", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("decreaseStep", Value.fromBigDecimal(BigDecimal.zero()));
@@ -147,13 +146,38 @@ export class CommunityEntity extends Entity {
     this.set("state", Value.fromI32(value));
   }
 
-  get previous(): Bytes {
+  get previous(): Bytes | null {
     let value = this.get("previous");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
   }
 
-  set previous(value: Bytes) {
-    this.set("previous", Value.fromBytes(value));
+  set previous(value: Bytes | null) {
+    if (!value) {
+      this.unset("previous");
+    } else {
+      this.set("previous", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get migrated(): Bytes | null {
+    let value = this.get("migrated");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set migrated(value: Bytes | null) {
+    if (!value) {
+      this.unset("migrated");
+    } else {
+      this.set("migrated", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get claimAmount(): BigDecimal {
@@ -668,7 +692,7 @@ export class ManagerEntity extends Entity {
     this.set("state", Value.fromI32(0));
     this.set("added", Value.fromI32(0));
     this.set("removed", Value.fromI32(0));
-    this.set("activity", Value.fromStringArray(new Array(0)));
+    this.set("since", Value.fromI32(0));
   }
 
   save(): void {
@@ -742,13 +766,13 @@ export class ManagerEntity extends Entity {
     this.set("removed", Value.fromI32(value));
   }
 
-  get activity(): Array<string> {
-    let value = this.get("activity");
-    return value!.toStringArray();
+  get since(): i32 {
+    let value = this.get("since");
+    return value!.toI32();
   }
 
-  set activity(value: Array<string>) {
-    this.set("activity", Value.fromStringArray(value));
+  set since(value: i32) {
+    this.set("since", Value.fromI32(value));
   }
 }
 
@@ -764,7 +788,7 @@ export class BeneficiaryEntity extends Entity {
     this.set("preLastClaimAt", Value.fromI32(0));
     this.set("claims", Value.fromI32(0));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("activity", Value.fromStringArray(new Array(0)));
+    this.set("since", Value.fromI32(0));
   }
 
   save(): void {
@@ -858,13 +882,13 @@ export class BeneficiaryEntity extends Entity {
     this.set("claimed", Value.fromBigDecimal(value));
   }
 
-  get activity(): Array<string> {
-    let value = this.get("activity");
-    return value!.toStringArray();
+  get since(): i32 {
+    let value = this.get("since");
+    return value!.toI32();
   }
 
-  set activity(value: Array<string>) {
-    this.set("activity", Value.fromStringArray(value));
+  set since(value: i32) {
+    this.set("since", Value.fromI32(value));
   }
 }
 

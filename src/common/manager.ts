@@ -36,21 +36,15 @@ export function genericHandleManagerAdded(
                 manager.state = 0;
                 manager.added = 0;
                 manager.removed = 0;
-                manager.activity = [];
+                manager.since = _blockTimestamp.toI32();
             } else if (
-                Address.fromString(manager.community).equals(community.previous)
+                community.previous !== null &&
+                Address.fromString(manager.community).equals(
+                    // wasm still thinks it's null, so need to force
+                    community.previous!
+                )
             ) {
                 manager.community = community.id;
-                const activities = manager.activity;
-
-                for (let index = 0; index < activities.length; index++) {
-                    const activity = UserActivityEntity.load(
-                        activities[index]
-                    )!;
-
-                    activity.community = _community.toHex();
-                    activity.save();
-                }
                 isManagerMigrated = true;
             } else if (
                 Address.fromString(manager.community).notEqual(_community)
@@ -63,7 +57,6 @@ export function genericHandleManagerAdded(
                 previousManager.state = manager.state;
                 previousManager.added = manager.added;
                 previousManager.removed = manager.removed;
-                previousManager.activity = manager.activity;
                 previousManager.save();
                 //
                 manager.address = _manager;
@@ -71,7 +64,7 @@ export function genericHandleManagerAdded(
                 manager.state = 0;
                 manager.added = 0;
                 manager.removed = 0;
-                manager.activity = [];
+                manager.since = _blockTimestamp.toI32();
             } else if (
                 Address.fromString(manager.community).equals(_community)
             ) {
@@ -105,11 +98,6 @@ export function genericHandleManagerAdded(
                 activity.timestamp = _blockTimestamp.toI32();
                 activity.activity = 'ADDED';
                 activity.save();
-                // update activities
-                const activities = manager.activity;
-
-                activities.push(activity.id);
-                manager.activity = activities;
             }
             manager.save();
         }
@@ -155,10 +143,6 @@ export function genericHandleManagerRemoved(
             activity.save();
             // update manager
             manager.state = 1;
-            const activities = manager.activity;
-
-            activities.push(activity.id);
-            manager.activity = activities;
             manager.save();
             // update community
             community.managers -= 1;
