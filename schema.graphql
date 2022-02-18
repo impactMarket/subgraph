@@ -5,87 +5,300 @@ type CommunityProposalEntity @entity {
   endBlock: Int!
 }
 
+"""
+UBI community
+"""
 type CommunityEntity @entity {
-  id: ID! # community address
-  startDayId: Int! # only useful to update daily entities when migrating
+  """
+  community address
+  """
+  id: ID!
+  """
+  community start day id (block timestamp / 86400). Useful to update daily entities when migrating
+  """
+  startDayId: Int!
+  """
+  community state (0: inactive, 1: active)
+  """
   state: Int!
-  previous: Bytes!
+  """
+  address of the previous community, if migrated. Might not have a previous
+  """
+  previous: Bytes
+  """
+  address of the community it was migrated to, if migrated. Might not have a been migrated
+  """
+  migrated: Bytes
+  """
+  UBI parameter claim amount (normalized)
+  """
   claimAmount: BigDecimal!
+  """
+  UBI parameter max claim (normalized)
+  """
   maxClaim: BigDecimal!
+  """
+  UBI parameter decrease step (normalized)
+  """
   decreaseStep: BigDecimal!
+  """
+  UBI parameter base interval (in blocks)
+  """
   baseInterval: Int!
+  """
+  UBI parameter increment interval (in blocks)
+  """
   incrementInterval: Int!
-  # totals
+  """
+  total active beneficiaries
+  """
   beneficiaries: Int!
+  """
+  total removed beneficiaries
+  """
   removedBeneficiaries: Int!
+  """
+  total active managers
+  """
   managers: Int!
+  """
+  total removed managers
+  """
   removedManagers: Int!
+  """
+  total claimed (normalized)
+  """
   claimed: BigDecimal!
+  """
+  total received from contributions (normalized)
+  """
   contributed: BigDecimal!
+  """
+  total contributors (normalized)
+  """
   contributors: Int!
   contributions: [ContributorContributionsEntity!]!
 }
 
+# when a community is migrated, CommunityDataEntity are migrated too
+# replacing the old community address with the new one on the id and community fields
+
+"""
+Community activity per day
+"""
 type CommunityDailyEntity @entity {
-  id: ID! # community address + day
+  """
+  community address + day id (block timestamp / 86400)
+  """
+  id: ID!
+  """
+  community object
+  """
   community: CommunityEntity!
+  """
+  day id (block timestamp / 86400)
+  """
   dayId: Int!
+  """
+  difference of beneficiaries (negative if more removed than added)
+  """
   beneficiaries: Int!
+  """
+  difference of managers (negative if more removed than added)
+  """
   managers: Int!
+  """
+  total claimed (normalized)
+  """
   claimed: BigDecimal!
+  """
+  total contributed (normalized)
+  """
   contributed: BigDecimal!
+  """
+  total contributors (normalized)
+  """
   contributors: Int!
+  """
+  volume transacted in cUSD (normalized)
+  """
   volume: BigDecimal!
+  """
+  number of transactions
+  """
   transactions: Int!
+  """
+  number of reached unique addresses
+  """
   reach: Int!
 }
 
+"""
+Global UBI activity since inception
+"""
 type UBIEntity @entity {
-  id: ID! # 0, there's only one
+  """
+  0, there's only one
+  """
+  id: ID!
+  """
+  total number of communities
+  """
   communities: Int!
+  """
+  total number of beneficiaries
+  """
   beneficiaries: Int!
+  """
+  total number of managers
+  """
   managers: Int!
+  """
+  total claimed (normalized)
+  """
   claimed: BigDecimal!
+  """
+  total contributed (normalized)
+  """
   contributed: BigDecimal!
+  """
+  total contributors (normalized)
+  """
   contributors: Int!
+  """
+  volume transacted in cUSD (normalized)
+  """
   volume: BigDecimal!
+  """
+  number of transactions
+  """
   transactions: Int!
+  """
+  number of reached unique addresses
+  """
   reach: Int!
 }
 
+"""
+Global UBI activity per day
+"""
 type UBIDailyEntity @entity {
-  id: ID! # day id
+  """
+  day id (block timestamp / 86400)
+  """
+  id: ID!
+  """
+  difference of communities (negative if more removed than added)
+  """
   communities: Int!
+  """
+  difference of beneficiaries (negative if more removed than added)
+  """
   beneficiaries: Int!
+  """
+  difference of managers (negative if more removed than added)
+  """
   managers: Int!
+  """
+  total claimed (normalized)
+  """
   claimed: BigDecimal!
+  """
+  total contributed (normalized)
+  """
   contributed: BigDecimal!
+  """
+  total contributors (normalized)
+  """
   contributors: Int!
+  """
+  volume transacted in cUSD (normalized)
+  """
   volume: BigDecimal!
+  """
+  number of transactions
+  """
   transactions: Int!
+  """
+  number of reached unique addresses
+  """
   reach: Int!
 }
 
+"""
+UBI community managers
+"""
 type ManagerEntity @entity {
-  id: ID! # tx hash if this address is added on a new community, otherwise address
+  """
+  tx hash if this address is added on a new community, otherwise address
+  """
+  id: ID!
+  """
+  manager address
+  """
   address: Bytes!
+  """
+  community object from which this manager belongs to
+  """
   community: CommunityEntity!
+  """
+  manager state on the community (0: active, 1: removed)
+  """
   state: Int!
-  added: Int! # total beneficiaries added
-  removed: Int! # total beneficiaries removed
-  activity: [UserActivityEntity!]!
+  """
+  total beneficiaries added to this community by this manager
+  """
+  added: Int!
+  """
+  total beneficiaries removed from this community by this manager
+  """
+  removed: Int!
+  """
+  tx timestamp of when this manager was added to this community
+  """
+  since: Int!
 }
 
+"""
+UBI community beneficiary
+"""
 type BeneficiaryEntity @entity {
-  id: ID! # tx hash if this address is added on a new community, otherwise address
+  """
+  tx hash if this address is added on a new community, otherwise address
+  """
+  id: ID!
+  """
+  beneficiary address
+  """
   address: Bytes!
+  """
+  community object from which this beneficiary belongs to
+  """
   community: CommunityEntity!
+  """
+  beneficiary state on the community (0: active, 1: removed)
+  """
   state: Int!
+  """
+  last time this beneficiary claimed in this community
+  """
   lastClaimAt: Int!
+  """
+  pre last time this beneficiary claimed in this community
+  """
   preLastClaimAt: Int!
+  """
+  number of claims made by this beneficiary
+  """
   claims: Int!
+  """
+  total amount of cUSD claimed by this beneficiary (normalized)
+  """
   claimed: BigDecimal!
-  activity: [UserActivityEntity!]!
+  """
+  tx timestamp of when this beneficiary was added to this community
+  """
+  since: Int!
 }
 
 enum ActivityCode {
@@ -93,34 +306,102 @@ enum ActivityCode {
   REMOVED
 }
 
-# registry beneficiry or manager activity
+"""
+Beneficiry or manager activity registry
+"""
 type UserActivityEntity @entity {
-  id: ID! # tx hash
-  user: Bytes! # user address
-  by: Bytes! # address of the user who did the activity
+  """
+  tx hash
+  """
+  id: ID!
+  """
+  user address
+  """
+  user: Bytes!
+  """
+  address of the user who did the activity
+  """
+  by: Bytes!
+  """
+  which community the user belong to whe activity happened
+  """
   community: CommunityEntity!
+  """
+  activity timestamp in seconds (block timestamp)
+  """
   timestamp: Int!
+  """
+  activity code ('ADDED' or 'REMOVED')
+  """
   activity: ActivityCode!
 }
 
+"""
+User transactions when transacting with a beneficiary
+"""
 type UserTransactionsEntity @entity {
-  id: ID! # address
+  """
+  address of the user
+  """
+  id: ID!
+  """
+  volume transacted by this user in cUSD (normalized)
+  """
   volume: BigDecimal!
+  """
+  number of transactions made by this user
+  """
   transactions: Int!
+  """
+  last transaction day id (block timestamp / 86400)
+  """
   lastTransaction: Int!
 }
 
+"""
+Contributor contributions to an address
+"""
 type ContributorContributionsEntity @entity {
-  id: ID! # contributor address + to address
-  to: Bytes! # community address or treasury address
+  """
+  contributor address + to address
+  """
+  id: ID!
+  """
+  community address or treasury address
+  """
+  to: Bytes!
+  """
+  contributed amount in cUSD (normalized)
+  """
   contributed: BigDecimal!
+  """
+  number of contributions
+  """
   contributions: Int!
-  lastContribution: Int! # day id
+  """
+  last contribution day id (block timestamp / 86400)
+  """
+  lastContribution: Int!
 }
 
+"""
+Contributor
+"""
 type ContributorEntity @entity {
-  id: ID! # address
+  """
+  contributor address
+  """
+  id: ID!
+  """
+  contributed amount in cUSD (normalized)
+  """
   contributed: BigDecimal!
+  """
+  number of contributions
+  """
   contributions: Int!
-  lastContribution: Int! # day id
+  """
+  last contribution day id (block timestamp / 86400)
+  """
+  lastContribution: Int!
 }
