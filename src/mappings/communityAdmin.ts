@@ -111,6 +111,9 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
             community.contributions = contributions;
             store.remove('CommunityDailyEntity', pastContributionId);
         }
+        // update previous community
+        previousCommunity.migrated = event.params.communityAddress;
+        // create new community
         community.startDayId = previousCommunity.startDayId;
         community.state = previousCommunity.state;
         community.claimAmount = previousCommunity.claimAmount;
@@ -130,5 +133,6 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         Community.create(event.params.communityAddress);
         // save entity state
         community.save();
+        previousCommunity.save();
     }
 }
