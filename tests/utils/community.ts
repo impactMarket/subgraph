@@ -4,6 +4,7 @@ import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import {
     CommunityAdded,
+    CommunityMigrated,
     CommunityRemoved
 } from '../../generated/CommunityAdmin/CommunityAdmin';
 
@@ -93,4 +94,36 @@ export function createCommunityRemovedEvent(
     communityRemovedEvent.parameters.push(communityAddressParam);
 
     return communityRemovedEvent;
+}
+
+export function createCommunityMigratedEvent(
+    managers: string[],
+    communityAddress: string,
+    previousCommunityAddress: string
+): CommunityMigrated {
+    const communityMigratedEvent = changetype<CommunityMigrated>(
+        newMockEvent()
+    );
+
+    communityMigratedEvent.parameters = [];
+    const managersParam = new ethereum.EventParam(
+        'managers',
+        ethereum.Value.fromAddressArray(
+            managers.map<Address>((m) => Address.fromString(m))
+        )
+    );
+    const communityAddressParam = new ethereum.EventParam(
+        'communityAddress',
+        ethereum.Value.fromAddress(Address.fromString(communityAddress))
+    );
+    const previousCommunityAddressParam = new ethereum.EventParam(
+        'previousCommunityAddress',
+        ethereum.Value.fromAddress(Address.fromString(previousCommunityAddress))
+    );
+
+    communityMigratedEvent.parameters.push(managersParam);
+    communityMigratedEvent.parameters.push(communityAddressParam);
+    communityMigratedEvent.parameters.push(previousCommunityAddressParam);
+
+    return communityMigratedEvent;
 }

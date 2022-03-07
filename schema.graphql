@@ -70,6 +70,10 @@ type CommunityEntity @entity {
   """
   claimed: BigDecimal!
   """
+  total claims
+  """
+  claims: Int!
+  """
   total received from contributions (normalized)
   """
   contributed: BigDecimal!

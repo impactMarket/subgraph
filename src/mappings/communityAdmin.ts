@@ -15,16 +15,19 @@ import {
     generiHandleCommunityAdded,
     generiHandleCommunityRemoved
 } from '../common/community';
+import { genericHandleManagerAdded } from '../common/manager';
 
 // TODO: add five cents to first managers
 export function handleCommunityAdded(event: CommunityAdded): void {
     generiHandleCommunityAdded(
         event.params.communityAddress,
+        event.params.managers,
         event.params.claimAmount,
         event.params.maxClaim,
         event.params.decreaseStep,
         event.params.baseInterval.toI32(),
         event.params.incrementInterval.toI32(),
+        event.transaction.hash.toHex(),
         event.block.timestamp
     );
     // create community entry
@@ -121,16 +124,28 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.decreaseStep = previousCommunity.decreaseStep;
         community.baseInterval = previousCommunity.baseInterval;
         community.incrementInterval = previousCommunity.incrementInterval;
-        community.beneficiaries = previousCommunity.removedManagers;
+        community.beneficiaries = previousCommunity.beneficiaries;
         community.removedBeneficiaries = previousCommunity.removedBeneficiaries;
         community.managers = 0;
-        community.removedManagers = 0;
+        community.removedManagers = previousCommunity.removedManagers;
+        community.claims = previousCommunity.claims;
         community.claimed = previousCommunity.claimed;
         community.contributed = previousCommunity.contributed;
         community.contributors = previousCommunity.contributors;
         community.previous = event.params.previousCommunityAddress;
         // create community entry
         Community.create(event.params.communityAddress);
+        for (let index = 0; index < event.params.managers.length; index++) {
+            const manager = event.params.managers[index];
+
+            genericHandleManagerAdded(
+                community,
+                manager,
+                event.params.communityAddress,
+                event.transaction.hash.toString(),
+                event.block.timestamp
+            );
+        }
         // save entity state
         community.save();
         previousCommunity.save();

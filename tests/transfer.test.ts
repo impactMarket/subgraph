@@ -29,6 +29,8 @@ export { handleTransferCeloDollar };
 const fiveDollars = toToken('5');
 
 test('contribute cusd to community', () => {
+    clearStore();
+
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
@@ -74,11 +76,11 @@ test('contribute cusd to community', () => {
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
-    clearStore();
 });
 
 test('contribute cusd to treasury', () => {
+    clearStore();
+
     // community generate the UBIEntity
     const community = createCommunityAddedEvent(
         communityAddress[0],
@@ -119,11 +121,11 @@ test('contribute cusd to treasury', () => {
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
-    clearStore();
 });
 
 test('contribute cusd to treasury and community', () => {
+    clearStore();
+
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
@@ -187,11 +189,11 @@ test('contribute cusd to treasury and community', () => {
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
     );
-
-    clearStore();
 });
 
 test('contribute cusd to community and update contributor entities', () => {
+    clearStore();
+
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
@@ -264,11 +266,11 @@ test('contribute cusd to community and update contributor entities', () => {
         'contributions',
         `[${userAddress[0]}-${communityAddress[0]}, ${userAddress[1]}-${communityAddress[0]}]`
     );
-
-    clearStore();
 });
 
 test('contribute cusd to community and update contributor entities, many communities', () => {
+    clearStore();
+
     const community1 = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
@@ -368,8 +370,6 @@ test('contribute cusd to community and update contributor entities, many communi
         'contributions',
         `[${userAddress[0]}-${communityAddress[0]}, ${userAddress[1]}-${communityAddress[0]}]`
     );
-
-    clearStore();
 });
 
 // User Transactions
@@ -402,7 +402,6 @@ function createDummyEntities(): void {
     beneficiary1.preLastClaimAt = 0;
     beneficiary1.claims = 0;
     beneficiary1.claimed = BigDecimal.zero();
-    beneficiary1.activity = [];
     beneficiary1.save();
 
     const beneficiary2 = new BeneficiaryEntity(beneficiaryAddress[1]);
@@ -414,7 +413,6 @@ function createDummyEntities(): void {
     beneficiary2.preLastClaimAt = 0;
     beneficiary2.claims = 0;
     beneficiary2.claimed = BigDecimal.zero();
-    beneficiary2.activity = [];
     beneficiary2.save();
 
     const ubi = new UBIEntity('0');
@@ -432,6 +430,8 @@ function createDummyEntities(): void {
 }
 
 test('should count first time user transactions', () => {
+    clearStore();
+
     createDummyEntities();
 
     const transferEvent1 = createTransferEvent(
@@ -458,6 +458,8 @@ test('should count first time user transactions', () => {
         '1'
     );
 
+    assert.fieldEquals('UBIEntity', '0', 'transactions', '1');
+    assert.fieldEquals('UBIEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'reach', '1');
     assert.fieldEquals(
@@ -472,11 +474,11 @@ test('should count first time user transactions', () => {
         'reach',
         '1'
     );
-
-    clearStore();
 });
 
 test('should count multiple user transactions, same day', () => {
+    clearStore();
+
     createDummyEntities();
 
     const transferEvent1 = createTransferEvent(
@@ -510,6 +512,8 @@ test('should count multiple user transactions, same day', () => {
         '2'
     );
 
+    assert.fieldEquals('UBIEntity', '0', 'transactions', '2');
+    assert.fieldEquals('UBIEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'reach', '1');
     assert.fieldEquals(
@@ -524,11 +528,11 @@ test('should count multiple user transactions, same day', () => {
         'reach',
         '1'
     );
-
-    clearStore();
 });
 
 test('should count multiple user transactions, different days', () => {
+    clearStore();
+
     createDummyEntities();
 
     const transferEvent1 = createTransferEvent(
@@ -621,11 +625,11 @@ test('should count multiple user transactions, different days', () => {
         'reach',
         '1'
     );
-
-    clearStore();
 });
 
 test('should not count user transactions if none parties are a beneficiary', () => {
+    clearStore();
+
     createDummyEntities();
 
     const transferEvent1 = createTransferEvent(
@@ -640,11 +644,11 @@ test('should not count user transactions if none parties are a beneficiary', () 
 
     assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
     assert.fieldEquals('UBIEntity', '0', 'reach', '0');
-
-    clearStore();
 });
 
 test('should not count user transactions if from forbiden address', () => {
+    clearStore();
+
     createDummyEntities();
 
     const transferEvent1 = createTransferEvent(
@@ -659,11 +663,11 @@ test('should not count user transactions if from forbiden address', () => {
 
     assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
     assert.fieldEquals('UBIEntity', '0', 'reach', '0');
-
-    clearStore();
 });
 
 test('should not count user transactions if from community', () => {
+    clearStore();
+
     createDummyEntities();
 
     const transferEvent1 = createTransferEvent(
@@ -678,6 +682,4 @@ test('should not count user transactions if from community', () => {
 
     assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
     assert.fieldEquals('UBIEntity', '0', 'reach', '0');
-
-    clearStore();
 });

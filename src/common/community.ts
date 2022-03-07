@@ -5,6 +5,7 @@ import {
     CommunityEntity,
     UBIEntity
 } from '../../generated/schema';
+import { genericHandleManagerAdded } from './manager';
 import { loadOrCreateDailyUbi } from './ubi';
 import { normalize } from '../utils';
 
@@ -36,11 +37,13 @@ export function loadOrCreateCommunityDaily(
 
 export function generiHandleCommunityAdded(
     _communityAddress: Address,
+    _managers: Array<Address>,
     _claimAmount: BigInt,
     _maxClaim: BigInt,
     _decreaseStep: BigInt,
     _baseInterval: i32,
     _incrementInterval: i32,
+    _hash: string,
     _blockTimestamp: BigInt
 ): void {
     const communityId = _communityAddress.toHex();
@@ -60,6 +63,7 @@ export function generiHandleCommunityAdded(
     community.removedBeneficiaries = 0;
     community.managers = 0;
     community.removedManagers = 0;
+    community.claims = 0;
     community.claimed = BigDecimal.zero();
     community.contributed = BigDecimal.zero();
     community.contributors = 0;
@@ -87,6 +91,18 @@ export function generiHandleCommunityAdded(
     }
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+
+    for (let index = 0; index < _managers.length; index++) {
+        const manager = _managers[index];
+
+        genericHandleManagerAdded(
+            community,
+            manager,
+            _communityAddress,
+            _hash,
+            _blockTimestamp
+        );
+    }
 
     ubiDaily.communities += 1;
     ubiDaily.save();

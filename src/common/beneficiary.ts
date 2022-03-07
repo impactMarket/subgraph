@@ -203,6 +203,7 @@ export function genericHandleBeneficiaryClaim(
             beneficiary.claimed = beneficiary.claimed.plus(normalizedAmount);
             beneficiary.save();
             // update community
+            community.claims += 1;
             community.claimed = community.claimed.plus(normalizedAmount);
             community.save();
             // update community daily
