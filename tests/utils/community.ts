@@ -11,11 +11,15 @@ import {
 export function createCommunityAddedEvent(
     communityAddress: string,
     managers: string[],
-    props: Map<string, string>
+    props: Map<string, string>,
+    timestamp: i32 = 0
 ): CommunityAdded {
     const communityAddedEvent = changetype<CommunityAdded>(newMockEvent());
 
     communityAddedEvent.parameters = [];
+    if (timestamp !== 0) {
+        communityAddedEvent.block.timestamp = BigInt.fromI32(timestamp);
+    }
     const communityAddressParam = new ethereum.EventParam(
         'communityAddress',
         ethereum.Value.fromAddress(Address.fromString(communityAddress))
@@ -99,13 +103,17 @@ export function createCommunityRemovedEvent(
 export function createCommunityMigratedEvent(
     managers: string[],
     communityAddress: string,
-    previousCommunityAddress: string
+    previousCommunityAddress: string,
+    timestamp: i32 = 0
 ): CommunityMigrated {
     const communityMigratedEvent = changetype<CommunityMigrated>(
         newMockEvent()
     );
 
     communityMigratedEvent.parameters = [];
+    if (timestamp !== 0) {
+        communityMigratedEvent.block.timestamp = BigInt.fromI32(timestamp);
+    }
     const managersParam = new ethereum.EventParam(
         'managers',
         ethereum.Value.fromAddressArray(

@@ -9,13 +9,15 @@ import {
 import {
     CommunityDailyEntity,
     CommunityEntity,
-    ContributorContributionsEntity
+    ContributorContributionsEntity,
+    UBIEntity
 } from '../../generated/schema';
 import {
     generiHandleCommunityAdded,
     generiHandleCommunityRemoved
 } from '../common/community';
 import { genericHandleManagerAdded } from '../common/manager';
+import { loadOrCreateDailyUbi } from '../common/ubi';
 
 // TODO: add five cents to first managers
 export function handleCommunityAdded(event: CommunityAdded): void {
@@ -126,17 +128,29 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.incrementInterval = previousCommunity.incrementInterval;
         community.beneficiaries = previousCommunity.beneficiaries;
         community.removedBeneficiaries = previousCommunity.removedBeneficiaries;
-        community.managers = 0;
+        community.managers = event.params.managers.length;
         community.removedManagers = previousCommunity.removedManagers;
         community.claims = previousCommunity.claims;
         community.claimed = previousCommunity.claimed;
         community.contributed = previousCommunity.contributed;
         community.contributors = previousCommunity.contributors;
         community.previous = event.params.previousCommunityAddress;
+        community.managerList = new Array<string>();
+        previousCommunity.state = 1;
         // create community entry
         Community.create(event.params.communityAddress);
+
+        const ubi = UBIEntity.load('0')!;
+        const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
+        let decreaseManagers = 0;
+
         for (let index = 0; index < event.params.managers.length; index++) {
             const manager = event.params.managers[index];
+
+            // verify past managers
+            if (!previousCommunity.managerList.includes(manager.toHex())) {
+                decreaseManagers += 1;
+            }
 
             genericHandleManagerAdded(
                 community,
@@ -147,6 +161,11 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
             );
         }
         // save entity state
+        ubi.managers -= decreaseManagers;
+        community.managers -= decreaseManagers;
+        ubiDaily.managers -= decreaseManagers;
+        ubi.save();
+        ubiDaily.save();
         community.save();
         previousCommunity.save();
     }

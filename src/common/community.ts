@@ -67,6 +67,7 @@ export function generiHandleCommunityAdded(
     community.claimed = BigDecimal.zero();
     community.contributed = BigDecimal.zero();
     community.contributors = 0;
+    community.managerList = new Array<string>();
     community.save();
     // create ubi if it doesn't exist
     let ubi = UBIEntity.load('0');
@@ -92,6 +93,9 @@ export function generiHandleCommunityAdded(
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
 
+    ubiDaily.communities += 1;
+    ubiDaily.save();
+
     for (let index = 0; index < _managers.length; index++) {
         const manager = _managers[index];
 
@@ -103,9 +107,6 @@ export function generiHandleCommunityAdded(
             _blockTimestamp
         );
     }
-
-    ubiDaily.communities += 1;
-    ubiDaily.save();
 }
 
 export function generiHandleCommunityRemoved(

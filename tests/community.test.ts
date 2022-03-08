@@ -83,6 +83,40 @@ test('migrate community', () => {
     handleCommunityAdded(community);
 
     const communityMigrated = createCommunityMigratedEvent(
+        [managerAddress[0]],
+        communityAddress[1],
+        communityAddress[0]
+    );
+
+    handleCommunityMigrated(communityMigrated);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '1');
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[1],
+        'previous',
+        communityAddress[0]
+    );
+    assert.fieldEquals(
+        'ManagerEntity',
+        managerAddress[0],
+        'community',
+        communityAddress[1]
+    );
+});
+
+test('migrate community with different managers', () => {
+    clearStore();
+
+    const community = createCommunityAddedEvent(
+        communityAddress[0],
+        [managerAddress[0]],
+        communityProps[0]
+    );
+
+    handleCommunityAdded(community);
+
+    const communityMigrated = createCommunityMigratedEvent(
         [managerAddress[1]],
         communityAddress[1],
         communityAddress[0]
@@ -108,3 +142,5 @@ test('migrate community', () => {
 // TODO: also test UBIEntity in all cases
 
 // TODO: test migration with different managers
+
+// TODO: test number of managers and beneficiaries after removal

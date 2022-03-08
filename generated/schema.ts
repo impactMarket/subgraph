@@ -306,6 +306,15 @@ export class CommunityEntity extends Entity {
   set contributions(value: Array<string>) {
     this.set("contributions", Value.fromStringArray(value));
   }
+
+  get managerList(): Array<string> {
+    let value = this.get("managerList");
+    return value!.toStringArray();
+  }
+
+  set managerList(value: Array<string>) {
+    this.set("managerList", Value.fromStringArray(value));
+  }
 }
 
 export class CommunityDailyEntity extends Entity {

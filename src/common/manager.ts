@@ -74,6 +74,11 @@ export function genericHandleManagerAdded(
                 _community.removedManagers -= 1;
             }
             if (!isManagerMigrated) {
+                // update manager list
+                const managerList = _community.managerList;
+
+                managerList.push(managerId);
+                _community.managerList = managerList;
                 // update ubi
                 const ubi = UBIEntity.load('0')!;
 
@@ -123,6 +128,10 @@ export function genericHandleManagerRemoved(
         const manager = ManagerEntity.load(managerId);
 
         if (manager) {
+            const managerList = community.managerList;
+
+            managerList.splice(managerList.indexOf(managerId), 1);
+            community.managerList = managerList;
             // update ubi
             const ubi = UBIEntity.load('0')!;
 

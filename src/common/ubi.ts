@@ -3,14 +3,11 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { UBIDailyEntity } from '../../generated/schema';
 
 export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
-    let ubiDaily = UBIDailyEntity.load(
-        (_blockTimestamp.toI32() / 86400).toString()
-    );
+    const ubiDailyId = (_blockTimestamp.toI32() / 86400).toString();
+    let ubiDaily = UBIDailyEntity.load(ubiDailyId);
 
     if (!ubiDaily) {
-        ubiDaily = new UBIDailyEntity(
-            (_blockTimestamp.toI32() / 86400).toString()
-        );
+        ubiDaily = new UBIDailyEntity(ubiDailyId);
         ubiDaily.communities = 0;
         ubiDaily.beneficiaries = 0;
         ubiDaily.managers = 0;

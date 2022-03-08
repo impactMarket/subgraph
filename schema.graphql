@@ -82,6 +82,10 @@ type CommunityEntity @entity {
   """
   contributors: Int!
   contributions: [ContributorContributionsEntity!]!
+  """
+  active community managers array
+  """
+  managerList: [ManagerEntity!]! @derivedFrom(field: "community")
 }
 
 # when a community is migrated, CommunityDataEntity are migrated too
