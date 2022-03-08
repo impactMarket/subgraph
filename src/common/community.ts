@@ -5,9 +5,9 @@ import {
     CommunityEntity,
     UBIEntity
 } from '../../generated/schema';
+import { fiveCents, normalize } from '../utils';
 import { genericHandleManagerAdded } from './manager';
 import { loadOrCreateDailyUbi } from './ubi';
-import { normalize } from '../utils';
 
 export function loadOrCreateCommunityDaily(
     _community: Address,
@@ -44,7 +44,8 @@ export function generiHandleCommunityAdded(
     _baseInterval: i32,
     _incrementInterval: i32,
     _hash: string,
-    _blockTimestamp: BigInt
+    _blockTimestamp: BigInt,
+    _firstManagerFunded: boolean = false
 ): void {
     const communityId = _communityAddress.toHex();
     let community = CommunityEntity.load(communityId);
@@ -64,7 +65,7 @@ export function generiHandleCommunityAdded(
     community.managers = 0;
     community.removedManagers = 0;
     community.claims = 0;
-    community.claimed = BigDecimal.zero();
+    community.claimed = _firstManagerFunded ? fiveCents : BigDecimal.zero();
     community.contributed = BigDecimal.zero();
     community.contributors = 0;
     community.managerList = new Array<string>();
@@ -78,7 +79,7 @@ export function generiHandleCommunityAdded(
         ubi.communities = 1;
         ubi.beneficiaries = 0;
         ubi.managers = 0;
-        ubi.claimed = BigDecimal.zero();
+        ubi.claimed = _firstManagerFunded ? fiveCents : BigDecimal.zero();
         ubi.contributed = BigDecimal.zero();
         ubi.contributors = 0;
         ubi.volume = BigDecimal.zero();
@@ -88,12 +89,18 @@ export function generiHandleCommunityAdded(
     } else {
         // one already!
         ubi.communities += 1;
+        if (_firstManagerFunded) {
+            ubi.claimed = ubi.claimed.plus(fiveCents);
+        }
         ubi.save();
     }
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
 
     ubiDaily.communities += 1;
+    if (_firstManagerFunded) {
+        ubiDaily.claimed = ubiDaily.claimed.plus(fiveCents);
+    }
     ubiDaily.save();
 
     for (let index = 0; index < _managers.length; index++) {

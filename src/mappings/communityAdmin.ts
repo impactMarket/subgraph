@@ -12,6 +12,7 @@ import {
     ContributorContributionsEntity,
     UBIEntity
 } from '../../generated/schema';
+import { fiveCents } from '../utils';
 import {
     generiHandleCommunityAdded,
     generiHandleCommunityRemoved
@@ -19,7 +20,6 @@ import {
 import { genericHandleManagerAdded } from '../common/manager';
 import { loadOrCreateDailyUbi } from '../common/ubi';
 
-// TODO: add five cents to first managers
 export function handleCommunityAdded(event: CommunityAdded): void {
     generiHandleCommunityAdded(
         event.params.communityAddress,
@@ -30,8 +30,10 @@ export function handleCommunityAdded(event: CommunityAdded): void {
         event.params.baseInterval.toI32(),
         event.params.incrementInterval.toI32(),
         event.transaction.hash.toHex(),
-        event.block.timestamp
+        event.block.timestamp,
+        true
     );
+
     // create community entry
     Community.create(event.params.communityAddress);
 }

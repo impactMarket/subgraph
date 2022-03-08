@@ -1,7 +1,22 @@
+"""
+Proposals for community creation
+"""
 type CommunityProposalEntity @entity {
-  id: ID! # proposal id
+  """
+  proposal id
+  """
+  id: ID!
+  """
+  proposal calldata
+  """
   calldata: Bytes!
+  """
+  status from last action
+  """
   status: Int!
+  """
+  endBlock for the last action
+  """
   endBlock: Int!
 }
 

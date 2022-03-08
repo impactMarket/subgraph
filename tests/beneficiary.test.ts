@@ -163,7 +163,8 @@ test('add claim', () => {
         normalize(
             BigInt.fromString(communityProps[0].get('claimAmount'))
                 .times(BigInt.fromI32(2))
-                .plus(fiveCents.times(BigInt.fromI32(2)))
+                // two beneficiaries + initial manager
+                .plus(fiveCents.times(BigInt.fromI32(3)))
                 .toString()
         ).toString()
     );
@@ -182,7 +183,8 @@ test('add claim', () => {
         normalize(
             BigInt.fromString(communityProps[0].get('claimAmount'))
                 .times(BigInt.fromI32(2))
-                .plus(fiveCents.times(BigInt.fromI32(2)))
+                // two beneficiaries + initial manager
+                .plus(fiveCents.times(BigInt.fromI32(3)))
                 .toString()
         ).toString()
     );
