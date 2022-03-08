@@ -1,22 +1,14 @@
 import { store } from '@graphprotocol/graph-ts';
 
 import { Community } from '../../generated/templates';
-import {
-    CommunityAdded,
-    CommunityMigrated,
-    CommunityRemoved
-} from '../../generated/CommunityAdmin/CommunityAdmin';
+import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
 import {
     CommunityDailyEntity,
     CommunityEntity,
     ContributorContributionsEntity,
     UBIEntity
 } from '../../generated/schema';
-import { fiveCents } from '../utils';
-import {
-    generiHandleCommunityAdded,
-    generiHandleCommunityRemoved
-} from '../common/community';
+import { generiHandleCommunityAdded, generiHandleCommunityRemoved } from '../common/community';
 import { genericHandleManagerAdded } from '../common/manager';
 import { loadOrCreateDailyUbi } from '../common/ubi';
 
@@ -39,10 +31,7 @@ export function handleCommunityAdded(event: CommunityAdded): void {
 }
 
 export function handleCommunityRemoved(event: CommunityRemoved): void {
-    generiHandleCommunityRemoved(
-        event.params.communityAddress,
-        event.block.timestamp
-    );
+    generiHandleCommunityRemoved(event.params.communityAddress, event.block.timestamp);
 }
 
 export function handleCommunityMigrated(event: CommunityMigrated): void {
@@ -51,9 +40,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
     if (!community) {
         community = new CommunityEntity(event.params.communityAddress.toHex());
     }
-    const previousCommunity = CommunityEntity.load(
-        event.params.previousCommunityAddress.toHex()
-    );
+    const previousCommunity = CommunityEntity.load(event.params.previousCommunityAddress.toHex());
 
     if (previousCommunity) {
         // read start day id and update all community daily
@@ -62,29 +49,21 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
 
         while (dayId <= todayDayId) {
             const previousCommunityDailyId = `${event.params.previousCommunityAddress.toHex()}-${dayId}`;
-            const previousCommunityDaily = CommunityDailyEntity.load(
-                previousCommunityDailyId
-            );
+            const previousCommunityDaily = CommunityDailyEntity.load(previousCommunityDailyId);
 
             if (previousCommunityDaily) {
                 const communityDailyId = `${event.params.communityAddress.toHex()}-${dayId}`;
-                const communityDaily = new CommunityDailyEntity(
-                    communityDailyId
-                );
+                const communityDaily = new CommunityDailyEntity(communityDailyId);
 
-                communityDaily.community =
-                    event.params.communityAddress.toHex();
+                communityDaily.community = event.params.communityAddress.toHex();
                 communityDaily.dayId = previousCommunityDaily.dayId;
-                communityDaily.beneficiaries =
-                    previousCommunityDaily.beneficiaries;
+                communityDaily.beneficiaries = previousCommunityDaily.beneficiaries;
                 communityDaily.managers = previousCommunityDaily.managers;
                 communityDaily.claimed = previousCommunityDaily.claimed;
                 communityDaily.contributed = previousCommunityDaily.contributed;
-                communityDaily.contributors =
-                    previousCommunityDaily.contributors;
+                communityDaily.contributors = previousCommunityDaily.contributors;
                 communityDaily.volume = previousCommunityDaily.volume;
-                communityDaily.transactions =
-                    previousCommunityDaily.transactions;
+                communityDaily.transactions = previousCommunityDaily.transactions;
                 communityDaily.reach = previousCommunityDaily.reach;
                 communityDaily.save();
                 store.remove('CommunityDailyEntity', previousCommunityDailyId);
@@ -93,24 +72,18 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         }
         for (let index = 0; index < community.contributions.length; index++) {
             const pastContributionId = community.contributions[index];
-            const pastContributorContributions =
-                ContributorContributionsEntity.load(pastContributionId)!;
+            const pastContributorContributions = ContributorContributionsEntity.load(pastContributionId)!;
             const contributorContributionsId = `${pastContributionId.slice(
                 0,
                 pastContributionId.indexOf('-')
             )}-${event.params.communityAddress.toHex()}`;
 
-            const contributorContributions = new ContributorContributionsEntity(
-                contributorContributionsId
-            );
+            const contributorContributions = new ContributorContributionsEntity(contributorContributionsId);
 
             contributorContributions.to = pastContributorContributions.to;
-            contributorContributions.contributed =
-                pastContributorContributions.contributed;
-            contributorContributions.contributions =
-                pastContributorContributions.contributions;
-            contributorContributions.lastContribution =
-                pastContributorContributions.lastContribution;
+            contributorContributions.contributed = pastContributorContributions.contributed;
+            contributorContributions.contributions = pastContributorContributions.contributions;
+            contributorContributions.lastContribution = pastContributorContributions.lastContribution;
             contributorContributions.save();
             const contributions = community.contributions;
 

@@ -13,7 +13,9 @@
         "remove-local": "graph remove --node http://localhost:8020/ impactmarket/subgraph",
         "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 impactmarket/subgraph",
         "prettier": "prettier --write \"./src/**/*.ts\"",
+        "prettier:dryrun": "prettier \"./src/**/*.ts\"",
         "eslint": "eslint --fix \"./{src,tests}/**/*.ts\"",
+        "eslint:dryrun": "eslint \"./{src,tests}/**/*.ts\"",
         "prepare:mainnet:subgraph": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
         "prepare:mainnet:addresses": "mustache config/mainnet.json src/common/addresses.template > src/common/addresses.ts",
         "prepare:mainnet": "yarn prepare:mainnet:subgraph && yarn prepare:mainnet:addresses",
@@ -28,7 +30,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.16.10",
-        "eslint": "^7.3.1",
+        "eslint": "^8.9.0",
         "eslint-config-impact-market": "impactMarket/eslint-config-impact-market",
         "mustache": "4.2.0",
         "prettier": "^2.4.1",

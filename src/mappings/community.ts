@@ -14,10 +14,7 @@ import {
     genericHandleBeneficiaryJoined,
     genericHandleBeneficiaryRemoved
 } from '../common/beneficiary';
-import {
-    genericHandleManagerAdded,
-    genericHandleManagerRemoved
-} from '../common/manager';
+import { genericHandleManagerAdded, genericHandleManagerRemoved } from '../common/manager';
 import { normalize } from '../utils';
 
 export function handleManagerAdded(event: ManagerAdded): void {
@@ -65,29 +62,18 @@ export function handleBeneficiaryRemoved(event: BeneficiaryRemoved): void {
 }
 
 export function handleBeneficiaryClaim(event: BeneficiaryClaim): void {
-    genericHandleBeneficiaryClaim(
-        event.address,
-        event.params.beneficiary,
-        event.params.amount,
-        event.block.timestamp
-    );
+    genericHandleBeneficiaryClaim(event.address, event.params.beneficiary, event.params.amount, event.block.timestamp);
 }
 
-export function handleBeneficiaryParamsUpdated(
-    event: BeneficiaryParamsUpdated
-): void {
+export function handleBeneficiaryParamsUpdated(event: BeneficiaryParamsUpdated): void {
     const community = CommunityEntity.load(event.address.toHex());
 
     if (community) {
-        community.claimAmount = normalize(
-            event.params.newClaimAmount.toString()
-        );
+        community.claimAmount = normalize(event.params.newClaimAmount.toString());
         community.maxClaim = normalize(event.params.newMaxClaim.toString());
         community.incrementInterval = event.params.newIncrementInterval.toI32();
         community.baseInterval = event.params.newBaseInterval.toI32();
-        community.decreaseStep = normalize(
-            event.params.newDecreaseStep.toString()
-        );
+        community.decreaseStep = normalize(event.params.newDecreaseStep.toString());
         community.save();
     }
 }

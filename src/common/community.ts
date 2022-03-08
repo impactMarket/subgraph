@@ -1,18 +1,11 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
-import {
-    CommunityDailyEntity,
-    CommunityEntity,
-    UBIEntity
-} from '../../generated/schema';
+import { CommunityDailyEntity, CommunityEntity, UBIEntity } from '../../generated/schema';
 import { fiveCents, normalize } from '../utils';
 import { genericHandleManagerAdded } from './manager';
 import { loadOrCreateDailyUbi } from './ubi';
 
-export function loadOrCreateCommunityDaily(
-    _community: Address,
-    _blockTimestamp: BigInt
-): CommunityDailyEntity {
+export function loadOrCreateCommunityDaily(_community: Address, _blockTimestamp: BigInt): CommunityDailyEntity {
     // load or create community daily
     const dayId = _blockTimestamp.toI32() / 86400;
     const communityDailyId = `${_community.toHex()}-${dayId}`;
@@ -106,20 +99,11 @@ export function generiHandleCommunityAdded(
     for (let index = 0; index < _managers.length; index++) {
         const manager = _managers[index];
 
-        genericHandleManagerAdded(
-            community,
-            manager,
-            _communityAddress,
-            _hash,
-            _blockTimestamp
-        );
+        genericHandleManagerAdded(community, manager, _communityAddress, _hash, _blockTimestamp);
     }
 }
 
-export function generiHandleCommunityRemoved(
-    _communityAddress: Address,
-    _blockTimestamp: BigInt
-): void {
+export function generiHandleCommunityRemoved(_communityAddress: Address, _blockTimestamp: BigInt): void {
     const communityId = _communityAddress.toHex();
     let community = CommunityEntity.load(communityId);
 

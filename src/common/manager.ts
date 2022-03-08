@@ -1,11 +1,6 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 
-import {
-    CommunityEntity,
-    ManagerEntity,
-    UBIEntity,
-    UserActivityEntity
-} from '../../generated/schema';
+import { CommunityEntity, ManagerEntity, UBIEntity, UserActivityEntity } from '../../generated/schema';
 import { communityAdminAddress } from './addresses';
 import { loadOrCreateCommunityDaily } from './community';
 import { loadOrCreateDailyUbi } from './ubi';
@@ -21,10 +16,7 @@ export function genericHandleManagerAdded(
         if (_manager.notEqual(Address.fromString(communityAdminAddress))) {
             const communityAddress = Address.fromString(_community.id);
 
-            const communityDaily = loadOrCreateCommunityDaily(
-                communityAddress,
-                _blockTimestamp
-            );
+            const communityDaily = loadOrCreateCommunityDaily(communityAddress, _blockTimestamp);
 
             let isManagerMigrated = false;
             const managerId = _manager.toHex();
@@ -47,9 +39,7 @@ export function genericHandleManagerAdded(
             ) {
                 manager.community = _community.id;
                 isManagerMigrated = true;
-            } else if (
-                Address.fromString(manager.community).notEqual(communityAddress)
-            ) {
+            } else if (Address.fromString(manager.community).notEqual(communityAddress)) {
                 // save previous entry of manager in another community
                 const previousManager = new ManagerEntity(_hash);
 
@@ -66,9 +56,7 @@ export function genericHandleManagerAdded(
                 manager.added = 0;
                 manager.removed = 0;
                 manager.since = _blockTimestamp.toI32();
-            } else if (
-                Address.fromString(manager.community).equals(communityAddress)
-            ) {
+            } else if (Address.fromString(manager.community).equals(communityAddress)) {
                 // manager rejoining same community from where has left
                 manager.state = 0;
                 _community.removedManagers -= 1;
@@ -120,10 +108,7 @@ export function genericHandleManagerRemoved(
     const community = CommunityEntity.load(_community.toHex());
 
     if (community) {
-        const communityDaily = loadOrCreateCommunityDaily(
-            _community,
-            _blockTimestamp
-        );
+        const communityDaily = loadOrCreateCommunityDaily(_community, _blockTimestamp);
         const managerId = _manager.toHex();
         const manager = ManagerEntity.load(managerId);
 
