@@ -5,10 +5,7 @@ import {
     CommunityAdded as OldCommunityAdded,
     CommunityRemoved as OldCommunityRemoved
 } from '../../../generated/OldImpactMarket/OldImpactMarket';
-import {
-    generiHandleCommunityAdded,
-    generiHandleCommunityRemoved
-} from '../../common/community';
+import { generiHandleCommunityAdded, generiHandleCommunityRemoved } from '../../common/community';
 
 export function handleOldCommunityAdded(event: OldCommunityAdded): void {
     generiHandleCommunityAdded(
@@ -27,8 +24,5 @@ export function handleOldCommunityAdded(event: OldCommunityAdded): void {
 }
 
 export function handleOldCommunityRemoved(event: OldCommunityRemoved): void {
-    generiHandleCommunityRemoved(
-        event.params._communityAddress,
-        event.block.timestamp
-    );
+    generiHandleCommunityRemoved(event.params._communityAddress, event.block.timestamp);
 }
