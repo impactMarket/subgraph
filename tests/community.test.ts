@@ -62,13 +62,15 @@ test('remove community', () => {
 
     handleCommunityAdded(community);
 
+    assert.fieldEquals('UBIEntity', '0', 'communities', '1');
+    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+
     const communityRemove = createCommunityRemovedEvent(communityAddress[0]);
 
     handleCommunityRemoved(communityRemove);
 
     assert.fieldEquals('UBIEntity', '0', 'communities', '0');
-
-    // TODO: verify if manager was removed
+    assert.fieldEquals('UBIEntity', '0', 'managers', '0');
 });
 
 test('migrate community', () => {
@@ -89,6 +91,9 @@ test('migrate community', () => {
     );
 
     handleCommunityMigrated(communityMigrated);
+
+    assert.fieldEquals('UBIEntity', '0', 'communities', '1');
+    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
 
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '1');
     assert.fieldEquals(
@@ -124,6 +129,9 @@ test('migrate community with different managers', () => {
 
     handleCommunityMigrated(communityMigrated);
 
+    assert.fieldEquals('UBIEntity', '0', 'communities', '1');
+    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '1');
     assert.fieldEquals(
         'CommunityEntity',
@@ -138,9 +146,3 @@ test('migrate community with different managers', () => {
         communityAddress[1]
     );
 });
-
-// TODO: also test UBIEntity in all cases
-
-// TODO: test migration with different managers
-
-// TODO: test number of managers and beneficiaries after removal

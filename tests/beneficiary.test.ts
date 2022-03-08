@@ -330,6 +330,8 @@ test('remove beneficiary', () => {
         '2'
     );
 
+    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
+
     const beneficiaryRemovedEvent1 = createBeneficiaryRemovedEvent(
         managerAddress[0],
         beneficiaryAddress[0],
@@ -358,6 +360,8 @@ test('remove beneficiary', () => {
         'beneficiaries',
         '1'
     );
+
+    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
 });
 
 test('beneficiary joined', () => {
@@ -407,12 +411,7 @@ test('beneficiary joined', () => {
         communityAddress[1]
     );
 
-    // assert.fieldEquals(
-    //     'UserActivityEntity',
-    //     beneficiaryAddedEvent1.transaction.hash.toHex(),
-    //     'community',
-    //     communityAddress[1]
-    // );
+    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
 });
 
 test('beneficiary joined other community after removed', () => {
@@ -487,5 +486,3 @@ test('beneficiary joined other community after removed', () => {
 
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
 });
-
-// TODO: also test UBIEntity in all cases

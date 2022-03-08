@@ -126,11 +126,13 @@ export function generiHandleCommunityRemoved(
 
     ubi.communities -= 1;
     ubi.beneficiaries -= community.beneficiaries;
+    ubi.managers -= community.managers;
     ubi.save();
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
 
     ubiDaily.communities -= 1;
     ubiDaily.beneficiaries -= community.beneficiaries;
+    ubiDaily.managers -= community.managers;
     ubiDaily.save();
 }

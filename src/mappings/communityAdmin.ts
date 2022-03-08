@@ -116,6 +116,8 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
             community.contributions = contributions;
             store.remove('CommunityDailyEntity', pastContributionId);
         }
+        const totalNewManagers = event.params.managers.length;
+
         // update previous community
         previousCommunity.migrated = event.params.communityAddress;
         // create new community
@@ -128,7 +130,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.incrementInterval = previousCommunity.incrementInterval;
         community.beneficiaries = previousCommunity.beneficiaries;
         community.removedBeneficiaries = previousCommunity.removedBeneficiaries;
-        community.managers = event.params.managers.length;
+        community.managers = totalNewManagers;
         community.removedManagers = previousCommunity.removedManagers;
         community.claims = previousCommunity.claims;
         community.claimed = previousCommunity.claimed;
@@ -140,8 +142,6 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         // create community entry
         Community.create(event.params.communityAddress);
 
-        const ubi = UBIEntity.load('0')!;
-        const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
         let decreaseManagers = 0;
 
         for (let index = 0; index < event.params.managers.length; index++) {
@@ -160,6 +160,9 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 event.block.timestamp
             );
         }
+        const ubi = UBIEntity.load('0')!;
+        const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
+
         // save entity state
         ubi.managers -= decreaseManagers;
         community.managers -= decreaseManagers;
