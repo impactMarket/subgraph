@@ -23,6 +23,8 @@ const calldatas = [
 const descriptions = 'description';
 
 test('create proposal', () => {
+    clearStore();
+
     const community = createProposalCreatedEvent(
         1,
         '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
@@ -44,11 +46,11 @@ test('create proposal', () => {
         '0x74d4f7e32043f3f82c76fc501956d0f4b5da8176ff66cab4d283ef17405766c2'
     );
     assert.fieldEquals('CommunityProposalEntity', '1', 'status', '0');
-
-    clearStore();
 });
 
 test('queue proposal', () => {
+    clearStore();
+
     const community = createProposalCreatedEvent(
         2,
         '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
@@ -74,6 +76,4 @@ test('queue proposal', () => {
         '0x74d4f7e32043f3f82c76fc501956d0f4b5da8176ff66cab4d283ef17405766c2'
     );
     assert.fieldEquals('CommunityProposalEntity', '2', 'status', '3');
-
-    clearStore();
 });

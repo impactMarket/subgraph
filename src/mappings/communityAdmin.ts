@@ -9,24 +9,31 @@ import {
 import {
     CommunityDailyEntity,
     CommunityEntity,
-    ContributorContributionsEntity
+    ContributorContributionsEntity,
+    UBIEntity
 } from '../../generated/schema';
+import { fiveCents } from '../utils';
 import {
     generiHandleCommunityAdded,
     generiHandleCommunityRemoved
 } from '../common/community';
+import { genericHandleManagerAdded } from '../common/manager';
+import { loadOrCreateDailyUbi } from '../common/ubi';
 
-// TODO: add five cents to first managers
 export function handleCommunityAdded(event: CommunityAdded): void {
     generiHandleCommunityAdded(
         event.params.communityAddress,
+        event.params.managers,
         event.params.claimAmount,
         event.params.maxClaim,
         event.params.decreaseStep,
         event.params.baseInterval.toI32(),
         event.params.incrementInterval.toI32(),
-        event.block.timestamp
+        event.transaction.hash.toHex(),
+        event.block.timestamp,
+        true
     );
+
     // create community entry
     Community.create(event.params.communityAddress);
 }
@@ -111,6 +118,8 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
             community.contributions = contributions;
             store.remove('CommunityDailyEntity', pastContributionId);
         }
+        const totalNewManagers = event.params.managers.length;
+
         // update previous community
         previousCommunity.migrated = event.params.communityAddress;
         // create new community
@@ -121,17 +130,47 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.decreaseStep = previousCommunity.decreaseStep;
         community.baseInterval = previousCommunity.baseInterval;
         community.incrementInterval = previousCommunity.incrementInterval;
-        community.beneficiaries = previousCommunity.removedManagers;
+        community.beneficiaries = previousCommunity.beneficiaries;
         community.removedBeneficiaries = previousCommunity.removedBeneficiaries;
-        community.managers = 0;
-        community.removedManagers = 0;
+        community.managers = totalNewManagers;
+        community.removedManagers = previousCommunity.removedManagers;
+        community.claims = previousCommunity.claims;
         community.claimed = previousCommunity.claimed;
         community.contributed = previousCommunity.contributed;
         community.contributors = previousCommunity.contributors;
         community.previous = event.params.previousCommunityAddress;
+        community.managerList = new Array<string>();
+        previousCommunity.state = 1;
         // create community entry
         Community.create(event.params.communityAddress);
+
+        let decreaseManagers = 0;
+
+        for (let index = 0; index < event.params.managers.length; index++) {
+            const manager = event.params.managers[index];
+
+            // verify past managers
+            if (!previousCommunity.managerList.includes(manager.toHex())) {
+                decreaseManagers += 1;
+            }
+
+            genericHandleManagerAdded(
+                community,
+                manager,
+                event.params.communityAddress,
+                event.transaction.hash.toString(),
+                event.block.timestamp
+            );
+        }
+        const ubi = UBIEntity.load('0')!;
+        const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
+
         // save entity state
+        ubi.managers -= decreaseManagers;
+        community.managers -= decreaseManagers;
+        ubiDaily.managers -= decreaseManagers;
+        ubi.save();
+        ubiDaily.save();
         community.save();
         previousCommunity.save();
     }

@@ -13,11 +13,13 @@ import {
 export function handleOldCommunityAdded(event: OldCommunityAdded): void {
     generiHandleCommunityAdded(
         event.params._communityAddress,
+        [event.params._firstManager],
         event.params._claimAmount,
         event.params._maxClaim,
         BigInt.fromI32(0),
         event.params._baseInterval.toI32(),
         event.params._incrementInterval.toI32(),
+        event.transaction.hash.toHex(),
         event.block.timestamp
     );
     // create community entry

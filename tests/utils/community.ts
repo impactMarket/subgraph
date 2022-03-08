@@ -4,17 +4,22 @@ import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import {
     CommunityAdded,
+    CommunityMigrated,
     CommunityRemoved
 } from '../../generated/CommunityAdmin/CommunityAdmin';
 
 export function createCommunityAddedEvent(
     communityAddress: string,
     managers: string[],
-    props: Map<string, string>
+    props: Map<string, string>,
+    timestamp: i32 = 0
 ): CommunityAdded {
     const communityAddedEvent = changetype<CommunityAdded>(newMockEvent());
 
     communityAddedEvent.parameters = [];
+    if (timestamp !== 0) {
+        communityAddedEvent.block.timestamp = BigInt.fromI32(timestamp);
+    }
     const communityAddressParam = new ethereum.EventParam(
         'communityAddress',
         ethereum.Value.fromAddress(Address.fromString(communityAddress))
@@ -93,4 +98,40 @@ export function createCommunityRemovedEvent(
     communityRemovedEvent.parameters.push(communityAddressParam);
 
     return communityRemovedEvent;
+}
+
+export function createCommunityMigratedEvent(
+    managers: string[],
+    communityAddress: string,
+    previousCommunityAddress: string,
+    timestamp: i32 = 0
+): CommunityMigrated {
+    const communityMigratedEvent = changetype<CommunityMigrated>(
+        newMockEvent()
+    );
+
+    communityMigratedEvent.parameters = [];
+    if (timestamp !== 0) {
+        communityMigratedEvent.block.timestamp = BigInt.fromI32(timestamp);
+    }
+    const managersParam = new ethereum.EventParam(
+        'managers',
+        ethereum.Value.fromAddressArray(
+            managers.map<Address>((m) => Address.fromString(m))
+        )
+    );
+    const communityAddressParam = new ethereum.EventParam(
+        'communityAddress',
+        ethereum.Value.fromAddress(Address.fromString(communityAddress))
+    );
+    const previousCommunityAddressParam = new ethereum.EventParam(
+        'previousCommunityAddress',
+        ethereum.Value.fromAddress(Address.fromString(previousCommunityAddress))
+    );
+
+    communityMigratedEvent.parameters.push(managersParam);
+    communityMigratedEvent.parameters.push(communityAddressParam);
+    communityMigratedEvent.parameters.push(previousCommunityAddressParam);
+
+    return communityMigratedEvent;
 }

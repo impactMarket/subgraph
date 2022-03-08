@@ -7,7 +7,7 @@ module.exports = {
     },
     extends: ['impact-market/node', 'prettier'],
     rules: {
-        'max-params': ['error', 9],
+        'max-params': ['error', 10],
         'no-underscore-dangle': 'off',
         'prefer-destructuring': 'off'
     }

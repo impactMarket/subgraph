@@ -5,8 +5,9 @@ import {
     CommunityEntity,
     UBIEntity
 } from '../../generated/schema';
+import { fiveCents, normalize } from '../utils';
+import { genericHandleManagerAdded } from './manager';
 import { loadOrCreateDailyUbi } from './ubi';
-import { normalize } from '../utils';
 
 export function loadOrCreateCommunityDaily(
     _community: Address,
@@ -36,12 +37,15 @@ export function loadOrCreateCommunityDaily(
 
 export function generiHandleCommunityAdded(
     _communityAddress: Address,
+    _managers: Array<Address>,
     _claimAmount: BigInt,
     _maxClaim: BigInt,
     _decreaseStep: BigInt,
     _baseInterval: i32,
     _incrementInterval: i32,
-    _blockTimestamp: BigInt
+    _hash: string,
+    _blockTimestamp: BigInt,
+    _firstManagerFunded: boolean = false
 ): void {
     const communityId = _communityAddress.toHex();
     let community = CommunityEntity.load(communityId);
@@ -60,9 +64,11 @@ export function generiHandleCommunityAdded(
     community.removedBeneficiaries = 0;
     community.managers = 0;
     community.removedManagers = 0;
-    community.claimed = BigDecimal.zero();
+    community.claims = 0;
+    community.claimed = _firstManagerFunded ? fiveCents : BigDecimal.zero();
     community.contributed = BigDecimal.zero();
     community.contributors = 0;
+    community.managerList = new Array<string>();
     community.save();
     // create ubi if it doesn't exist
     let ubi = UBIEntity.load('0');
@@ -73,7 +79,7 @@ export function generiHandleCommunityAdded(
         ubi.communities = 1;
         ubi.beneficiaries = 0;
         ubi.managers = 0;
-        ubi.claimed = BigDecimal.zero();
+        ubi.claimed = _firstManagerFunded ? fiveCents : BigDecimal.zero();
         ubi.contributed = BigDecimal.zero();
         ubi.contributors = 0;
         ubi.volume = BigDecimal.zero();
@@ -83,13 +89,31 @@ export function generiHandleCommunityAdded(
     } else {
         // one already!
         ubi.communities += 1;
+        if (_firstManagerFunded) {
+            ubi.claimed = ubi.claimed.plus(fiveCents);
+        }
         ubi.save();
     }
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
 
     ubiDaily.communities += 1;
+    if (_firstManagerFunded) {
+        ubiDaily.claimed = ubiDaily.claimed.plus(fiveCents);
+    }
     ubiDaily.save();
+
+    for (let index = 0; index < _managers.length; index++) {
+        const manager = _managers[index];
+
+        genericHandleManagerAdded(
+            community,
+            manager,
+            _communityAddress,
+            _hash,
+            _blockTimestamp
+        );
+    }
 }
 
 export function generiHandleCommunityRemoved(
@@ -109,11 +133,13 @@ export function generiHandleCommunityRemoved(
 
     ubi.communities -= 1;
     ubi.beneficiaries -= community.beneficiaries;
+    ubi.managers -= community.managers;
     ubi.save();
     // update daily ubi
     const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
 
     ubiDaily.communities -= 1;
     ubiDaily.beneficiaries -= community.beneficiaries;
+    ubiDaily.managers -= community.managers;
     ubiDaily.save();
 }

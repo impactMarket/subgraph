@@ -22,7 +22,7 @@ import { normalize } from '../utils';
 
 export function handleManagerAdded(event: ManagerAdded): void {
     genericHandleManagerAdded(
-        event.address,
+        CommunityEntity.load(event.address.toHex()),
         event.params.account,
         event.params.manager,
         event.transaction.hash.toHex(),

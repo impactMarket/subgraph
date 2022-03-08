@@ -1,7 +1,22 @@
+"""
+Proposals for community creation
+"""
 type CommunityProposalEntity @entity {
-  id: ID! # proposal id
+  """
+  proposal id
+  """
+  id: ID!
+  """
+  proposal calldata
+  """
   calldata: Bytes!
+  """
+  status from last action
+  """
   status: Int!
+  """
+  endBlock for the last action
+  """
   endBlock: Int!
 }
 
@@ -70,6 +85,10 @@ type CommunityEntity @entity {
   """
   claimed: BigDecimal!
   """
+  total claims
+  """
+  claims: Int!
+  """
   total received from contributions (normalized)
   """
   contributed: BigDecimal!
@@ -78,6 +97,10 @@ type CommunityEntity @entity {
   """
   contributors: Int!
   contributions: [ContributorContributionsEntity!]!
+  """
+  active community managers array
+  """
+  managerList: [ManagerEntity!]! @derivedFrom(field: "community")
 }
 
 # when a community is migrated, CommunityDataEntity are migrated too

@@ -97,6 +97,7 @@ export class CommunityEntity extends Entity {
     this.set("managers", Value.fromI32(0));
     this.set("removedManagers", Value.fromI32(0));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("claims", Value.fromI32(0));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
     this.set("contributions", Value.fromStringArray(new Array(0)));
@@ -270,6 +271,15 @@ export class CommunityEntity extends Entity {
     this.set("claimed", Value.fromBigDecimal(value));
   }
 
+  get claims(): i32 {
+    let value = this.get("claims");
+    return value!.toI32();
+  }
+
+  set claims(value: i32) {
+    this.set("claims", Value.fromI32(value));
+  }
+
   get contributed(): BigDecimal {
     let value = this.get("contributed");
     return value!.toBigDecimal();
@@ -295,6 +305,15 @@ export class CommunityEntity extends Entity {
 
   set contributions(value: Array<string>) {
     this.set("contributions", Value.fromStringArray(value));
+  }
+
+  get managerList(): Array<string> {
+    let value = this.get("managerList");
+    return value!.toStringArray();
+  }
+
+  set managerList(value: Array<string>) {
+    this.set("managerList", Value.fromStringArray(value));
   }
 }
 
