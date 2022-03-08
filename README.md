@@ -15,7 +15,8 @@ $ docker run -it --rm --mount type=bind,source=<absolute/path/to/project>,target
 
 ## Deploy
 ```
+$ yarn prepare:alfajores # or mainnet
 $ yarn codegen
 $ yarn build
-$ yarn deploy
+$ yarn deploy:alfajores # or mainnet
 ```
