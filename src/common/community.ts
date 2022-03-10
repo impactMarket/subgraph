@@ -61,7 +61,6 @@ export function generiHandleCommunityAdded(
     community.claimed = _firstManagerFunded ? fiveCents : BigDecimal.zero();
     community.contributed = BigDecimal.zero();
     community.contributors = 0;
-    community.managerList = new Array<string>();
     community.save();
     // create ubi if it doesn't exist
     let ubi = UBIEntity.load('0');
