@@ -112,7 +112,6 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.contributed = previousCommunity.contributed;
         community.contributors = previousCommunity.contributors;
         community.previous = event.params.previousCommunityAddress;
-        community.managerList = new Array<string>();
         previousCommunity.state = 1;
         // create community entry
         Community.create(event.params.communityAddress);
