@@ -375,6 +375,16 @@ type UserTransactionsEntity @entity {
   number of transactions made by this user
   """
   transactions: Int!
+}
+
+"""
+User transaction with a given address
+"""
+type UserTransactionWithEntity @entity {
+  """
+  pattern: fromAddress-toAddress
+  """
+  id: ID!
   """
   last transaction day id (block timestamp / 86400)
   """

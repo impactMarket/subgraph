@@ -13,7 +13,10 @@ const managerAddress: string[] = [
 ];
 const beneficiaryAddress: string[] = [
     '0xeeb298432a9d38d2d4818e934e9eb325fd455dba',
-    '0xd4f7a973b08f64b8f8b558ac8016fc2e0b77ad08'
+    '0xd4f7a973b08f64b8f8b558ac8016fc2e0b77ad08',
+    '0x5d3a536e4d6dbd6114cc1ead35777bab948e3643',
+    '0x6b175474e89094c44da98b954eedeac495271d0f',
+    '0xdd974d5c2e2928dea5f71b9825b8b646686bd200'
 ];
 const userAddress: string[] = [
     '0xba889d87b9aac1ac322e9ffc01040bdd16681e42',

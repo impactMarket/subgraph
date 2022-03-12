@@ -1066,6 +1066,55 @@ export class UserTransactionsEntity extends Entity {
   }
 }
 
+export class UserTransactionWithEntity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("lastTransaction", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save UserTransactionWithEntity entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save UserTransactionWithEntity entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("UserTransactionWithEntity", id.toString(), this);
+    }
+  }
+
+  static load(id: string): UserTransactionWithEntity | null {
+    return changetype<UserTransactionWithEntity | null>(
+      store.get("UserTransactionWithEntity", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get lastTransaction(): i32 {
+    let value = this.get("lastTransaction");
+    return value!.toI32();
+  }
+
+  set lastTransaction(value: i32) {
+    this.set("lastTransaction", Value.fromI32(value));
+  }
+}
+
 export class ContributorContributionsEntity extends Entity {
   constructor(id: string) {
     super();

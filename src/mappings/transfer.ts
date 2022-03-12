@@ -8,6 +8,7 @@ import {
     ContributorEntity,
     UBIDailyEntity,
     UBIEntity,
+    UserTransactionWithEntity,
     UserTransactionsEntity
 } from '../../generated/schema';
 import { Transfer } from '../../generated/CeloDollar/CeloDollar';
@@ -147,29 +148,24 @@ export function handleTransferCeloDollar(event: Transfer): void {
         const ubi = UBIEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
 
-        communityDaily.volume = communityDaily.volume.plus(normalizedAmount);
-        communityDaily.transactions += 1;
-
         let transactionFrom = UserTransactionsEntity.load(event.params.from.toHex());
         let transactionTo = UserTransactionsEntity.load(event.params.to.toHex());
+        const transactionWithId = `${event.params.from.toHex()}-${event.params.to.toHex()}`;
+        let transactionWith = UserTransactionWithEntity.load(transactionWithId);
 
-        if (event.params.from.notEqual(event.transaction.from)) {
-            if (!transactionFrom) {
-                ubi.reach += 1;
-                ubiDaily.reach += 1;
-                communityDaily.reach += 1;
-            } else if (transactionFrom.lastTransaction !== dayId) {
-                ubiDaily.reach += 1;
-                communityDaily.reach += 1;
-            }
-        } else if (!transactionTo) {
+        if (!transactionFrom || !transactionTo) {
             ubi.reach += 1;
             ubiDaily.reach += 1;
             communityDaily.reach += 1;
-        } else if (transactionTo.lastTransaction !== dayId) {
+        } else if (
+            transactionFrom &&
+            transactionTo &&
+            (!transactionWith || (transactionWith && transactionWith.lastTransaction !== dayId))
+        ) {
             ubiDaily.reach += 1;
             communityDaily.reach += 1;
         }
+
         if (!transactionFrom) {
             transactionFrom = new UserTransactionsEntity(event.params.from.toHex());
             transactionFrom.volume = BigDecimal.zero();
@@ -180,22 +176,27 @@ export function handleTransferCeloDollar(event: Transfer): void {
             transactionTo.volume = BigDecimal.zero();
             transactionTo.transactions = 0;
         }
+        if (!transactionWith) {
+            transactionWith = new UserTransactionWithEntity(transactionWithId);
+        }
         transactionFrom.volume = transactionFrom.volume.plus(normalizedAmount);
         transactionFrom.transactions += 1;
-        transactionFrom.lastTransaction = dayId;
         transactionTo.volume = transactionTo.volume.plus(normalizedAmount);
         transactionTo.transactions += 1;
-        transactionTo.lastTransaction = dayId;
+        transactionWith.lastTransaction = dayId;
 
         ubi.volume = ubi.volume.plus(normalizedAmount);
         ubi.transactions += 1;
         ubiDaily.volume = ubiDaily.volume.plus(normalizedAmount);
         ubiDaily.transactions += 1;
+        communityDaily.volume = communityDaily.volume.plus(normalizedAmount);
+        communityDaily.transactions += 1;
 
-        ubi.save();
-        ubiDaily.save();
         transactionFrom.save();
         transactionTo.save();
+        transactionWith.save();
+        ubi.save();
+        ubiDaily.save();
         communityDaily.save();
     }
     // nothing goes here!
