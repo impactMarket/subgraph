@@ -101,6 +101,7 @@ export class CommunityEntity extends Entity {
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
     this.set("contributions", Value.fromStringArray(new Array(0)));
+    this.set("estimatedFunds", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -314,6 +315,15 @@ export class CommunityEntity extends Entity {
 
   set managerList(value: Array<string>) {
     this.set("managerList", Value.fromStringArray(value));
+  }
+
+  get estimatedFunds(): BigDecimal {
+    let value = this.get("estimatedFunds");
+    return value!.toBigDecimal();
+  }
+
+  set estimatedFunds(value: BigDecimal) {
+    this.set("estimatedFunds", Value.fromBigDecimal(value));
   }
 }
 
@@ -1004,7 +1014,6 @@ export class UserTransactionsEntity extends Entity {
 
     this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("transactions", Value.fromI32(0));
-    this.set("lastTransaction", Value.fromI32(0));
   }
 
   save(): void {
@@ -1054,15 +1063,6 @@ export class UserTransactionsEntity extends Entity {
 
   set transactions(value: i32) {
     this.set("transactions", Value.fromI32(value));
-  }
-
-  get lastTransaction(): i32 {
-    let value = this.get("lastTransaction");
-    return value!.toI32();
-  }
-
-  set lastTransaction(value: i32) {
-    this.set("lastTransaction", Value.fromI32(value));
   }
 }
 
