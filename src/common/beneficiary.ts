@@ -91,6 +91,7 @@ export function genericHandleBeneficiaryAdded(
             // update community
             community.beneficiaries += 1;
             community.claimed = community.claimed.plus(fiveCents);
+            community.estimatedFunds = community.estimatedFunds.minus(fiveCents);
             community.maxClaim = community.maxClaim.minus(community.decreaseStep);
             community.save();
             // update community daily
@@ -193,6 +194,7 @@ export function genericHandleBeneficiaryClaim(
             // update community
             community.claims += 1;
             community.claimed = community.claimed.plus(normalizedAmount);
+            community.estimatedFunds = community.estimatedFunds.minus(normalizedAmount);
             community.save();
             // update community daily
             communityDaily.claimed = communityDaily.claimed.plus(normalizedAmount);

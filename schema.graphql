@@ -101,6 +101,10 @@ type CommunityEntity @entity {
   active community managers array
   """
   managerList: [ManagerEntity!]! @derivedFrom(field: "community")
+  """
+  estimated funds on contract (normalized) (raised - claimed)
+  """
+  estimatedFunds: BigDecimal!
 }
 
 # when a community is migrated, CommunityDataEntity are migrated too

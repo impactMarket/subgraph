@@ -71,7 +71,12 @@ export function generiHandleCommunityAdded(
         ubi.communities = 1;
         ubi.beneficiaries = 0;
         ubi.managers = 0;
-        ubi.claimed = _firstManagerFunded ? fiveCents : BigDecimal.zero();
+        if (_firstManagerFunded) {
+            ubi.claimed = fiveCents;
+            community.estimatedFunds = community.estimatedFunds.minus(fiveCents);
+        } else {
+            ubi.claimed = BigDecimal.zero();
+        }
         ubi.contributed = BigDecimal.zero();
         ubi.contributors = 0;
         ubi.volume = BigDecimal.zero();
@@ -83,6 +88,7 @@ export function generiHandleCommunityAdded(
         ubi.communities += 1;
         if (_firstManagerFunded) {
             ubi.claimed = ubi.claimed.plus(fiveCents);
+            community.estimatedFunds = community.estimatedFunds.minus(fiveCents);
         }
         ubi.save();
     }

@@ -108,6 +108,7 @@ export function handleTransferCeloDollar(event: Transfer): void {
         ubiDaily.save();
         // update community
         community.contributed = community.contributed.plus(normalizedAmount);
+        community.estimatedFunds = community.estimatedFunds.plus(normalizedAmount);
         community.save();
         // update community daily
         communityDaily.contributed = communityDaily.contributed.plus(normalizedAmount);
