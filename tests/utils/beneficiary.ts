@@ -22,10 +22,7 @@ export function createBeneficiaryAddedEvent(
     beneficiaryAddedEvent.parameters = [];
     beneficiaryAddedEvent.address = Address.fromString(fromCommunityAddress);
     beneficiaryAddedEvent.block.timestamp = BigInt.fromI32(addTimestamp);
-    const managerParam = new ethereum.EventParam(
-        'manager',
-        ethereum.Value.fromAddress(Address.fromString(manager))
-    );
+    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
     const beneficiaryParam = new ethereum.EventParam(
         'beneficiary',
         ethereum.Value.fromAddress(Address.fromString(beneficiary))
@@ -42,17 +39,12 @@ export function createBeneficiaryRemovedEvent(
     beneficiary: string,
     fromCommunityAddress: string
 ): BeneficiaryRemoved {
-    const beneficiaryRemovedEvent = changetype<BeneficiaryRemoved>(
-        newMockEvent()
-    );
+    const beneficiaryRemovedEvent = changetype<BeneficiaryRemoved>(newMockEvent());
 
     beneficiaryRemovedEvent.parameters = [];
     beneficiaryRemovedEvent.address = Address.fromString(fromCommunityAddress);
     beneficiaryRemovedEvent.block.timestamp = BigInt.fromI32(addTimestamp);
-    const managerParam = new ethereum.EventParam(
-        'manager',
-        ethereum.Value.fromAddress(Address.fromString(manager))
-    );
+    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
     const beneficiaryParam = new ethereum.EventParam(
         'beneficiary',
         ethereum.Value.fromAddress(Address.fromString(beneficiary))
@@ -64,13 +56,8 @@ export function createBeneficiaryRemovedEvent(
     return beneficiaryRemovedEvent;
 }
 
-export function createBeneficiaryJoinedEvent(
-    beneficiary: string,
-    communityAddress: string
-): BeneficiaryJoined {
-    const beneficiaryJoinedEvent = changetype<BeneficiaryJoined>(
-        newMockEvent()
-    );
+export function createBeneficiaryJoinedEvent(beneficiary: string, communityAddress: string): BeneficiaryJoined {
+    const beneficiaryJoinedEvent = changetype<BeneficiaryJoined>(newMockEvent());
 
     beneficiaryJoinedEvent.parameters = [];
     beneficiaryJoinedEvent.address = Address.fromString(communityAddress);
@@ -101,10 +88,7 @@ export function createBeneficiaryClaimEvent(
         'beneficiary',
         ethereum.Value.fromAddress(Address.fromString(beneficiary))
     );
-    const amountParam = new ethereum.EventParam(
-        'amount',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(amount))
-    );
+    const amountParam = new ethereum.EventParam('amount', ethereum.Value.fromUnsignedBigInt(BigInt.fromString(amount)));
 
     beneficiaryClaimEvent.parameters.push(beneficiaryParam);
     beneficiaryClaimEvent.parameters.push(amountParam);

@@ -89,7 +89,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
 
             contributions.push(contributorContributionsId);
             community.contributions = contributions;
-            store.remove('CommunityDailyEntity', pastContributionId);
+            store.remove('ContributorContributionsEntity', pastContributionId);
         }
         const totalNewManagers = event.params.managers.length;
 

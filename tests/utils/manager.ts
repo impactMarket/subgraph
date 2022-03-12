@@ -2,10 +2,7 @@
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
-import {
-    ManagerAdded,
-    ManagerRemoved
-} from '../../generated/templates/Community/Community';
+import { ManagerAdded, ManagerRemoved } from '../../generated/templates/Community/Community';
 
 export function createManagerAddedEvent(
     manager: string,
@@ -20,14 +17,8 @@ export function createManagerAddedEvent(
         managerAddedEvent.block.timestamp = BigInt.fromI32(timestamp);
     }
     managerAddedEvent.address = Address.fromString(fromCommunityAddress);
-    const managerParam = new ethereum.EventParam(
-        'manager',
-        ethereum.Value.fromAddress(Address.fromString(manager))
-    );
-    const accountParam = new ethereum.EventParam(
-        'account',
-        ethereum.Value.fromAddress(Address.fromString(account))
-    );
+    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
+    const accountParam = new ethereum.EventParam('account', ethereum.Value.fromAddress(Address.fromString(account)));
 
     managerAddedEvent.parameters.push(managerParam);
     managerAddedEvent.parameters.push(accountParam);
@@ -48,14 +39,8 @@ export function createManagerRemovedEvent(
         managerRemovedEvent.block.timestamp = BigInt.fromI32(timestamp);
     }
     managerRemovedEvent.address = Address.fromString(fromCommunityAddress);
-    const managerParam = new ethereum.EventParam(
-        'manager',
-        ethereum.Value.fromAddress(Address.fromString(manager))
-    );
-    const accountParam = new ethereum.EventParam(
-        'account',
-        ethereum.Value.fromAddress(Address.fromString(account))
-    );
+    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
+    const accountParam = new ethereum.EventParam('account', ethereum.Value.fromAddress(Address.fromString(account)));
 
     managerRemovedEvent.parameters.push(managerParam);
     managerRemovedEvent.parameters.push(accountParam);

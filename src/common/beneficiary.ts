@@ -19,6 +19,9 @@ export function genericHandleBeneficiaryAdded(
         // load beneficiary
         const beneficiaryId = _beneficiary.toHex();
         let beneficiary = BeneficiaryEntity.load(beneficiaryId);
+        // alpha version of smart contracts had an issue.
+        // it allowed to add a user as beneficiary even though it was a beneficiary already.
+        let noContractsAlphaIssue = true;
 
         if (!beneficiary) {
             beneficiary = new BeneficiaryEntity(beneficiaryId);
@@ -55,39 +58,46 @@ export function genericHandleBeneficiaryAdded(
             beneficiary &&
             Address.fromString(beneficiary.community).equals(_community)
         ) {
-            community.removedBeneficiaries -= 1;
+            if (beneficiary.state == 0) {
+                noContractsAlphaIssue = false;
+            } else {
+                community.removedBeneficiaries -= 1;
+            }
         }
-        // add beneficiary activity
-        const activity = new UserActivityEntity(_hash);
 
-        activity.user = _beneficiary;
-        activity.by = _by;
-        activity.community = community.id;
-        activity.timestamp = _blockTimestamp.toI32();
-        activity.activity = 'ADDED';
-        activity.save();
-        beneficiary.save();
-        // update ubi
-        const ubi = UBIEntity.load('0')!;
+        if (noContractsAlphaIssue) {
+            // add beneficiary activity
+            const activity = new UserActivityEntity(_hash);
 
-        ubi.beneficiaries += 1;
-        ubi.claimed = ubi.claimed.plus(fiveCents);
-        ubi.save();
-        // update daily ubi
-        const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+            activity.user = _beneficiary;
+            activity.by = _by;
+            activity.community = community.id;
+            activity.timestamp = _blockTimestamp.toI32();
+            activity.activity = 'ADDED';
+            activity.save();
+            beneficiary.save();
+            // update ubi
+            const ubi = UBIEntity.load('0')!;
 
-        ubiDaily.beneficiaries += 1;
-        ubiDaily.claimed = ubiDaily.claimed.plus(fiveCents);
-        ubiDaily.save();
-        // update community
-        community.beneficiaries += 1;
-        community.claimed = community.claimed.plus(fiveCents);
-        community.maxClaim = community.maxClaim.minus(community.decreaseStep);
-        community.save();
-        // update community daily
-        communityDaily.beneficiaries += 1;
-        communityDaily.claimed = communityDaily.claimed.plus(fiveCents);
-        communityDaily.save();
+            ubi.beneficiaries += 1;
+            ubi.claimed = ubi.claimed.plus(fiveCents);
+            ubi.save();
+            // update daily ubi
+            const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
+
+            ubiDaily.beneficiaries += 1;
+            ubiDaily.claimed = ubiDaily.claimed.plus(fiveCents);
+            ubiDaily.save();
+            // update community
+            community.beneficiaries += 1;
+            community.claimed = community.claimed.plus(fiveCents);
+            community.maxClaim = community.maxClaim.minus(community.decreaseStep);
+            community.save();
+            // update community daily
+            communityDaily.beneficiaries += 1;
+            communityDaily.claimed = communityDaily.claimed.plus(fiveCents);
+            communityDaily.save();
+        }
     }
 }
 
@@ -104,7 +114,7 @@ export function genericHandleBeneficiaryRemoved(
     if (community) {
         const beneficiary = BeneficiaryEntity.load(_beneficiary.toHex());
 
-        if (beneficiary) {
+        if (beneficiary && beneficiary.state !== 1) {
             const communityDaily = loadOrCreateCommunityDaily(_community, _blockTimestamp);
             // update ubi
             const ubi = UBIEntity.load('0')!;
@@ -143,7 +153,7 @@ export function genericHandleBeneficiaryRemoved(
 export function genericHandleBeneficiaryJoined(_community: Address, _beneficiary: Address): void {
     const beneficiary = BeneficiaryEntity.load(_beneficiary.toHex());
 
-    if (beneficiary) {
+    if (beneficiary && beneficiary.community !== _community.toHex()) {
         // update beneficiary
         beneficiary.community = _community.toHex();
         beneficiary.save();

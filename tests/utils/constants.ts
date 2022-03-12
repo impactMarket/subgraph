@@ -13,29 +13,27 @@ const managerAddress: string[] = [
 ];
 const beneficiaryAddress: string[] = [
     '0xeeb298432a9d38d2d4818e934e9eb325fd455dba',
-    '0xd4f7a973b08f64b8f8b558ac8016fc2e0b77ad08'
+    '0xd4f7a973b08f64b8f8b558ac8016fc2e0b77ad08',
+    '0x5d3a536e4d6dbd6114cc1ead35777bab948e3643',
+    '0x6b175474e89094c44da98b954eedeac495271d0f',
+    '0xdd974d5c2e2928dea5f71b9825b8b646686bd200'
 ];
 const userAddress: string[] = [
     '0xba889d87b9aac1ac322e9ffc01040bdd16681e42',
-    '0x505d61759efff407939606b47ca721e2a18f3ea2'
+    '0x505d61759efff407939606b47ca721e2a18f3ea2',
+    '0x8f8f72aa9304c8b593d555f12ef6589cc3a579a2'
 ];
 
 const fiveCents = BigInt.fromString('5').times(BigInt.fromI32(10).pow(16));
-const toToken = (amount: string): BigInt =>
-    BigInt.fromString(amount).times(BigInt.fromI32(10).pow(18));
+const toToken = (amount: string): BigInt => BigInt.fromString(amount).times(BigInt.fromI32(10).pow(18));
 const normalize = (amount: string): BigDecimal =>
-    BigDecimal.fromString(amount).div(
-        BigDecimal.fromString('1000000000000000000')
-    );
+    BigDecimal.fromString(amount).div(BigDecimal.fromString('1000000000000000000'));
 
 const communityProps0 = new Map<string, string>();
 
 communityProps0.set('claimAmount', toToken('5').toString());
 communityProps0.set('maxClaim', '0');
-communityProps0.set(
-    'decreaseStep',
-    BigInt.fromString('1').times(BigInt.fromI32(10).pow(16)).toString()
-);
+communityProps0.set('decreaseStep', BigInt.fromString('1').times(BigInt.fromI32(10).pow(16)).toString());
 communityProps0.set('baseInterval', '0');
 communityProps0.set('incrementInterval', '0');
 communityProps0.set('minTranche', '0');
