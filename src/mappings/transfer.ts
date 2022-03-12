@@ -21,9 +21,7 @@ function updateContributorHelper(
     normalizedAmount: BigDecimal,
     dayId: i32,
     ubi: UBIEntity,
-    ubiDaily: UBIDailyEntity,
-    community: CommunityEntity | null,
-    communityDaily: CommunityDailyEntity | null
+    ubiDaily: UBIDailyEntity
 ): void {
     // update contribuotrs data
     let contributor = ContributorEntity.load(event.params.from.toHex());
@@ -34,15 +32,14 @@ function updateContributorHelper(
         contributor.contributions = 0;
         contributor.lastContribution = dayId;
         // update ubi data
-        ubi.contributors += 1;
-        ubiDaily.contributors += 1;
-        if (community) {
-            community.contributors += 1;
+        if (event.params.from.notEqual(Address.fromString(treasuryAddress))) {
+            ubi.contributors += 1;
+            ubiDaily.contributors += 1;
         }
-        if (communityDaily) {
-            communityDaily.contributors += 1;
-        }
-    } else if (contributor.lastContribution != dayId) {
+    } else if (
+        contributor.lastContribution != dayId &&
+        event.params.from.notEqual(Address.fromString(treasuryAddress))
+    ) {
         ubiDaily.contributors += 1;
     }
     contributor.contributed = contributor.contributed.plus(normalizedAmount);
@@ -55,8 +52,6 @@ function updateContributorContributionsHelper(
     event: Transfer,
     normalizedAmount: BigDecimal,
     dayId: i32,
-    ubi: UBIEntity,
-    ubiDaily: UBIDailyEntity,
     community: CommunityEntity | null,
     communityDaily: CommunityDailyEntity | null
 ): void {
@@ -71,8 +66,6 @@ function updateContributorContributionsHelper(
         contributorContributions.contributions = 0;
         contributorContributions.lastContribution = dayId;
         // update ubi data
-        ubi.contributors += 1;
-        ubiDaily.contributors += 1;
         if (community) {
             community.contributors += 1;
             const contributions = community.contributions;
@@ -83,8 +76,9 @@ function updateContributorContributionsHelper(
         if (communityDaily) {
             communityDaily.contributors += 1;
         }
-    } else if (contributorContributions.lastContribution != dayId) {
-        ubiDaily.contributors += 1;
+    }
+    if (communityDaily && contributorContributions.lastContribution !== dayId) {
+        communityDaily.contributors += 1;
     }
     contributorContributions.contributed = contributorContributions.contributed.plus(normalizedAmount);
     contributorContributions.contributions += 1;
@@ -102,8 +96,8 @@ export function handleTransferCeloDollar(event: Transfer): void {
         const ubi = UBIEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
 
-        updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily, community, communityDaily);
-        updateContributorContributionsHelper(event, normalizedAmount, dayId, ubi, ubiDaily, community, communityDaily);
+        updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
+        updateContributorContributionsHelper(event, normalizedAmount, dayId, community, communityDaily);
 
         if (event.params.from.notEqual(Address.fromString(treasuryAddress))) {
             ubi.contributed = ubi.contributed.plus(normalizedAmount);
@@ -124,8 +118,8 @@ export function handleTransferCeloDollar(event: Transfer): void {
         ubi.contributed = ubi.contributed.plus(normalizedAmount);
         ubiDaily.contributed = ubiDaily.contributed.plus(normalizedAmount);
 
-        updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily, null, null);
-        updateContributorContributionsHelper(event, normalizedAmount, dayId, ubi, ubiDaily, null, null);
+        updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
+        updateContributorContributionsHelper(event, normalizedAmount, dayId, null, null);
 
         ubi.save();
         ubiDaily.save();
