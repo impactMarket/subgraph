@@ -1,32 +1,19 @@
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import {
-    communityAddress,
-    communityProps,
-    managerAddress,
-    normalize
-} from './utils/constants';
+import { communityAddress, communityProps, managerAddress, normalize } from './utils/constants';
 import {
     createCommunityAddedEvent,
     createCommunityMigratedEvent,
     createCommunityRemovedEvent
 } from './utils/community';
-import {
-    handleCommunityAdded,
-    handleCommunityMigrated,
-    handleCommunityRemoved
-} from '../src/mappings/communityAdmin';
+import { handleCommunityAdded, handleCommunityMigrated, handleCommunityRemoved } from '../src/mappings/communityAdmin';
 
 export { handleCommunityAdded, handleCommunityRemoved };
 
 test('create community', () => {
     clearStore();
 
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -43,22 +30,13 @@ test('create community', () => {
         normalize(communityProps[0].get('decreaseStep')).toString()
     );
     assert.fieldEquals('UBIEntity', '0', 'communities', '1');
-    assert.fieldEquals(
-        'ManagerEntity',
-        managerAddress[0],
-        'community',
-        communityAddress[0]
-    );
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'community', communityAddress[0]);
 });
 
 test('remove community', () => {
     clearStore();
 
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -76,11 +54,7 @@ test('remove community', () => {
 test('migrate community', () => {
     clearStore();
 
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -96,28 +70,14 @@ test('migrate community', () => {
     assert.fieldEquals('UBIEntity', '0', 'managers', '1');
 
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '1');
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[1],
-        'previous',
-        communityAddress[0]
-    );
-    assert.fieldEquals(
-        'ManagerEntity',
-        managerAddress[0],
-        'community',
-        communityAddress[1]
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'previous', communityAddress[0]);
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'community', communityAddress[1]);
 });
 
 test('migrate community with different managers', () => {
     clearStore();
 
-    const community = createCommunityAddedEvent(
-        communityAddress[0],
-        [managerAddress[0]],
-        communityProps[0]
-    );
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
 
@@ -133,16 +93,6 @@ test('migrate community with different managers', () => {
     assert.fieldEquals('UBIEntity', '0', 'managers', '1');
 
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '1');
-    assert.fieldEquals(
-        'CommunityEntity',
-        communityAddress[1],
-        'previous',
-        communityAddress[0]
-    );
-    assert.fieldEquals(
-        'ManagerEntity',
-        managerAddress[1],
-        'community',
-        communityAddress[1]
-    );
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'previous', communityAddress[0]);
+    assert.fieldEquals('ManagerEntity', managerAddress[1], 'community', communityAddress[1]);
 });
