@@ -112,6 +112,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.contributed = previousCommunity.contributed;
         community.contributors = previousCommunity.contributors;
         community.previous = event.params.previousCommunityAddress;
+        community.managerList = new Array<string>();
         previousCommunity.state = 1;
         // create community entry
         Community.create(event.params.communityAddress);
@@ -122,7 +123,12 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
             const manager = event.params.managers[index];
 
             // verify past managers
-            if (!previousCommunity.managerList.includes(manager.toHex())) {
+            if (
+                previousCommunity &&
+                previousCommunity.managerList &&
+                previousCommunity.managerList.length > 0 &&
+                previousCommunity.managerList.includes(manager.toHex())
+            ) {
                 decreaseManagers += 1;
             }
 

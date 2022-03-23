@@ -7,14 +7,14 @@ import { loadOrCreateDailyUbi } from './ubi';
 
 export function loadOrCreateCommunityDaily(_community: Address, _blockTimestamp: BigInt): CommunityDailyEntity {
     // load or create community daily
-    const dayId = _blockTimestamp.toI32() / 86400;
-    const communityDailyId = `${_community.toHex()}-${dayId}`;
+    const dayIdInt = _blockTimestamp.toI32() / 86400;
+    const communityDailyId = `${_community.toHex()}-${dayIdInt}`;
     let communityDaily = CommunityDailyEntity.load(communityDailyId);
 
     if (!communityDaily) {
         communityDaily = new CommunityDailyEntity(communityDailyId);
         communityDaily.community = _community.toHex();
-        communityDaily.dayId = dayId;
+        communityDaily.dayId = dayIdInt;
         communityDaily.beneficiaries = 0;
         communityDaily.managers = 0;
         communityDaily.claimed = BigDecimal.zero();
@@ -23,6 +23,38 @@ export function loadOrCreateCommunityDaily(_community: Address, _blockTimestamp:
         communityDaily.volume = BigDecimal.zero();
         communityDaily.transactions = 0;
         communityDaily.reach = 0;
+        communityDaily.fundingRate = BigDecimal.zero();
+
+        let previousDayIdInt = dayIdInt - 1;
+        const yesterdayCommunityDaily = CommunityDailyEntity.load(previousDayIdInt.toString());
+
+        if (yesterdayCommunityDaily && yesterdayCommunityDaily.fundingRate.equals(BigDecimal.zero())) {
+            let mongthlyContributed = BigDecimal.zero();
+            let monthlyClaimed = BigDecimal.zero();
+            let previousUbiDaily = CommunityDailyEntity.load(previousDayIdInt.toString());
+
+            do {
+                if (previousUbiDaily) {
+                    mongthlyContributed = previousUbiDaily.contributed.plus(mongthlyContributed);
+                    monthlyClaimed = previousUbiDaily.claimed.plus(monthlyClaimed);
+                }
+
+                previousDayIdInt--;
+                previousUbiDaily = CommunityDailyEntity.load(previousDayIdInt.toString());
+            } while (dayIdInt - previousDayIdInt <= 30 && previousUbiDaily !== null);
+
+            let fundingRate = BigDecimal.zero();
+
+            if (mongthlyContributed.gt(BigDecimal.zero())) {
+                fundingRate = mongthlyContributed
+                    .minus(monthlyClaimed)
+                    .div(mongthlyContributed)
+                    .times(BigDecimal.fromString('100'));
+            }
+
+            yesterdayCommunityDaily.fundingRate = fundingRate;
+            yesterdayCommunityDaily.save();
+        }
     }
 
     return communityDaily;
@@ -61,6 +93,7 @@ export function generiHandleCommunityAdded(
     community.claimed = _firstManagerFunded ? fiveCents : BigDecimal.zero();
     community.contributed = BigDecimal.zero();
     community.contributors = 0;
+    community.managerList = new Array<string>();
     community.save();
     // create ubi if it doesn't exist
     let ubi = UBIEntity.load('0');

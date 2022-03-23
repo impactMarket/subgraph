@@ -100,7 +100,7 @@ type CommunityEntity @entity {
   """
   active community managers array
   """
-  managerList: [ManagerEntity!]! @derivedFrom(field: "community")
+  managerList: [ManagerEntity!]!
   """
   estimated funds on contract (normalized) (raised - claimed)
   """
@@ -158,6 +158,10 @@ type CommunityDailyEntity @entity {
   number of reached unique addresses
   """
   reach: Int!
+  """
+  funding rate: (monthly raised - monthly claimed) / monthly raised
+  """
+  fundingRate: BigDecimal!
 }
 
 """
@@ -250,6 +254,10 @@ type UBIDailyEntity @entity {
   number of reached unique addresses
   """
   reach: Int!
+  """
+  funding rate: (monthly raised - monthly claimed) / monthly raised
+  """
+  fundingRate: BigDecimal!
 }
 
 """
