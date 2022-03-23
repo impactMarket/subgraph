@@ -101,6 +101,7 @@ export class CommunityEntity extends Entity {
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
     this.set("contributions", Value.fromStringArray(new Array(0)));
+    this.set("managerList", Value.fromStringArray(new Array(0)));
     this.set("estimatedFunds", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
@@ -342,6 +343,7 @@ export class CommunityDailyEntity extends Entity {
     this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("transactions", Value.fromI32(0));
     this.set("reach", Value.fromI32(0));
+    this.set("fundingRate", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -460,6 +462,15 @@ export class CommunityDailyEntity extends Entity {
 
   set reach(value: i32) {
     this.set("reach", Value.fromI32(value));
+  }
+
+  get fundingRate(): BigDecimal {
+    let value = this.get("fundingRate");
+    return value!.toBigDecimal();
+  }
+
+  set fundingRate(value: BigDecimal) {
+    this.set("fundingRate", Value.fromBigDecimal(value));
   }
 }
 
@@ -601,6 +612,7 @@ export class UBIDailyEntity extends Entity {
     this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("transactions", Value.fromI32(0));
     this.set("reach", Value.fromI32(0));
+    this.set("fundingRate", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -708,6 +720,15 @@ export class UBIDailyEntity extends Entity {
 
   set reach(value: i32) {
     this.set("reach", Value.fromI32(value));
+  }
+
+  get fundingRate(): BigDecimal {
+    let value = this.get("fundingRate");
+    return value!.toBigDecimal();
+  }
+
+  set fundingRate(value: BigDecimal) {
+    this.set("fundingRate", Value.fromBigDecimal(value));
   }
 }
 
