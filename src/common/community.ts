@@ -43,10 +43,14 @@ export function loadOrCreateCommunityDaily(_community: Address, _blockTimestamp:
                 previousUbiDaily = CommunityDailyEntity.load(previousDayIdInt.toString());
             } while (dayIdInt - previousDayIdInt <= 30 && previousUbiDaily !== null);
 
-            const fundingRate = mongthlyContributed
-                .minus(monthlyClaimed)
-                .div(mongthlyContributed)
-                .times(BigDecimal.fromString('100'));
+            let fundingRate = BigDecimal.zero();
+
+            if (mongthlyContributed.gt(BigDecimal.zero())) {
+                fundingRate = mongthlyContributed
+                    .minus(monthlyClaimed)
+                    .div(mongthlyContributed)
+                    .times(BigDecimal.fromString('100'));
+            }
 
             yesterdayCommunityDaily.fundingRate = fundingRate;
             yesterdayCommunityDaily.save();

@@ -37,10 +37,14 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
                 previousUbiDaily = UBIDailyEntity.load(previousDayIdInt.toString());
             } while (dayIdInt - previousDayIdInt <= 30 && previousUbiDaily !== null);
 
-            const fundingRate = mongthlyContributed
-                .minus(monthlyClaimed)
-                .div(mongthlyContributed)
-                .times(BigDecimal.fromString('100'));
+            let fundingRate = BigDecimal.zero();
+
+            if (mongthlyContributed.gt(BigDecimal.zero())) {
+                fundingRate = mongthlyContributed
+                    .minus(monthlyClaimed)
+                    .div(mongthlyContributed)
+                    .times(BigDecimal.fromString('100'));
+            }
 
             yesterdayUbiDaily.fundingRate = fundingRate;
             yesterdayUbiDaily.save();
