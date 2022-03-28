@@ -22,7 +22,7 @@ export function createCommunityAddedEvent(
     );
     const managersParam = new ethereum.EventParam(
         'managers',
-        ethereum.Value.fromAddressArray([Address.fromString(managers[0])])
+        ethereum.Value.fromAddressArray(managers.map<Address>(m => Address.fromString(m)))
     );
     const claimAmountParam = new ethereum.EventParam(
         'claimAmount',

@@ -1,4 +1,4 @@
-import { store } from '@graphprotocol/graph-ts';
+import { Address, store } from '@graphprotocol/graph-ts';
 
 import { Community } from '../../generated/templates';
 import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
@@ -119,6 +119,13 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
 
         let decreaseManagers = 0;
 
+        for (let index = 0; index < previousCommunity.managerList.length; index++) {
+            const manager = previousCommunity.managerList[index];
+
+            if (!event.params.managers.includes(Address.fromString(manager))) {
+                decreaseManagers++;
+            }
+        }
         for (let index = 0; index < event.params.managers.length; index++) {
             const manager = event.params.managers[index];
 
@@ -127,9 +134,10 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 previousCommunity &&
                 previousCommunity.managerList &&
                 previousCommunity.managerList.length > 0 &&
-                previousCommunity.managerList.includes(manager.toHex())
+                previousCommunity.managerList.includes(manager.toHex()) &&
+                !event.params.managers.includes(manager)
             ) {
-                decreaseManagers += 1;
+                decreaseManagers++;
             }
 
             genericHandleManagerAdded(

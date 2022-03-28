@@ -6,6 +6,8 @@ import { createManagerAddedEvent, createManagerRemovedEvent } from './utils/mana
 import { handleCommunityAdded, handleCommunityMigrated } from '../src/mappings/communityAdmin';
 import { handleManagerAdded, handleManagerRemoved } from '../src/mappings/community';
 
+import { communityAdminAddress } from '../src/common/addresses';
+
 export { handleCommunityAdded, handleManagerAdded };
 
 test('add manager', () => {
@@ -14,6 +16,102 @@ test('add manager', () => {
     const community = createCommunityAddedEvent(
         communityAddress[0],
         [managerAddress[0]],
+        communityProps[0],
+        1646650968
+    );
+
+    handleCommunityAdded(community);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '1');
+    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+
+    const managerAddedEvent1 = createManagerAddedEvent(
+        managerAddress[0],
+        managerAddress[1],
+        communityAddress[0],
+        1646650969
+    );
+
+    const managerAddedEvent2 = createManagerAddedEvent(
+        managerAddress[0],
+        managerAddress[2],
+        communityAddress[0],
+        1646650970
+    );
+
+    handleManagerAdded(managerAddedEvent1);
+    handleManagerAdded(managerAddedEvent2);
+
+    assert.fieldEquals('ManagerEntity', managerAddress[1], 'address', managerAddress[1]);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
+    assert.fieldEquals('UBIEntity', '0', 'managers', '3');
+
+    const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
+
+    assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`, 'managers', '3');
+
+    assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'managers', '3');
+});
+
+test('add later forbidden manager', () => {
+    clearStore();
+
+    const community = createCommunityAddedEvent(
+        communityAddress[0],
+        [managerAddress[0]],
+        communityProps[0],
+        1646650968
+    );
+
+    handleCommunityAdded(community);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '1');
+    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+
+    const managerAddedEvent1 = createManagerAddedEvent(
+        managerAddress[0],
+        managerAddress[1],
+        communityAddress[0],
+        1646650969
+    );
+
+    const managerAddedEvent2 = createManagerAddedEvent(
+        managerAddress[0],
+        managerAddress[2],
+        communityAddress[0],
+        1646650970
+    );
+
+    const managerAddedEvent3 = createManagerAddedEvent(
+        managerAddress[0],
+        communityAdminAddress,
+        communityAddress[0],
+        1646650971
+    );
+
+    handleManagerAdded(managerAddedEvent1);
+    handleManagerAdded(managerAddedEvent2);
+    handleManagerAdded(managerAddedEvent3);
+
+    assert.fieldEquals('ManagerEntity', managerAddress[1], 'address', managerAddress[1]);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
+    assert.fieldEquals('UBIEntity', '0', 'managers', '3');
+
+    const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
+
+    assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`, 'managers', '3');
+
+    assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'managers', '3');
+});
+
+test('add forbidden manager at deploy', () => {
+    clearStore();
+
+    const community = createCommunityAddedEvent(
+        communityAddress[0],
+        [communityAdminAddress, managerAddress[0]],
         communityProps[0],
         1646650968
     );
