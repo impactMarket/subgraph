@@ -124,6 +124,8 @@ templates:
           handler: handleBeneficiaryClaim
         - event: BeneficiaryJoined(indexed address)
           handler: handleBeneficiaryJoined
+        - event: BeneficiaryParamsUpdated(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleBeneficiaryParamsUpdated
       file: ./src/mappings/community.ts
   - name: OldCommunity
     kind: ethereum/contract
@@ -152,4 +154,6 @@ templates:
           handler: handleOldBeneficiaryRemoved
         - event: BeneficiaryClaim(indexed address,uint256)
           handler: handleOldBeneficiaryClaim
+        - event: CommunityEdited(uint256,uint256,uint256,uint256)
+          handler: handleCommunityEdited
       file: ./src/mappings/old/community.ts

@@ -2,7 +2,9 @@
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
+import { BeneficiaryParamsUpdated } from '../../generated/templates/Community/Community';
 import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
+import { CommunityEdited } from '../../generated/templates/OldCommunity/OldCommunity';
 
 export function createCommunityAddedEvent(
     communityAddress: string,
@@ -110,4 +112,99 @@ export function createCommunityMigratedEvent(
     communityMigratedEvent.parameters.push(previousCommunityAddressParam);
 
     return communityMigratedEvent;
+}
+
+export function createBeneficiaryParamsUpdatedEvent(
+    community: string,
+    props: Map<string, string>
+): BeneficiaryParamsUpdated {
+    const beneficiaryParamsUpdatedEvent = changetype<BeneficiaryParamsUpdated>(newMockEvent());
+
+    beneficiaryParamsUpdatedEvent.address = Address.fromString(community);
+    beneficiaryParamsUpdatedEvent.parameters = [];
+    // we don't use the old parameters, so they can be anything
+    const oldClaimAmountParam = new ethereum.EventParam(
+        'oldClaimAmount',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(0))
+    );
+    const oldMaxClaimParam = new ethereum.EventParam(
+        'oldMaxClaim',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(0))
+    );
+    const oldDecreaseStepParam = new ethereum.EventParam(
+        'oldDecreaseStep',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(0))
+    );
+    const oldBaseIntervalParam = new ethereum.EventParam(
+        'oldBaseInterval',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(0))
+    );
+    const oldIncrementIntervalParam = new ethereum.EventParam(
+        'oldIncrementInterval',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(0))
+    );
+    //
+    const newClaimAmountParam = new ethereum.EventParam(
+        'newClaimAmount',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('claimAmount')))
+    );
+    const newMaxClaimParam = new ethereum.EventParam(
+        'newMaxClaim',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('maxClaim')))
+    );
+    const newDecreaseStepParam = new ethereum.EventParam(
+        'newDecreaseStep',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('decreaseStep')))
+    );
+    const newBaseIntervalParam = new ethereum.EventParam(
+        'newBaseInterval',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('baseInterval')))
+    );
+    const newIncrementIntervalParam = new ethereum.EventParam(
+        'newIncrementInterval',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('incrementInterval')))
+    );
+
+    beneficiaryParamsUpdatedEvent.parameters.push(oldClaimAmountParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(oldMaxClaimParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(oldDecreaseStepParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(oldBaseIntervalParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(oldIncrementIntervalParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(newClaimAmountParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(newMaxClaimParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(newDecreaseStepParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(newBaseIntervalParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(newIncrementIntervalParam);
+
+    return beneficiaryParamsUpdatedEvent;
+}
+
+export function createCommunityEditedEvent(community: string, props: Map<string, string>): CommunityEdited {
+    const communityEditedEvent = changetype<CommunityEdited>(newMockEvent());
+
+    communityEditedEvent.address = Address.fromString(community);
+    communityEditedEvent.parameters = [];
+    const claimAmountParam = new ethereum.EventParam(
+        '_claimAmount',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('claimAmount')))
+    );
+    const maxClaimParam = new ethereum.EventParam(
+        '_maxClaim',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('maxClaim')))
+    );
+    const baseIntervalParam = new ethereum.EventParam(
+        '_baseInterval',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('baseInterval')))
+    );
+    const incrementIntervalParam = new ethereum.EventParam(
+        '_incrementInterval',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('incrementInterval')))
+    );
+
+    communityEditedEvent.parameters.push(claimAmountParam);
+    communityEditedEvent.parameters.push(maxClaimParam);
+    communityEditedEvent.parameters.push(baseIntervalParam);
+    communityEditedEvent.parameters.push(incrementIntervalParam);
+
+    return communityEditedEvent;
 }
