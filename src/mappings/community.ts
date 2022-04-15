@@ -4,6 +4,7 @@ import {
     BeneficiaryJoined,
     BeneficiaryParamsUpdated,
     BeneficiaryRemoved,
+    CommunityParamsUpdated,
     ManagerAdded,
     ManagerRemoved
 } from '../../generated/templates/Community/Community';
@@ -74,6 +75,16 @@ export function handleBeneficiaryParamsUpdated(event: BeneficiaryParamsUpdated):
         community.incrementInterval = event.params.newIncrementInterval.toI32();
         community.baseInterval = event.params.newBaseInterval.toI32();
         community.decreaseStep = normalize(event.params.newDecreaseStep.toString());
+        community.save();
+    }
+}
+
+export function handleCommunityParamsUpdated(event: CommunityParamsUpdated): void {
+    const community = CommunityEntity.load(event.address.toHex());
+
+    if (community) {
+        community.minTranche = normalize(event.params.newMinTranche.toString());
+        community.maxTranche = normalize(event.params.newMaxTranche.toString());
         community.save();
     }
 }

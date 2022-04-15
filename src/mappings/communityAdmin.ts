@@ -21,6 +21,8 @@ export function handleCommunityAdded(event: CommunityAdded): void {
         event.params.decreaseStep,
         event.params.baseInterval.toI32(),
         event.params.incrementInterval.toI32(),
+        event.params.minTranche,
+        event.params.maxTranche,
         event.transaction.hash.toHex(),
         event.block.timestamp,
         true

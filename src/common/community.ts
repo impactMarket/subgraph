@@ -68,6 +68,8 @@ export function generiHandleCommunityAdded(
     _decreaseStep: BigInt,
     _baseInterval: i32,
     _incrementInterval: i32,
+    _minTranche: BigInt,
+    _maxTranche: BigInt,
     _hash: string,
     _blockTimestamp: BigInt,
     _firstManagerFunded: boolean = false
@@ -94,6 +96,8 @@ export function generiHandleCommunityAdded(
     community.contributed = BigDecimal.zero();
     community.contributors = 0;
     community.managerList = new Array<string>();
+    community.minTranche = normalize(_minTranche.toString());
+    community.maxTranche = normalize(_maxTranche.toString());
     community.save();
     // create ubi if it doesn't exist
     let ubi = UBIEntity.load('0');
