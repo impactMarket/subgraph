@@ -179,11 +179,13 @@ export function genericHandleBeneficiaryClaim(
             const ubi = UBIEntity.load('0')!;
 
             ubi.claimed = ubi.claimed.plus(normalizedAmount);
+            ubi.claims += 1;
             ubi.save();
             // update daily ubi
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
 
             ubiDaily.claimed = ubiDaily.claimed.plus(normalizedAmount);
+            ubiDaily.claims += 1;
             ubiDaily.save();
             // update beneficiary
             beneficiary.preLastClaimAt = beneficiary.lastClaimAt;
@@ -198,6 +200,7 @@ export function genericHandleBeneficiaryClaim(
             community.save();
             // update community daily
             communityDaily.claimed = communityDaily.claimed.plus(normalizedAmount);
+            communityDaily.claims += 1;
             communityDaily.save();
         }
     }

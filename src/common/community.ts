@@ -18,6 +18,7 @@ export function loadOrCreateCommunityDaily(_community: Address, _blockTimestamp:
         communityDaily.beneficiaries = 0;
         communityDaily.managers = 0;
         communityDaily.claimed = BigDecimal.zero();
+        communityDaily.claims = 0;
         communityDaily.contributed = BigDecimal.zero();
         communityDaily.contributors = 0;
         communityDaily.volume = BigDecimal.zero();
@@ -110,6 +111,7 @@ export function generiHandleCommunityAdded(
         } else {
             ubi.claimed = BigDecimal.zero();
         }
+        ubi.claims = 0;
         ubi.contributed = BigDecimal.zero();
         ubi.contributors = 0;
         ubi.volume = BigDecimal.zero();

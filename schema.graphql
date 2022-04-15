@@ -139,6 +139,10 @@ type CommunityDailyEntity @entity {
   """
   claimed: BigDecimal!
   """
+  total claims
+  """
+  claims: Int!
+  """
   total contributed (normalized)
   """
   contributed: BigDecimal!
@@ -189,6 +193,10 @@ type UBIEntity @entity {
   """
   claimed: BigDecimal!
   """
+  total claims
+  """
+  claims: Int!
+  """
   total contributed (normalized)
   """
   contributed: BigDecimal!
@@ -234,6 +242,10 @@ type UBIDailyEntity @entity {
   total claimed (normalized)
   """
   claimed: BigDecimal!
+  """
+  total claims
+  """
+  claims: Int!
   """
   total contributed (normalized)
   """

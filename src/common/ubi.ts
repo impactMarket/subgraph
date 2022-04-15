@@ -13,6 +13,7 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
         ubiDaily.beneficiaries = 0;
         ubiDaily.managers = 0;
         ubiDaily.claimed = BigDecimal.zero();
+        ubiDaily.claims = 0;
         ubiDaily.contributed = BigDecimal.zero();
         ubiDaily.contributors = 0;
         ubiDaily.volume = BigDecimal.zero();

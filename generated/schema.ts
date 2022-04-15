@@ -338,6 +338,7 @@ export class CommunityDailyEntity extends Entity {
     this.set("beneficiaries", Value.fromI32(0));
     this.set("managers", Value.fromI32(0));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("claims", Value.fromI32(0));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
     this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
@@ -419,6 +420,15 @@ export class CommunityDailyEntity extends Entity {
     this.set("claimed", Value.fromBigDecimal(value));
   }
 
+  get claims(): i32 {
+    let value = this.get("claims");
+    return value!.toI32();
+  }
+
+  set claims(value: i32) {
+    this.set("claims", Value.fromI32(value));
+  }
+
   get contributed(): BigDecimal {
     let value = this.get("contributed");
     return value!.toBigDecimal();
@@ -483,6 +493,7 @@ export class UBIEntity extends Entity {
     this.set("beneficiaries", Value.fromI32(0));
     this.set("managers", Value.fromI32(0));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("claims", Value.fromI32(0));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
     this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
@@ -552,6 +563,15 @@ export class UBIEntity extends Entity {
     this.set("claimed", Value.fromBigDecimal(value));
   }
 
+  get claims(): i32 {
+    let value = this.get("claims");
+    return value!.toI32();
+  }
+
+  set claims(value: i32) {
+    this.set("claims", Value.fromI32(value));
+  }
+
   get contributed(): BigDecimal {
     let value = this.get("contributed");
     return value!.toBigDecimal();
@@ -607,6 +627,7 @@ export class UBIDailyEntity extends Entity {
     this.set("beneficiaries", Value.fromI32(0));
     this.set("managers", Value.fromI32(0));
     this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("claims", Value.fromI32(0));
     this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("contributors", Value.fromI32(0));
     this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
@@ -675,6 +696,15 @@ export class UBIDailyEntity extends Entity {
 
   set claimed(value: BigDecimal) {
     this.set("claimed", Value.fromBigDecimal(value));
+  }
+
+  get claims(): i32 {
+    let value = this.get("claims");
+    return value!.toI32();
+  }
+
+  set claims(value: i32) {
+    this.set("claims", Value.fromI32(value));
   }
 
   get contributed(): BigDecimal {
