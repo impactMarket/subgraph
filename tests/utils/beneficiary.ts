@@ -6,7 +6,9 @@ import {
     BeneficiaryAdded,
     BeneficiaryClaim,
     BeneficiaryJoined,
-    BeneficiaryRemoved
+    BeneficiaryLocked,
+    BeneficiaryRemoved,
+    BeneficiaryUnlocked
 } from '../../generated/templates/Community/Community';
 
 const addTimestamp: i32 = 1640716190;
@@ -94,4 +96,46 @@ export function createBeneficiaryClaimEvent(
     beneficiaryClaimEvent.parameters.push(amountParam);
 
     return beneficiaryClaimEvent;
+}
+
+export function createBeneficiaryLockedEvent(
+    manager: string,
+    beneficiary: string,
+    communityAddress: string
+): BeneficiaryLocked {
+    const beneficaryLockedEvent = changetype<BeneficiaryLocked>(newMockEvent());
+
+    beneficaryLockedEvent.parameters = [];
+    beneficaryLockedEvent.address = Address.fromString(communityAddress);
+    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
+    const beneficiaryParam = new ethereum.EventParam(
+        'beneficiary',
+        ethereum.Value.fromAddress(Address.fromString(beneficiary))
+    );
+
+    beneficaryLockedEvent.parameters.push(managerParam);
+    beneficaryLockedEvent.parameters.push(beneficiaryParam);
+
+    return beneficaryLockedEvent;
+}
+
+export function createBeneficiaryUnlockedEvent(
+    manager: string,
+    beneficiary: string,
+    communityAddress: string
+): BeneficiaryUnlocked {
+    const beneficiaryUnlockedEvent = changetype<BeneficiaryUnlocked>(newMockEvent());
+
+    beneficiaryUnlockedEvent.parameters = [];
+    beneficiaryUnlockedEvent.address = Address.fromString(communityAddress);
+    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
+    const beneficiaryParam = new ethereum.EventParam(
+        'beneficiary',
+        ethereum.Value.fromAddress(Address.fromString(beneficiary))
+    );
+
+    beneficiaryUnlockedEvent.parameters.push(managerParam);
+    beneficiaryUnlockedEvent.parameters.push(beneficiaryParam);
+
+    return beneficiaryUnlockedEvent;
 }

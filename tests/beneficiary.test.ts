@@ -13,14 +13,18 @@ import {
     createBeneficiaryAddedEvent,
     createBeneficiaryClaimEvent,
     createBeneficiaryJoinedEvent,
-    createBeneficiaryRemovedEvent
+    createBeneficiaryLockedEvent,
+    createBeneficiaryRemovedEvent,
+    createBeneficiaryUnlockedEvent
 } from './utils/beneficiary';
 import { createCommunityAddedEvent } from './utils/community';
 import {
     handleBeneficiaryAdded,
     handleBeneficiaryClaim,
     handleBeneficiaryJoined,
-    handleBeneficiaryRemoved
+    handleBeneficiaryLocked,
+    handleBeneficiaryRemoved,
+    handleBeneficiaryUnlocked
 } from '../src/mappings/community';
 import { handleCommunityAdded } from '../src/mappings/communityAdmin';
 
@@ -410,4 +414,38 @@ test('should not count same beneficiary twice - alpha issue', () => {
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '0');
 
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
+});
+
+test('lock/unlock beneficiary', () => {
+    clearStore();
+
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
+
+    handleCommunityAdded(community);
+
+    const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryAdded(beneficiaryAddedEvent1);
+
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '0');
+
+    const lockCommunity = createBeneficiaryLockedEvent(managerAddress[0], beneficiaryAddress[0], communityAddress[0]);
+
+    handleBeneficiaryLocked(lockCommunity);
+
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '2');
+
+    const unlockCommunity = createBeneficiaryUnlockedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryUnlocked(unlockCommunity);
+
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '0');
 });

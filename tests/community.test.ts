@@ -1,14 +1,20 @@
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import { communityAddress, communityProps, managerAddress, normalize } from './utils/constants';
+import { communityAddress, communityProps, managerAddress, normalize, userAddress } from './utils/constants';
 import {
     createBeneficiaryParamsUpdatedEvent,
     createCommunityAddedEvent,
     createCommunityEditedEvent,
+    createCommunityLockedEvent,
     createCommunityMigratedEvent,
-    createCommunityRemovedEvent
+    createCommunityRemovedEvent,
+    createCommunityUnlockedEvent
 } from './utils/community';
-import { handleBeneficiaryParamsUpdated } from '../src/mappings/community';
+import {
+    handleBeneficiaryParamsUpdated,
+    handleCommunityLocked,
+    handleCommunityUnlocked
+} from '../src/mappings/community';
 import { handleCommunityAdded, handleCommunityMigrated, handleCommunityRemoved } from '../src/mappings/communityAdmin';
 import { handleCommunityEdited } from '../src/mappings/old/community';
 
@@ -229,4 +235,26 @@ test('edit parameters old community', () => {
         'incrementInterval',
         communityProps[1].get('incrementInterval').toString()
     );
+});
+
+test('lock/unlock community', () => {
+    clearStore();
+
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
+
+    handleCommunityAdded(community);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'state', '0');
+
+    const lockCommunity = createCommunityLockedEvent(userAddress[0], communityAddress[0]);
+
+    handleCommunityLocked(lockCommunity);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'state', '2');
+
+    const unlockCommunity = createCommunityUnlockedEvent(communityAddress[0], communityAddress[0]);
+
+    handleCommunityUnlocked(unlockCommunity);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'state', '0');
 });
