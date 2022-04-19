@@ -33,7 +33,7 @@ type CommunityEntity @entity {
   """
   startDayId: Int!
   """
-  community state (0: inactive, 1: active)
+  community state (0: active, 1: removed, 2: locked)
   """
   state: Int!
   """
@@ -311,7 +311,7 @@ type BeneficiaryEntity @entity {
   """
   community: CommunityEntity!
   """
-  beneficiary state on the community (0: active, 1: removed)
+  beneficiary state on the community (0: active, 1: removed, 2: locked)
   """
   state: Int!
   """

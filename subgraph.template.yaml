@@ -124,6 +124,14 @@ templates:
           handler: handleBeneficiaryClaim
         - event: BeneficiaryJoined(indexed address)
           handler: handleBeneficiaryJoined
+        - event: BeneficiaryLocked(indexed address,indexed address)
+          handler: handleBeneficiaryLocked
+        - event: BeneficiaryUnlocked(indexed address,indexed address)
+          handler: handleBeneficiaryUnlocked
+        - event: CommunityLocked(indexed address)
+          handler: handleCommunityLocked
+        - event: CommunityUnlocked(indexed address)
+          handler: handleCommunityUnlocked
         - event: BeneficiaryParamsUpdated(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleBeneficiaryParamsUpdated
       file: ./src/mappings/community.ts
