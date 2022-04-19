@@ -182,16 +182,18 @@ test('remove manager', () => {
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
     assert.fieldEquals('UBIEntity', '0', 'managers', '3');
 
+    const timestampRemove = 1646650971;
     const managerRemovedEvent1 = createManagerRemovedEvent(
         managerAddress[0],
         managerAddress[1],
         communityAddress[0],
-        1646650971
+        timestampRemove
     );
 
     handleManagerRemoved(managerRemovedEvent1);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '2');
+    assert.fieldEquals('ManagerEntity', managerAddress[1], 'until', timestampRemove.toString());
     assert.fieldEquals('UBIEntity', '0', 'managers', '2');
 
     const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
@@ -249,6 +251,7 @@ test('remove manager (and readd)', () => {
     handleManagerAdded(managerAddedEvent3);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
+    assert.fieldEquals('ManagerEntity', managerAddress[1], 'until', '0');
     assert.fieldEquals('UBIEntity', '0', 'managers', '3');
 
     const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
