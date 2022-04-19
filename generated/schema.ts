@@ -743,6 +743,7 @@ export class ManagerEntity extends Entity {
     this.set("added", Value.fromI32(0));
     this.set("removed", Value.fromI32(0));
     this.set("since", Value.fromI32(0));
+    this.set("until", Value.fromI32(0));
   }
 
   save(): void {
@@ -823,6 +824,15 @@ export class ManagerEntity extends Entity {
 
   set since(value: i32) {
     this.set("since", Value.fromI32(value));
+  }
+
+  get until(): i32 {
+    let value = this.get("until");
+    return value!.toI32();
+  }
+
+  set until(value: i32) {
+    this.set("until", Value.fromI32(value));
   }
 }
 
