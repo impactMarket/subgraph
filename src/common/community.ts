@@ -97,8 +97,8 @@ export function generiHandleCommunityAdded(
     community.contributed = BigDecimal.zero();
     community.contributors = 0;
     community.managerList = new Array<string>();
-    community.minTranche = normalize(_minTranche.toString());
-    community.maxTranche = normalize(_maxTranche.toString());
+    community.minTranche = _minTranche.isZero() ? BigDecimal.zero() : normalize(_minTranche.toString());
+    community.maxTranche = _maxTranche.isZero() ? BigDecimal.zero() : normalize(_maxTranche.toString());
     community.save();
     // create ubi if it doesn't exist
     let ubi = UBIEntity.load('0');

@@ -1,3 +1,4 @@
+import { BigInt } from '@graphprotocol/graph-ts';
 import {
     CommunityEdited,
     BeneficiaryAdded as OldBeneficiaryAdded,
@@ -65,8 +66,12 @@ export function handleCommunityEdited(event: CommunityEdited): void {
     if (community) {
         community.claimAmount = normalize(event.params._claimAmount.toString());
         community.maxClaim = normalize(event.params._maxClaim.toString());
-        community.incrementInterval = event.params._incrementInterval.toI32();
-        community.baseInterval = event.params._baseInterval.toI32();
+        community.incrementInterval = event.params._incrementInterval.gt(BigInt.fromI32(500000))
+            ? 0
+            : event.params._incrementInterval.toI32();
+        community.baseInterval = event.params._baseInterval.gt(BigInt.fromI32(500000))
+            ? 0
+            : event.params._baseInterval.toI32();
         community.save();
     }
 }
