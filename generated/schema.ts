@@ -102,6 +102,8 @@ export class CommunityEntity extends Entity {
     this.set("contributions", Value.fromStringArray(new Array(0)));
     this.set("managerList", Value.fromStringArray(new Array(0)));
     this.set("estimatedFunds", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("minTranche", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("maxTranche", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -323,6 +325,24 @@ export class CommunityEntity extends Entity {
 
   set estimatedFunds(value: BigDecimal) {
     this.set("estimatedFunds", Value.fromBigDecimal(value));
+  }
+
+  get minTranche(): BigDecimal {
+    let value = this.get("minTranche");
+    return value!.toBigDecimal();
+  }
+
+  set minTranche(value: BigDecimal) {
+    this.set("minTranche", Value.fromBigDecimal(value));
+  }
+
+  get maxTranche(): BigDecimal {
+    let value = this.get("maxTranche");
+    return value!.toBigDecimal();
+  }
+
+  set maxTranche(value: BigDecimal) {
+    this.set("maxTranche", Value.fromBigDecimal(value));
   }
 }
 

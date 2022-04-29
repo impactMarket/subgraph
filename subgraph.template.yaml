@@ -41,6 +41,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - CommunityEntity
+        - CommunityDailyEntity
+        - UBIEntity
+        - UBIDailyEntity
       abis:
         - name: CommunityAdmin
           file: ./abis/CommunityAdmin.json
@@ -65,6 +68,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - CommunityEntity
+        - CommunityDailyEntity
+        - UBIEntity
+        - UBIDailyEntity
       abis:
         - name: OldImpactMarket
           file: ./abis/old/ImpactMarket.json
@@ -86,7 +92,10 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - CeloDollarEntity
+        - UserTransactionsEntity
+        - UserTransactionWithEntity
+        - ContributorContributionsEntity
+        - ContributorEntity
       abis:
         - name: CeloDollar
           file: ./abis/BaseERC20.json
@@ -107,7 +116,11 @@ templates:
       entities:
         - ManagerEntity
         - BeneficiaryEntity
-        - ClaimEntity
+        - CommunityEntity
+        - CommunityDailyEntity
+        - UBIEntity
+        - UBIDailyEntity
+        - UserActivityEntity
       abis:
         - name: Community
           file: ./abis/Community.json
@@ -134,6 +147,8 @@ templates:
           handler: handleCommunityUnlocked
         - event: BeneficiaryParamsUpdated(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleBeneficiaryParamsUpdated
+        - event: CommunityParamsUpdated(uint256,uint256,uint256,uint256)
+          handler: handleCommunityParamsUpdated
       file: ./src/mappings/community.ts
   - name: OldCommunity
     kind: ethereum/contract
@@ -147,7 +162,11 @@ templates:
       entities:
         - ManagerEntity
         - BeneficiaryEntity
-        - ClaimEntity
+        - CommunityEntity
+        - CommunityDailyEntity
+        - UBIEntity
+        - UBIDailyEntity
+        - UserActivityEntity
       abis:
         - name: OldCommunity
           file: ./abis/old/Community.json

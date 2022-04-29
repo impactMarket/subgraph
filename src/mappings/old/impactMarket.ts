@@ -16,6 +16,8 @@ export function handleOldCommunityAdded(event: OldCommunityAdded): void {
         BigInt.fromI32(0),
         event.params._baseInterval.toI32(),
         event.params._incrementInterval.toI32(),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
         event.transaction.hash.toHex(),
         event.block.timestamp
     );

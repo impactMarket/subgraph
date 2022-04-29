@@ -105,6 +105,14 @@ type CommunityEntity @entity {
   estimated funds on contract (normalized) (raised - claimed)
   """
   estimatedFunds: BigDecimal!
+  """
+  community min tranche (normalized)
+  """
+  minTranche: BigDecimal!
+  """
+  community max tranche (normalized)
+  """
+  maxTranche: BigDecimal!
 }
 
 # when a community is migrated, CommunityDataEntity are migrated too
