@@ -1,4 +1,4 @@
-import { Address, store } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, store } from '@graphprotocol/graph-ts';
 
 import { Community } from '../../generated/templates';
 import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
@@ -102,7 +102,12 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.state = previousCommunity.state;
         community.claimAmount = previousCommunity.claimAmount;
         community.maxClaim = previousCommunity.maxClaim;
-        community.decreaseStep = previousCommunity.decreaseStep;
+        // 18962 = 1 december 2021
+        if (previousCommunity.decreaseStep.equals(BigDecimal.zero()) && previousCommunity.startDayId < 18962) {
+            community.decreaseStep = BigDecimal.fromString('0.01');
+        } else {
+            community.decreaseStep = previousCommunity.decreaseStep;
+        }
         community.baseInterval = previousCommunity.baseInterval;
         community.incrementInterval = previousCommunity.incrementInterval;
         community.beneficiaries = previousCommunity.beneficiaries;

@@ -33,7 +33,7 @@ type CommunityEntity @entity {
   """
   startDayId: Int!
   """
-  community state (0: inactive, 1: active)
+  community state (0: active, 1: removed, 2: locked)
   """
   state: Int!
   """
@@ -147,6 +147,10 @@ type CommunityDailyEntity @entity {
   """
   claimed: BigDecimal!
   """
+  total claims
+  """
+  claims: Int!
+  """
   total contributed (normalized)
   """
   contributed: BigDecimal!
@@ -197,6 +201,10 @@ type UBIEntity @entity {
   """
   claimed: BigDecimal!
   """
+  total claims
+  """
+  claims: Int!
+  """
   total contributed (normalized)
   """
   contributed: BigDecimal!
@@ -242,6 +250,10 @@ type UBIDailyEntity @entity {
   total claimed (normalized)
   """
   claimed: BigDecimal!
+  """
+  total claims
+  """
+  claims: Int!
   """
   total contributed (normalized)
   """
@@ -300,6 +312,10 @@ type ManagerEntity @entity {
   tx timestamp of when this manager was added to this community
   """
   since: Int!
+  """
+  tx timestamp of when this manager was removed from this community
+  """
+  until: Int!
 }
 
 """
@@ -319,7 +335,7 @@ type BeneficiaryEntity @entity {
   """
   community: CommunityEntity!
   """
-  beneficiary state on the community (0: active, 1: removed)
+  beneficiary state on the community (0: active, 1: removed, 2: locked)
   """
   state: Int!
   """

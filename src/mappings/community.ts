@@ -2,13 +2,17 @@ import {
     BeneficiaryAdded,
     BeneficiaryClaim,
     BeneficiaryJoined,
+    BeneficiaryLocked,
     BeneficiaryParamsUpdated,
     BeneficiaryRemoved,
     CommunityParamsUpdated,
+    BeneficiaryUnlocked,
+    CommunityLocked,
+    CommunityUnlocked,
     ManagerAdded,
     ManagerRemoved
 } from '../../generated/templates/Community/Community';
-import { CommunityEntity } from '../../generated/schema';
+import { BeneficiaryEntity, CommunityEntity } from '../../generated/schema';
 import {
     genericHandleBeneficiaryAdded,
     genericHandleBeneficiaryClaim,
@@ -85,6 +89,42 @@ export function handleCommunityParamsUpdated(event: CommunityParamsUpdated): voi
     if (community) {
         community.minTranche = normalize(event.params.newMinTranche.toString());
         community.maxTranche = normalize(event.params.newMaxTranche.toString());
+        community.save();
+    }
+}
+
+export function handleBeneficiaryLocked(event: BeneficiaryLocked): void {
+    const beneficiary = BeneficiaryEntity.load(event.params.beneficiary.toHex());
+
+    if (beneficiary) {
+        beneficiary.state = 2;
+        beneficiary.save();
+    }
+}
+
+export function handleBeneficiaryUnlocked(event: BeneficiaryUnlocked): void {
+    const beneficiary = BeneficiaryEntity.load(event.params.beneficiary.toHex());
+
+    if (beneficiary) {
+        beneficiary.state = 0;
+        beneficiary.save();
+    }
+}
+
+export function handleCommunityLocked(event: CommunityLocked): void {
+    const community = CommunityEntity.load(event.address.toHex());
+
+    if (community) {
+        community.state = 2;
+        community.save();
+    }
+}
+
+export function handleCommunityUnlocked(event: CommunityUnlocked): void {
+    const community = CommunityEntity.load(event.address.toHex());
+
+    if (community) {
+        community.state = 0;
         community.save();
     }
 }

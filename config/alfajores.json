@@ -1,11 +1,11 @@
 {
-    "startBlockAlpha": 3914902,
-    "startBlockV1": 8568251,
+    "startBlockAlpha": 11008453,
+    "startBlockV1": 11005140,
     "network": "celo-alfajores",
-    "PACTDelegator": "0xBf35872f98E716bfc06B03aB173037576DebE1F5",
-    "Treasury": "0x88207E99CBa73D6d30c9c6349E94cCCA9e4cb0CB",
-    "CommunityAdmin": "0x88B101c163bbFE1dc4764225248a6DAd282d7A39",
-    "OldImpactMarket": "0x23611bDA8C4a048c22139b4a444f3E329E2046b4",
+    "PACTDelegator": "0x5c27e2600a3eDEF53DE0Ec32F01efCF145419eDF",
+    "Treasury": "0xB0deEE097B5227C5E6bbE787665e4e62b4fE85f3",
+    "CommunityAdmin": "0x1c33D75bcE52132c7a0e220c1C338B9db7cf3f3A",
+    "OldImpactMarket": "0x32A163D149B78153239b14b95ccc7c8ea8682B82",
     "CeloDollar": "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
     "AttestationProxy": "0xad5e5722427d79dff28a4ab30249729d1f8b4cc0"
 }

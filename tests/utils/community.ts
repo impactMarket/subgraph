@@ -2,7 +2,11 @@
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
-import { BeneficiaryParamsUpdated } from '../../generated/templates/Community/Community';
+import {
+    BeneficiaryParamsUpdated,
+    CommunityLocked,
+    CommunityUnlocked
+} from '../../generated/templates/Community/Community';
 import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
 import { CommunityEdited } from '../../generated/templates/OldCommunity/OldCommunity';
 
@@ -207,4 +211,34 @@ export function createCommunityEditedEvent(community: string, props: Map<string,
     communityEditedEvent.parameters.push(incrementIntervalParam);
 
     return communityEditedEvent;
+}
+
+export function createCommunityLockedEvent(ambassadorEntity: string, communityAddress: string): CommunityLocked {
+    const communityLockedEvent = changetype<CommunityLocked>(newMockEvent());
+
+    communityLockedEvent.parameters = [];
+    communityLockedEvent.address = Address.fromString(communityAddress);
+    const ambassadorEntityParam = new ethereum.EventParam(
+        'manager',
+        ethereum.Value.fromAddress(Address.fromString(ambassadorEntity))
+    );
+
+    communityLockedEvent.parameters.push(ambassadorEntityParam);
+
+    return communityLockedEvent;
+}
+
+export function createCommunityUnlockedEvent(ambassadorEntity: string, communityAddress: string): CommunityUnlocked {
+    const communityUnlockedEvent = changetype<CommunityUnlocked>(newMockEvent());
+
+    communityUnlockedEvent.parameters = [];
+    communityUnlockedEvent.address = Address.fromString(communityAddress);
+    const ambassadorEntityParam = new ethereum.EventParam(
+        'manager',
+        ethereum.Value.fromAddress(Address.fromString(ambassadorEntity))
+    );
+
+    communityUnlockedEvent.parameters.push(ambassadorEntityParam);
+
+    return communityUnlockedEvent;
 }

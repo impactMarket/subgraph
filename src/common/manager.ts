@@ -30,6 +30,7 @@ export function genericHandleManagerAdded(
                 manager.added = 0;
                 manager.removed = 0;
                 manager.since = _blockTimestamp.toI32();
+                manager.until = 0;
             } else if (
                 _community.previous !== null &&
                 Address.fromString(manager.community).equals(
@@ -48,6 +49,8 @@ export function genericHandleManagerAdded(
                 previousManager.state = manager.state;
                 previousManager.added = manager.added;
                 previousManager.removed = manager.removed;
+                previousManager.since = manager.since;
+                previousManager.until = manager.until;
                 previousManager.save();
                 //
                 manager.address = _manager;
@@ -56,9 +59,12 @@ export function genericHandleManagerAdded(
                 manager.added = 0;
                 manager.removed = 0;
                 manager.since = _blockTimestamp.toI32();
+                manager.until = 0;
             } else if (Address.fromString(manager.community).equals(communityAddress)) {
                 // manager rejoining same community from where has left
                 manager.state = 0;
+                // reset if removed in the past and readded
+                manager.until = 0;
                 _community.removedManagers -= 1;
             }
             if (!isManagerMigrated) {
@@ -138,6 +144,7 @@ export function genericHandleManagerRemoved(
             activity.save();
             // update manager
             manager.state = 1;
+            manager.until = _blockTimestamp.toI32();
             manager.save();
             // update community
             community.managers -= 1;
