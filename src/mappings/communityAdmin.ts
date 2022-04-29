@@ -1,4 +1,4 @@
-import { Address, BigDecimal, store } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt, store } from '@graphprotocol/graph-ts';
 
 import { Community } from '../../generated/templates';
 import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
@@ -19,8 +19,8 @@ export function handleCommunityAdded(event: CommunityAdded): void {
         event.params.claimAmount,
         event.params.maxClaim,
         event.params.decreaseStep,
-        event.params.baseInterval.toI32(),
-        event.params.incrementInterval.toI32(),
+        event.params.baseInterval.gt(BigInt.fromI32(500000)) ? 0 : event.params.baseInterval.toI32(),
+        event.params.incrementInterval.gt(BigInt.fromI32(500000)) ? 0 : event.params.incrementInterval.toI32(),
         event.params.minTranche,
         event.params.maxTranche,
         event.transaction.hash.toHex(),
