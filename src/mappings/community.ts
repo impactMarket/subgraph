@@ -5,9 +5,9 @@ import {
     BeneficiaryLocked,
     BeneficiaryParamsUpdated,
     BeneficiaryRemoved,
-    CommunityParamsUpdated,
     BeneficiaryUnlocked,
     CommunityLocked,
+    CommunityParamsUpdated,
     CommunityUnlocked,
     ManagerAdded,
     ManagerRemoved
