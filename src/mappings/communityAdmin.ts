@@ -41,6 +41,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
 
     if (!community) {
         community = new CommunityEntity(event.params.communityAddress.toHex());
+        community.contributions = new Array<string>();
     }
     const previousCommunity = CommunityEntity.load(event.params.previousCommunityAddress.toHex());
 
@@ -49,6 +50,9 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         const todayDayId = event.block.timestamp.toI32() / 86400;
         let dayId = previousCommunity.startDayId;
 
+        // migrate existing daily states
+        // this is necessary given the address is different
+        // TODO: test
         while (dayId <= todayDayId) {
             const previousCommunityDailyId = `${event.params.previousCommunityAddress.toHex()}-${dayId}`;
             const previousCommunityDaily = CommunityDailyEntity.load(previousCommunityDailyId);
@@ -62,18 +66,23 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 communityDaily.beneficiaries = previousCommunityDaily.beneficiaries;
                 communityDaily.managers = previousCommunityDaily.managers;
                 communityDaily.claimed = previousCommunityDaily.claimed;
+                communityDaily.claims = previousCommunityDaily.claims;
                 communityDaily.contributed = previousCommunityDaily.contributed;
                 communityDaily.contributors = previousCommunityDaily.contributors;
                 communityDaily.volume = previousCommunityDaily.volume;
                 communityDaily.transactions = previousCommunityDaily.transactions;
                 communityDaily.reach = previousCommunityDaily.reach;
+                communityDaily.fundingRate = previousCommunityDaily.fundingRate;
                 communityDaily.save();
                 store.remove('CommunityDailyEntity', previousCommunityDailyId);
             }
             dayId++;
         }
-        for (let index = 0; index < community.contributions.length; index++) {
-            const pastContributionId = community.contributions[index];
+        // migrate existing contributions
+        // this is necessary given the address is different
+        // TODO: test
+        for (let index = 0; index < previousCommunity.contributions.length; index++) {
+            const pastContributionId = previousCommunity.contributions[index];
             const pastContributorContributions = ContributorContributionsEntity.load(pastContributionId)!;
             const contributorContributionsId = `${pastContributionId.slice(
                 0,
@@ -118,8 +127,12 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.claimed = previousCommunity.claimed;
         community.contributed = previousCommunity.contributed;
         community.contributors = previousCommunity.contributors;
+        community.contributions = previousCommunity.contributions;
+        community.estimatedFunds = BigDecimal.zero();
         community.previous = event.params.previousCommunityAddress;
         community.managerList = new Array<string>();
+        community.minTranche = previousCommunity.minTranche;
+        community.maxTranche = previousCommunity.maxTranche;
         previousCommunity.state = 1;
         // create community entry
         Community.create(event.params.communityAddress);

@@ -95,7 +95,9 @@ export function generiHandleCommunityAdded(
     community.claims = 0;
     community.claimed = _firstManagerFunded ? fiveCents : BigDecimal.zero();
     community.contributed = BigDecimal.zero();
+    community.estimatedFunds = BigDecimal.zero();
     community.contributors = 0;
+    community.contributions = new Array<string>();
     community.managerList = new Array<string>();
     community.minTranche = _minTranche.isZero() ? BigDecimal.zero() : normalize(_minTranche.toString());
     community.maxTranche = _maxTranche.isZero() ? BigDecimal.zero() : normalize(_maxTranche.toString());

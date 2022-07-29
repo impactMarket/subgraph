@@ -19,6 +19,7 @@ export function genericHandleManagerAdded(
             const communityDaily = loadOrCreateCommunityDaily(communityAddress, _blockTimestamp);
 
             let isManagerMigrated = false;
+            let notPreviouslyRemoved = false;
             const managerId = _manager.toHex();
             let manager = ManagerEntity.load(managerId);
 
@@ -46,11 +47,19 @@ export function genericHandleManagerAdded(
 
                 previousManager.address = manager.address;
                 previousManager.community = manager.community;
-                previousManager.state = manager.state;
+                // if an active manager is added somewhere else,
+                // set it as removed on the previous community
+                if (manager.state === 0) {
+                    previousManager.state = 1;
+                    previousManager.until = _blockTimestamp.toI32();
+                    notPreviouslyRemoved = true;
+                } else {
+                    previousManager.state = manager.state;
+                    previousManager.until = manager.until;
+                }
                 previousManager.added = manager.added;
                 previousManager.removed = manager.removed;
                 previousManager.since = manager.since;
-                previousManager.until = manager.until;
                 previousManager.save();
                 //
                 manager.address = _manager;
@@ -67,7 +76,7 @@ export function genericHandleManagerAdded(
                 manager.until = 0;
                 _community.removedManagers -= 1;
             }
-            if (!isManagerMigrated) {
+            if (!isManagerMigrated && !notPreviouslyRemoved) {
                 // update manager list
                 const managerList = _community.managerList;
 
@@ -89,16 +98,16 @@ export function genericHandleManagerAdded(
                 // update community daily
                 communityDaily.managers += 1;
                 communityDaily.save();
-                // add manager activity
-                const activity = new UserActivityEntity(_hash);
-
-                activity.user = _manager;
-                activity.by = _by;
-                activity.community = _community.id;
-                activity.timestamp = _blockTimestamp.toI32();
-                activity.activity = 'ADDED';
-                activity.save();
             }
+            // add manager activity
+            const activity = new UserActivityEntity(_hash);
+
+            activity.user = _manager;
+            activity.by = _by;
+            activity.community = _community.id;
+            activity.timestamp = _blockTimestamp.toI32();
+            activity.activity = 'ADDED';
+            activity.save();
             manager.save();
         }
     }

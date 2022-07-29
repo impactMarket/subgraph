@@ -44,6 +44,7 @@ export function genericHandleBeneficiaryAdded(
             previousBeneficiary.preLastClaimAt = beneficiary.preLastClaimAt;
             previousBeneficiary.claims = beneficiary.claims;
             previousBeneficiary.claimed = beneficiary.claimed;
+            previousBeneficiary.since = beneficiary.since;
             previousBeneficiary.save();
             //
             beneficiary.community = community.id;
