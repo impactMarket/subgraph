@@ -536,6 +536,22 @@ export class Community__beneficiariesResult {
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     return map;
   }
+
+  getState(): i32 {
+    return this.value0;
+  }
+
+  getClaims(): BigInt {
+    return this.value1;
+  }
+
+  getClaimedAmount(): BigInt {
+    return this.value2;
+  }
+
+  getLastClaim(): BigInt {
+    return this.value3;
+  }
 }
 
 export class Community extends ethereum.SmartContract {

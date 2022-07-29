@@ -15,10 +15,6 @@ export class CommunityProposalEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("calldata", Value.fromBytes(Bytes.empty()));
-    this.set("status", Value.fromI32(0));
-    this.set("endBlock", Value.fromI32(0));
   }
 
   save(): void {
@@ -83,27 +79,6 @@ export class CommunityEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("startDayId", Value.fromI32(0));
-    this.set("state", Value.fromI32(0));
-    this.set("claimAmount", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("maxClaim", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("decreaseStep", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("baseInterval", Value.fromI32(0));
-    this.set("incrementInterval", Value.fromI32(0));
-    this.set("beneficiaries", Value.fromI32(0));
-    this.set("removedBeneficiaries", Value.fromI32(0));
-    this.set("managers", Value.fromI32(0));
-    this.set("removedManagers", Value.fromI32(0));
-    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("claims", Value.fromI32(0));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("contributors", Value.fromI32(0));
-    this.set("contributions", Value.fromStringArray(new Array(0)));
-    this.set("managerList", Value.fromStringArray(new Array(0)));
-    this.set("estimatedFunds", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("minTranche", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("maxTranche", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -350,19 +325,6 @@ export class CommunityDailyEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("community", Value.fromString(""));
-    this.set("dayId", Value.fromI32(0));
-    this.set("beneficiaries", Value.fromI32(0));
-    this.set("managers", Value.fromI32(0));
-    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("claims", Value.fromI32(0));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("contributors", Value.fromI32(0));
-    this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("transactions", Value.fromI32(0));
-    this.set("reach", Value.fromI32(0));
-    this.set("fundingRate", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -505,17 +467,6 @@ export class UBIEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("communities", Value.fromI32(0));
-    this.set("beneficiaries", Value.fromI32(0));
-    this.set("managers", Value.fromI32(0));
-    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("claims", Value.fromI32(0));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("contributors", Value.fromI32(0));
-    this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("transactions", Value.fromI32(0));
-    this.set("reach", Value.fromI32(0));
   }
 
   save(): void {
@@ -638,18 +589,6 @@ export class UBIDailyEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("communities", Value.fromI32(0));
-    this.set("beneficiaries", Value.fromI32(0));
-    this.set("managers", Value.fromI32(0));
-    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("claims", Value.fromI32(0));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("contributors", Value.fromI32(0));
-    this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("transactions", Value.fromI32(0));
-    this.set("reach", Value.fromI32(0));
-    this.set("fundingRate", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -781,14 +720,6 @@ export class ManagerEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("address", Value.fromBytes(Bytes.empty()));
-    this.set("community", Value.fromString(""));
-    this.set("state", Value.fromI32(0));
-    this.set("added", Value.fromI32(0));
-    this.set("removed", Value.fromI32(0));
-    this.set("since", Value.fromI32(0));
-    this.set("until", Value.fromI32(0));
   }
 
   save(): void {
@@ -884,15 +815,6 @@ export class BeneficiaryEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("address", Value.fromBytes(Bytes.empty()));
-    this.set("community", Value.fromString(""));
-    this.set("state", Value.fromI32(0));
-    this.set("lastClaimAt", Value.fromI32(0));
-    this.set("preLastClaimAt", Value.fromI32(0));
-    this.set("claims", Value.fromI32(0));
-    this.set("claimed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("since", Value.fromI32(0));
   }
 
   save(): void {
@@ -999,12 +921,6 @@ export class UserActivityEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("user", Value.fromBytes(Bytes.empty()));
-    this.set("by", Value.fromBytes(Bytes.empty()));
-    this.set("community", Value.fromString(""));
-    this.set("timestamp", Value.fromI32(0));
-    this.set("activity", Value.fromString(""));
   }
 
   save(): void {
@@ -1084,9 +1000,6 @@ export class UserTransactionsEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("volume", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("transactions", Value.fromI32(0));
   }
 
   save(): void {
@@ -1142,8 +1055,6 @@ export class UserTransactionWithEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("lastTransaction", Value.fromI32(0));
   }
 
   save(): void {
@@ -1190,11 +1101,6 @@ export class ContributorContributionsEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("to", Value.fromBytes(Bytes.empty()));
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("contributions", Value.fromI32(0));
-    this.set("lastContribution", Value.fromI32(0));
   }
 
   save(): void {
@@ -1268,10 +1174,6 @@ export class ContributorEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("contributed", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("contributions", Value.fromI32(0));
-    this.set("lastContribution", Value.fromI32(0));
   }
 
   save(): void {

@@ -18,6 +18,7 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
         ubiDaily.contributors = 0;
         ubiDaily.volume = BigDecimal.zero();
         ubiDaily.transactions = 0;
+        ubiDaily.reach = 0;
         ubiDaily.fundingRate = BigDecimal.zero();
 
         let previousDayIdInt = dayIdInt - 1;
