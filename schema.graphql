@@ -366,6 +366,14 @@ type BeneficiaryEntity @entity {
   tx timestamp of when this beneficiary was added to this community
   """
   since: Int!
+  """
+  added by
+  """
+  addedBy: Bytes!
+  """
+  removed by
+  """
+  removedBy: Bytes
 }
 
 enum ActivityCode {
