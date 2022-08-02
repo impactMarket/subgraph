@@ -59,6 +59,7 @@ test('should add beneficiary', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'address', beneficiaryAddress[0]);
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
     assert.fieldEquals('UserActivityEntity', beneficiaryAddedEvent1.transaction.hash.toHex(), 'activity', 'ADDED');
 });
 
@@ -243,6 +244,8 @@ test('should remove beneficiary', () => {
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '2');
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
 
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
+
     const beneficiaryRemovedEvent1 = createBeneficiaryRemovedEvent(
         managerAddress[0],
         beneficiaryAddress[0],
@@ -255,6 +258,10 @@ test('should remove beneficiary', () => {
     assert.fieldEquals('UserActivityEntity', beneficiaryRemovedEvent1.transaction.hash.toHex(), 'activity', 'REMOVED');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
+
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
+
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'removed', '1');
 });
 
 test('should be able to join migrated community', () => {
@@ -288,9 +295,13 @@ test('should be able to join migrated community', () => {
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'community', communityAddress[1]);
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
+
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
+
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'removed', '0');
 });
 
-test('should be able to join other community after removed', () => {
+test('should be able to be added to other community after removed', () => {
     clearStore();
 
     const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
@@ -335,9 +346,15 @@ test('should be able to join other community after removed', () => {
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'beneficiaries', '1');
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
+
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
+
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'removed', '1');
+    
+    assert.fieldEquals('ManagerEntity', managerAddress[1], 'added', '1');
 });
 
-test('should be able to join after removal', () => {
+test('should be able to be added to the same community after removal', () => {
     clearStore();
 
     const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
@@ -371,6 +388,10 @@ test('should be able to join after removal', () => {
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '0');
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
+
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '1');
+
+    assert.fieldEquals('ManagerEntity', managerAddress[0], 'removed', '1');
 });
 
 test('should not count same beneficiary twice - alpha issue', () => {
