@@ -123,6 +123,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.removedBeneficiaries = previousCommunity.removedBeneficiaries;
         community.managers = totalNewManagers;
         community.removedManagers = previousCommunity.removedManagers;
+        community.lockedBeneficiaries = previousCommunity.lockedBeneficiaries;
         community.claims = previousCommunity.claims;
         community.claimed = previousCommunity.claimed;
         community.contributed = previousCommunity.contributed;
