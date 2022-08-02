@@ -3,32 +3,6 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: PACTDelegator
-    network: {{network}}
-    source:
-      address: "{{PACTDelegator}}"
-      abi: PACTDelegator
-      startBlock: {{startBlockV1}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - CommunityProposalEntity
-      abis:
-        - name: PACTDelegator
-          file: ./abis/PACTDelegator.json
-      eventHandlers:
-        - event: ProposalCanceled(uint256)
-          handler: handleProposalCanceled
-        - event: ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)
-          handler: handleProposalCreated
-        - event: ProposalExecuted(uint256)
-          handler: handleProposalExecuted
-        - event: ProposalQueued(uint256,uint256)
-          handler: handleProposalQueued
-      file: ./src/mappings/proposals.ts
-  - kind: ethereum/contract
     name: CommunityAdmin
     network: {{network}}
     source:
