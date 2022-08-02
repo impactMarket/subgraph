@@ -95,19 +95,27 @@ export function handleCommunityParamsUpdated(event: CommunityParamsUpdated): voi
 
 export function handleBeneficiaryLocked(event: BeneficiaryLocked): void {
     const beneficiary = BeneficiaryEntity.load(event.params.beneficiary.toHex());
+    const community = CommunityEntity.load(event.address.toHex())!;
 
     if (beneficiary) {
         beneficiary.state = 2;
+        community.lockedBeneficiaries += 1;
+        // save
         beneficiary.save();
+        community.save();
     }
 }
 
 export function handleBeneficiaryUnlocked(event: BeneficiaryUnlocked): void {
     const beneficiary = BeneficiaryEntity.load(event.params.beneficiary.toHex());
+    const community = CommunityEntity.load(event.address.toHex())!;
 
     if (beneficiary) {
         beneficiary.state = 0;
+        community.lockedBeneficiaries -= 1;
+        // save
         beneficiary.save();
+        community.save();
     }
 }
 

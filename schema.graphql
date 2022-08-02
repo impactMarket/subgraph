@@ -51,6 +51,10 @@ type CommunityEntity @entity {
   """
   removedBeneficiaries: Int!
   """
+  total locked beneficiaries
+  """
+  lockedBeneficiaries: Int!
+  """
   total active managers
   """
   managers: Int!

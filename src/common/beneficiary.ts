@@ -1,6 +1,12 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
-import { BeneficiaryEntity, CommunityEntity, ManagerEntity, UBIEntity, UserActivityEntity } from '../../generated/schema';
+import {
+    BeneficiaryEntity,
+    CommunityEntity,
+    ManagerEntity,
+    UBIEntity,
+    UserActivityEntity
+} from '../../generated/schema';
 import { fiveCents, normalize } from '../utils';
 import { loadOrCreateCommunityDaily } from './community';
 import { loadOrCreateDailyUbi } from './ubi';
@@ -48,7 +54,7 @@ export function genericHandleBeneficiaryAdded(
             if (beneficiary.state === 0) {
                 const previousManager = ManagerEntity.load(beneficiary.addedBy.toHex())!;
                 const previousCommunity = CommunityEntity.load(beneficiary.community)!;
-                
+
                 // increase removed on manager
                 previousManager.removed += 1;
                 previousManager.save();
@@ -161,7 +167,7 @@ export function genericHandleBeneficiaryRemoved(
             const ubi = UBIEntity.load('0')!;
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
             const activity = new UserActivityEntity(_hash);
-            
+
             // update ubi
             ubi.beneficiaries -= 1;
             // update daily ubi

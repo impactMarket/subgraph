@@ -350,7 +350,7 @@ test('should be able to be added to other community after removed', () => {
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
 
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'removed', '1');
-    
+
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'added', '1');
 });
 
@@ -437,12 +437,14 @@ test('lock/unlock beneficiary', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent1);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '0');
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'lockedBeneficiaries', '0');
 
     const lockCommunity = createBeneficiaryLockedEvent(managerAddress[0], beneficiaryAddress[0], communityAddress[0]);
 
     handleBeneficiaryLocked(lockCommunity);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '2');
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'lockedBeneficiaries', '1');
 
     const unlockCommunity = createBeneficiaryUnlockedEvent(
         managerAddress[0],
@@ -453,4 +455,5 @@ test('lock/unlock beneficiary', () => {
     handleBeneficiaryUnlocked(unlockCommunity);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '0');
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'lockedBeneficiaries', '0');
 });
