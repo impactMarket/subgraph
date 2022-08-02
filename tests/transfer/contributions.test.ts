@@ -21,7 +21,6 @@ test('contribute cusd to community', () => {
     handleCommunityAdded(community);
 
     const transferEvent1 = createTransferEvent(userAddress[0], communityAddress[0], fiveDollars.toString());
-
     const transferEvent2 = createTransferEvent(userAddress[1], communityAddress[0], fiveDollars.toString());
 
     handleTransferCeloDollar(transferEvent1);
@@ -30,7 +29,6 @@ test('contribute cusd to community', () => {
     const dayId = transferEvent1.block.timestamp.toI32() / 86400;
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
-
     assert.fieldEquals(
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId}`,
@@ -63,10 +61,8 @@ test('contribute cusd to treasury', () => {
     const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
-    //
 
     const transferEvent1 = createTransferEvent(userAddress[0], treasuryAddress, fiveDollars.toString());
-
     const transferEvent2 = createTransferEvent(userAddress[1], treasuryAddress, fiveDollars.toString());
 
     handleTransferCeloDollar(transferEvent1);
@@ -118,14 +114,12 @@ test('contribute cusd to treasury and community', () => {
     const dayId = transferEvent1.block.timestamp.toI32() / 86400;
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
-
     assert.fieldEquals(
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId}`,
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`, 'contributors', '2');
 
     // assert ubi daily data
@@ -177,7 +171,6 @@ test('contribute cusd to treasury and community over some days', () => {
     handleTransferCeloDollar(transferEvent4);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
-
     assert.fieldEquals(
         'UBIEntity',
         '0',
@@ -198,7 +191,6 @@ test('contribute cusd to treasury and community over some days', () => {
     handleTransferCeloDollar(transferEvent6);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
-
     assert.fieldEquals(
         'UBIEntity',
         '0',
@@ -269,9 +261,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId1}`, 'contributors', '2');
-
     assert.fieldEquals(
         'UBIDailyEntity',
         dayId1.toString(),
@@ -290,9 +280,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(1)).toString()).toString()
     );
-
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId2}`, 'contributors', '1');
-
     assert.fieldEquals(
         'UBIDailyEntity',
         dayId2.toString(),
@@ -311,9 +299,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(1)).toString()).toString()
     );
-
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId3}`, 'contributors', '1');
-
     assert.fieldEquals(
         'UBIDailyEntity',
         dayId3.toString(),
@@ -332,9 +318,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId4}`, 'contributors', '2');
-
     assert.fieldEquals(
         'UBIDailyEntity',
         dayId4.toString(),
@@ -352,7 +336,6 @@ test('contribute cusd to community and update contributor entities', () => {
     handleCommunityAdded(community);
 
     const transferEvent1 = createTransferEvent(userAddress[0], communityAddress[0], fiveDollars.toString());
-
     const transferEvent2 = createTransferEvent(userAddress[1], communityAddress[0], fiveDollars.toString());
 
     handleTransferCeloDollar(transferEvent1);
@@ -364,13 +347,10 @@ test('contribute cusd to community and update contributor entities', () => {
         'contributed',
         normalize(fiveDollars.toString()).toString()
     );
-
     assert.fieldEquals('ContributorEntity', userAddress[0], 'contributions', '1');
-
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
 
     const transferEvent3 = createTransferEvent(userAddress[1], communityAddress[0], fiveDollars.toString());
-
     const dayId = transferEvent3.block.timestamp.toI32() / 86400;
 
     handleTransferCeloDollar(transferEvent3);
@@ -381,20 +361,15 @@ test('contribute cusd to community and update contributor entities', () => {
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
     assert.fieldEquals('ContributorEntity', userAddress[1], 'contributions', '2');
-
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
-
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`, 'contributors', '2');
-
     assert.fieldEquals(
         'ContributorContributionsEntity',
         `${userAddress[1]}-${communityAddress[0]}`,
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
@@ -413,9 +388,7 @@ test('contribute cusd to community and update contributor entities, many communi
     handleCommunityAdded(community2);
 
     const transferEvent1 = createTransferEvent(userAddress[0], communityAddress[0], fiveDollars.toString());
-
     const transferEvent2 = createTransferEvent(userAddress[1], communityAddress[0], fiveDollars.toString());
-
     const transferEvent3 = createTransferEvent(userAddress[0], communityAddress[1], fiveDollars.toString());
 
     handleTransferCeloDollar(transferEvent1);
@@ -428,16 +401,13 @@ test('contribute cusd to community and update contributor entities, many communi
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
     assert.fieldEquals('ContributorEntity', userAddress[0], 'contributions', '2');
-
     assert.fieldEquals(
         'ContributorContributionsEntity',
         `${userAddress[0]}-${communityAddress[0]}`,
         'contributed',
         normalize(fiveDollars.toString()).toString()
     );
-
     assert.fieldEquals(
         'ContributorContributionsEntity',
         `${userAddress[1]}-${communityAddress[0]}`,
@@ -455,16 +425,13 @@ test('contribute cusd to community and update contributor entities, many communi
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-
     assert.fieldEquals('ContributorEntity', userAddress[1], 'contributions', '2');
-
     assert.fieldEquals(
         'ContributorContributionsEntity',
         `${userAddress[1]}-${communityAddress[0]}`,
         'contributed',
         normalize(fiveDollars.toString()).toString()
     );
-
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
