@@ -157,6 +157,15 @@ export class CommunityEntity extends Entity {
     this.set("removedBeneficiaries", Value.fromI32(value));
   }
 
+  get lockedBeneficiaries(): i32 {
+    let value = this.get("lockedBeneficiaries");
+    return value!.toI32();
+  }
+
+  set lockedBeneficiaries(value: i32) {
+    this.set("lockedBeneficiaries", Value.fromI32(value));
+  }
+
   get managers(): i32 {
     let value = this.get("managers");
     return value!.toI32();

@@ -90,6 +90,7 @@ export function generiHandleCommunityAdded(
     community.incrementInterval = _incrementInterval;
     community.beneficiaries = 0;
     community.removedBeneficiaries = 0;
+    community.lockedBeneficiaries = 0;
     community.managers = 0;
     community.removedManagers = 0;
     community.claims = 0;
