@@ -316,6 +316,14 @@ type ManagerEntity @entity {
   tx timestamp of when this manager was removed from this community
   """
   until: Int!
+  """
+  added by
+  """
+  addedBy: Bytes!
+  """
+  removed by
+  """
+  removedBy: Bytes
 }
 
 """

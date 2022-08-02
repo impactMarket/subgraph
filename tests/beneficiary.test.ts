@@ -59,7 +59,6 @@ test('should add beneficiary', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'address', beneficiaryAddress[0]);
-
     assert.fieldEquals('UserActivityEntity', beneficiaryAddedEvent1.transaction.hash.toHex(), 'activity', 'ADDED');
 });
 
@@ -89,12 +88,12 @@ test('should add claim', () => {
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        communityProps[0].get('claimAmount'),
+        communityProps[0].get('claimAmount')!,
         communityAddress[0]
     );
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[1],
-        communityProps[0].get('claimAmount'),
+        communityProps[0].get('claimAmount')!,
         communityAddress[0]
     );
 
@@ -119,7 +118,7 @@ test('should add claim', () => {
         'BeneficiaryEntity',
         beneficiaryAddress[1],
         'claimed',
-        normalize(BigInt.fromString(communityProps[0].get('claimAmount')).toString()).toString()
+        normalize(BigInt.fromString(communityProps[0].get('claimAmount')!).toString()).toString()
     );
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'preLastClaimAt', '0');
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[1], 'preLastClaimAt', '0');
@@ -130,7 +129,7 @@ test('should add claim', () => {
         communityAddress[0],
         'claimed',
         normalize(
-            BigInt.fromString(communityProps[0].get('claimAmount'))
+            BigInt.fromString(communityProps[0].get('claimAmount')!)
                 .times(BigInt.fromI32(2))
                 // two beneficiaries + initial manager
                 .plus(fiveCents.times(BigInt.fromI32(3)))
@@ -145,7 +144,7 @@ test('should add claim', () => {
         '0',
         'claimed',
         normalize(
-            BigInt.fromString(communityProps[0].get('claimAmount'))
+            BigInt.fromString(communityProps[0].get('claimAmount')!)
                 .times(BigInt.fromI32(2))
                 // two beneficiaries + initial manager
                 .plus(fiveCents.times(BigInt.fromI32(3)))
@@ -175,7 +174,7 @@ test('should rotate claim timestamp', () => {
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        communityProps[0].get('claimAmount'),
+        communityProps[0].get('claimAmount')!,
         communityAddress[0],
         1640716194
     );
@@ -183,7 +182,7 @@ test('should rotate claim timestamp', () => {
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        communityProps[0].get('claimAmount'),
+        communityProps[0].get('claimAmount')!,
         communityAddress[0],
         1640716195
     );
@@ -196,7 +195,7 @@ test('should rotate claim timestamp', () => {
 
     const beneficiaryClaimEvent3 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        communityProps[0].get('claimAmount'),
+        communityProps[0].get('claimAmount')!,
         communityAddress[0],
         1640716196
     );
@@ -206,14 +205,13 @@ test('should rotate claim timestamp', () => {
     // assert second rotate
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'lastClaimAt', '1640716196');
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'preLastClaimAt', '1640716195');
-
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'claims', '3');
     assert.fieldEquals(
         'BeneficiaryEntity',
         beneficiaryAddress[0],
         'claimed',
         normalize(
-            BigInt.fromString(communityProps[0].get('claimAmount')).times(BigInt.fromI32(3)).toString()
+            BigInt.fromString(communityProps[0].get('claimAmount')!).times(BigInt.fromI32(3)).toString()
         ).toString()
     );
 });
@@ -241,11 +239,8 @@ test('should remove beneficiary', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'address', beneficiaryAddress[0]);
-
     assert.fieldEquals('UserActivityEntity', beneficiaryAddedEvent1.transaction.hash.toHex(), 'activity', 'ADDED');
-
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '2');
-
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
 
     const beneficiaryRemovedEvent1 = createBeneficiaryRemovedEvent(
@@ -257,11 +252,8 @@ test('should remove beneficiary', () => {
     handleBeneficiaryRemoved(beneficiaryRemovedEvent1);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '1');
-
     assert.fieldEquals('UserActivityEntity', beneficiaryRemovedEvent1.transaction.hash.toHex(), 'activity', 'REMOVED');
-
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
-
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
 });
 
@@ -295,7 +287,6 @@ test('should be able to join migrated community', () => {
     handleBeneficiaryJoined(beneficiaryJoinedEvent1);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'community', communityAddress[1]);
-
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
 });
 
@@ -341,11 +332,8 @@ test('should be able to join other community after removed', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent3);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
-
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '1');
-
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'beneficiaries', '1');
-
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
 });
 
@@ -381,9 +369,7 @@ test('should be able to join after removal', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent3);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
-
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '0');
-
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
 });
 
@@ -410,9 +396,7 @@ test('should not count same beneficiary twice - alpha issue', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
-
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '0');
-
     assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
 });
 
