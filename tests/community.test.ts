@@ -243,7 +243,7 @@ test('lock/unlock community', () => {
     handleCommunityAdded(community);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'state', '0');
-    
+
     // lock
 
     const lockCommunity = createCommunityLockedEvent(userAddress[0], communityAddress[0]);

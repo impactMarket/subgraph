@@ -7,7 +7,6 @@ import { handleCommunityAdded, handleCommunityMigrated } from '../src/mappings/c
 import { handleManagerAdded, handleManagerRemoved } from '../src/mappings/community';
 
 import { communityAdminAddress } from '../src/common/addresses';
-import { log } from '@graphprotocol/graph-ts';
 
 export { handleCommunityAdded, handleManagerAdded };
 
@@ -95,7 +94,7 @@ test('add later forbidden manager', () => {
     handleManagerAdded(managerAddedEvent2);
     handleManagerAdded(managerAddedEvent3);
 
-    assert.notInStore("ManagerEntity", communityAdminAddress);
+    assert.notInStore('ManagerEntity', communityAdminAddress);
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'address', managerAddress[1]);
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
     assert.fieldEquals('UBIEntity', '0', 'managers', '3');
@@ -138,7 +137,7 @@ test('add forbidden manager at deploy', () => {
     handleManagerAdded(managerAddedEvent1);
     handleManagerAdded(managerAddedEvent2);
 
-    assert.notInStore("ManagerEntity", communityAdminAddress);
+    assert.notInStore('ManagerEntity', communityAdminAddress);
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'address', managerAddress[1]);
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
     assert.fieldEquals('UBIEntity', '0', 'managers', '3');

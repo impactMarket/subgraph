@@ -27,7 +27,7 @@ const ambassadorAddress: string[] = [
     '0x6ad310c268901efafc1e2afed9444e46acd716d1',
     '0xc60cc9607da75542fee955dc000786f7bc12a722',
     '0x07cec7b5c997720f7351718400664beeb02b747a'
-]
+];
 
 const fiveCents = BigInt.fromString('5').times(BigInt.fromI32(10).pow(16));
 const toToken = (amount: string): BigInt => BigInt.fromString(amount).times(BigInt.fromI32(10).pow(18));
