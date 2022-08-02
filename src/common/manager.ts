@@ -19,7 +19,7 @@ export function genericHandleManagerAdded(
             const communityDaily = loadOrCreateCommunityDaily(communityAddress, _blockTimestamp);
 
             let isManagerMigrated = false;
-            let notPreviouslyRemoved = false;
+            let previouslyRemoved = true;
             const managerId = _manager.toHex();
             let manager = ManagerEntity.load(managerId);
 
@@ -32,6 +32,7 @@ export function genericHandleManagerAdded(
                 manager.removed = 0;
                 manager.since = _blockTimestamp.toI32();
                 manager.until = 0;
+                manager.addedBy = _by;
             } else if (
                 _community.previous !== null &&
                 Address.fromString(manager.community).equals(
@@ -39,6 +40,7 @@ export function genericHandleManagerAdded(
                     _community.previous!
                 )
             ) {
+                // this is just migrating
                 manager.community = _community.id;
                 isManagerMigrated = true;
             } else if (Address.fromString(manager.community).notEqual(communityAddress)) {
@@ -52,7 +54,7 @@ export function genericHandleManagerAdded(
                 if (manager.state === 0) {
                     previousManager.state = 1;
                     previousManager.until = _blockTimestamp.toI32();
-                    notPreviouslyRemoved = true;
+                    previouslyRemoved = false;
                 } else {
                     previousManager.state = manager.state;
                     previousManager.until = manager.until;
@@ -60,6 +62,8 @@ export function genericHandleManagerAdded(
                 previousManager.added = manager.added;
                 previousManager.removed = manager.removed;
                 previousManager.since = manager.since;
+                previousManager.addedBy = manager.addedBy;
+                previousManager.removedBy = manager.removedBy;
                 previousManager.save();
                 //
                 manager.address = _manager;
@@ -69,14 +73,20 @@ export function genericHandleManagerAdded(
                 manager.removed = 0;
                 manager.since = _blockTimestamp.toI32();
                 manager.until = 0;
+                manager.addedBy = _by;
+                manager.removedBy = null;
             } else if (Address.fromString(manager.community).equals(communityAddress)) {
+                // reset if removed in the past and readded
+                if (manager.state === 1) {
+                    manager.until = 0;
+                    manager.addedBy = _by;
+                    manager.removedBy = null;
+                    _community.removedManagers -= 1;
+                }
                 // manager rejoining same community from where has left
                 manager.state = 0;
-                // reset if removed in the past and readded
-                manager.until = 0;
-                _community.removedManagers -= 1;
             }
-            if (!isManagerMigrated && !notPreviouslyRemoved) {
+            if (!isManagerMigrated && previouslyRemoved) {
                 // update manager list
                 const managerList = _community.managerList;
 
@@ -154,6 +164,7 @@ export function genericHandleManagerRemoved(
             // update manager
             manager.state = 1;
             manager.until = _blockTimestamp.toI32();
+            manager.removedBy = _by;
             manager.save();
             // update community
             community.managers -= 1;

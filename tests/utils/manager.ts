@@ -5,8 +5,8 @@ import { newMockEvent } from 'matchstick-as/assembly/defaults';
 import { ManagerAdded, ManagerRemoved } from '../../generated/templates/Community/Community';
 
 export function createManagerAddedEvent(
+    by: string,
     manager: string,
-    account: string,
     fromCommunityAddress: string,
     timestamp: i32 = 0
 ): ManagerAdded {
@@ -17,18 +17,18 @@ export function createManagerAddedEvent(
         managerAddedEvent.block.timestamp = BigInt.fromI32(timestamp);
     }
     managerAddedEvent.address = Address.fromString(fromCommunityAddress);
-    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
-    const accountParam = new ethereum.EventParam('account', ethereum.Value.fromAddress(Address.fromString(account)));
+    const byParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(by)));
+    const managerParam = new ethereum.EventParam('account', ethereum.Value.fromAddress(Address.fromString(manager)));
 
+    managerAddedEvent.parameters.push(byParam);
     managerAddedEvent.parameters.push(managerParam);
-    managerAddedEvent.parameters.push(accountParam);
 
     return managerAddedEvent;
 }
 
 export function createManagerRemovedEvent(
+    by: string,
     manager: string,
-    account: string,
     fromCommunityAddress: string,
     timestamp: i32 = 0
 ): ManagerRemoved {
@@ -39,11 +39,11 @@ export function createManagerRemovedEvent(
         managerRemovedEvent.block.timestamp = BigInt.fromI32(timestamp);
     }
     managerRemovedEvent.address = Address.fromString(fromCommunityAddress);
-    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
-    const accountParam = new ethereum.EventParam('account', ethereum.Value.fromAddress(Address.fromString(account)));
+    const byParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(by)));
+    const managerParam = new ethereum.EventParam('account', ethereum.Value.fromAddress(Address.fromString(manager)));
 
+    managerRemovedEvent.parameters.push(byParam);
     managerRemovedEvent.parameters.push(managerParam);
-    managerRemovedEvent.parameters.push(accountParam);
 
     return managerRemovedEvent;
 }

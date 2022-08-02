@@ -809,6 +809,32 @@ export class ManagerEntity extends Entity {
   set until(value: i32) {
     this.set("until", Value.fromI32(value));
   }
+
+  get addedBy(): Bytes {
+    let value = this.get("addedBy");
+    return value!.toBytes();
+  }
+
+  set addedBy(value: Bytes) {
+    this.set("addedBy", Value.fromBytes(value));
+  }
+
+  get removedBy(): Bytes | null {
+    let value = this.get("removedBy");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set removedBy(value: Bytes | null) {
+    if (!value) {
+      this.unset("removedBy");
+    } else {
+      this.set("removedBy", Value.fromBytes(<Bytes>value));
+    }
+  }
 }
 
 export class BeneficiaryEntity extends Entity {
