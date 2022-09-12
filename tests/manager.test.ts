@@ -259,6 +259,57 @@ test('remove manager (and readd)', () => {
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'managers', '3');
 });
 
+test('add managers that already belong to a community', () => {
+    clearStore();
+
+    const community1 = createCommunityAddedEvent(
+        communityAddress[0],
+        [managerAddress[0]],
+        communityProps[0],
+        1646650968
+    );
+    const community2 = createCommunityAddedEvent(
+        communityAddress[1],
+        [managerAddress[1]],
+        communityProps[1],
+        1646650968
+    );
+
+    handleCommunityAdded(community1);
+    handleCommunityAdded(community2);
+
+    const managerAddedEvent1 = createManagerAddedEvent(
+        ambassadorAddress[0],
+        managerAddress[2],
+        communityAddress[0],
+        1646650969
+    );
+
+    const managerAddedEvent2 = createManagerAddedEvent(
+        ambassadorAddress[0],
+        managerAddress[3],
+        communityAddress[0],
+        1646650970
+    );
+
+    handleManagerAdded(managerAddedEvent1);
+    handleManagerAdded(managerAddedEvent2);
+
+    const managerAddedEvent3 = createManagerAddedEvent(
+        ambassadorAddress[0],
+        managerAddress[2],
+        communityAddress[1],
+        1646650972
+    );
+
+    handleManagerAdded(managerAddedEvent3);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '2');
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '2');
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'managerList', `[${managerAddress[0]}, ${managerAddress[3]}]`);
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'managerList', `[${managerAddress[1]}, ${managerAddress[2]}]`);
+});
+
 test('add manager - different days', () => {
     clearStore();
 
