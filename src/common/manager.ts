@@ -55,6 +55,22 @@ export function genericHandleManagerAdded(
                     previousManager.state = 1;
                     previousManager.until = _blockTimestamp.toI32();
                     previouslyRemoved = false;
+                    // update previous community manager list
+                    const previousCommunity = CommunityEntity.load(manager.community)!;
+                    const previousManagerList = previousCommunity.managerList;
+
+                    previousManagerList.splice(previousManagerList.indexOf(managerId), 1);
+                    previousCommunity.managerList = previousManagerList;
+                    previousCommunity.managers -= 1;
+                    previousCommunity.removedManagers += 1;
+                    previousCommunity.save();
+                    // update new community manager list
+                    const newManagerList = _community.managerList;
+
+                    newManagerList.push(managerId);
+                    _community.managerList = newManagerList;
+                    _community.managers += 1;
+                    _community.save();
                 } else {
                     previousManager.state = manager.state;
                     previousManager.until = manager.until;
@@ -65,7 +81,7 @@ export function genericHandleManagerAdded(
                 previousManager.addedBy = manager.addedBy;
                 previousManager.removedBy = manager.removedBy;
                 previousManager.save();
-                //
+                // use existing object and register with new manager data
                 manager.address = _manager;
                 manager.community = _community.id;
                 manager.state = 0;
