@@ -1,13 +1,13 @@
 import { Address, BigDecimal, BigInt, store } from '@graphprotocol/graph-ts';
 
-import { Community } from '../../generated/templates';
-import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
 import {
+    AssetContributions,
     CommunityDailyEntity,
     CommunityEntity,
-    ContributorContributionsEntity,
     UBIEntity
 } from '../../generated/schema';
+import { Community } from '../../generated/templates';
+import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
 import { generiHandleCommunityAdded, generiHandleCommunityRemoved } from '../common/community';
 import { genericHandleManagerAdded } from '../common/manager';
 import { loadOrCreateDailyUbi } from '../common/ubi';
@@ -84,24 +84,22 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         // TODO: test
         for (let index = 0; index < previousCommunity.contributions.length; index++) {
             const pastContributionId = previousCommunity.contributions[index];
-            const pastContributorContributions = ContributorContributionsEntity.load(pastContributionId)!;
-            const contributorContributionsId = `${pastContributionId.slice(
+            const pastAssetContributions = AssetContributions.load(pastContributionId)!;
+            const assetContributionsId = `${pastContributionId.slice(
                 0,
                 pastContributionId.indexOf('-')
             )}-${event.params.communityAddress.toHex()}`;
 
-            const contributorContributions = new ContributorContributionsEntity(contributorContributionsId);
+            const assetContributions = new AssetContributions(assetContributionsId);
 
-            contributorContributions.to = pastContributorContributions.to;
-            contributorContributions.contributed = pastContributorContributions.contributed;
-            contributorContributions.contributions = pastContributorContributions.contributions;
-            contributorContributions.lastContribution = pastContributorContributions.lastContribution;
-            contributorContributions.save();
+            assetContributions.asset = pastAssetContributions.asset;
+            assetContributions.amount = pastAssetContributions.amount;
+            assetContributions.save();
             const contributions = community.contributions;
 
-            contributions.push(contributorContributionsId);
+            contributions.push(assetContributionsId);
             community.contributions = contributions;
-            store.remove('ContributorContributionsEntity', pastContributionId);
+            store.remove('AssetContributions', pastContributionId);
         }
         const totalNewManagers = event.params.managers.length;
 
