@@ -21,6 +21,7 @@ export function loadOrCreateCommunityDaily(_community: Address, _blockTimestamp:
         communityDaily.claims = 0;
         communityDaily.contributed = BigDecimal.zero();
         communityDaily.contributors = 0;
+        communityDaily.contributions = new Array<string>();
         communityDaily.volume = BigDecimal.zero();
         communityDaily.transactions = 0;
         communityDaily.reach = 0;

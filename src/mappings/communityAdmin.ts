@@ -69,6 +69,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 communityDaily.claims = previousCommunityDaily.claims;
                 communityDaily.contributed = previousCommunityDaily.contributed;
                 communityDaily.contributors = previousCommunityDaily.contributors;
+                communityDaily.contributions = previousCommunityDaily.contributions;
                 communityDaily.volume = previousCommunityDaily.volume;
                 communityDaily.transactions = previousCommunityDaily.transactions;
                 communityDaily.reach = previousCommunityDaily.reach;

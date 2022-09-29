@@ -75,7 +75,7 @@ dataSources:
           file: ./abis/BaseERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransferCeloDollar
+          handler: handleTransferAsset
       file: ./src/mappings/transfer.ts
 templates:
   - name: Community

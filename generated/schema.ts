@@ -11,6 +11,58 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class AssetContributions extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save AssetContributions entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type AssetContributions must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("AssetContributions", id.toString(), this);
+    }
+  }
+
+  static load(id: string): AssetContributions | null {
+    return changetype<AssetContributions | null>(
+      store.get("AssetContributions", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get asset(): Bytes {
+    let value = this.get("asset");
+    return value!.toBytes();
+  }
+
+  set asset(value: Bytes) {
+    this.set("asset", Value.fromBytes(value));
+  }
+
+  get amount(): BigDecimal {
+    let value = this.get("amount");
+    return value!.toBigDecimal();
+  }
+
+  set amount(value: BigDecimal) {
+    this.set("amount", Value.fromBigDecimal(value));
+  }
+}
+
 export class CommunityEntity extends Entity {
   constructor(id: string) {
     super();
@@ -371,6 +423,15 @@ export class CommunityDailyEntity extends Entity {
     this.set("contributors", Value.fromI32(value));
   }
 
+  get contributions(): Array<string> {
+    let value = this.get("contributions");
+    return value!.toStringArray();
+  }
+
+  set contributions(value: Array<string>) {
+    this.set("contributions", Value.fromStringArray(value));
+  }
+
   get volume(): BigDecimal {
     let value = this.get("volume");
     return value!.toBigDecimal();
@@ -622,6 +683,15 @@ export class UBIDailyEntity extends Entity {
 
   set contributors(value: i32) {
     this.set("contributors", Value.fromI32(value));
+  }
+
+  get contributions(): Array<string> {
+    let value = this.get("contributions");
+    return value!.toStringArray();
+  }
+
+  set contributions(value: Array<string>) {
+    this.set("contributions", Value.fromStringArray(value));
   }
 
   get volume(): BigDecimal {

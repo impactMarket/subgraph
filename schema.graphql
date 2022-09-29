@@ -1,4 +1,25 @@
 """
+Contributions of an asset to an entity
+"""
+type AssetContributions @entity {
+  """
+  "asset-0" for global
+  "asset-number" for daily global
+  "asset-address" for community
+  "asset-address-number" for daily community
+  """
+  id: ID!
+  """
+  contributed asset
+  """
+  asset: Bytes!
+  """
+  contributed amount (normalized)
+  """
+  amount: BigDecimal!
+}
+
+"""
 UBI community
 """
 type CommunityEntity @entity {
@@ -78,7 +99,10 @@ type CommunityEntity @entity {
   total contributors (normalized)
   """
   contributors: Int!
-  contributions: [ContributorContributionsEntity!]!
+  """
+  contributions in each asset
+  """
+  contributions: [AssetContributions!]!
   """
   active community managers array
   """
@@ -140,6 +164,10 @@ type CommunityDailyEntity @entity {
   total contributors (normalized)
   """
   contributors: Int!
+  """
+  contributions in each asset
+  """
+  contributions: [AssetContributions!]!
   """
   volume transacted in cUSD (normalized)
   """
@@ -244,6 +272,10 @@ type UBIDailyEntity @entity {
   total contributors (normalized)
   """
   contributors: Int!
+  """
+  contributions in each asset
+  """
+  contributions: [AssetContributions!]!
   """
   volume transacted in cUSD (normalized)
   """
