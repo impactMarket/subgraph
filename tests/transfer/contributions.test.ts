@@ -87,18 +87,18 @@ test('contribute cusd to community', () => {
     );
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'contributors', '2');
     assert.fieldEquals(
-        'UBIEntity',
+        'UBIDailyEntity',
         '0',
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'contributors', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'contributors', '2');
 });
 
 test('contribute cusd to treasury', () => {
     clearStore();
 
-    // community generate the UBIEntity
+    // community generate the UBIDailyEntity
     const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
     handleCommunityAdded(community);
@@ -139,12 +139,12 @@ test('contribute cusd to treasury', () => {
     assert.fieldEquals('UBIDailyEntity', `${dayId}`, 'contributions', `[${celoDollarAddress.toLowerCase()}-${dayId}]`);
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'contributors', '2');
     assert.fieldEquals(
-        'UBIEntity',
+        'UBIDailyEntity',
         '0',
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'contributors', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'contributors', '2');
 });
 
 test('contribute cusd to treasury and community', () => {
@@ -211,12 +211,12 @@ test('contribute cusd to treasury and community', () => {
     );
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'contributors', '2');
     assert.fieldEquals(
-        'UBIEntity',
+        'UBIDailyEntity',
         '0',
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'contributors', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'contributors', '2');
 });
 
 test('contribute cusd to treasury and community over some days', () => {
@@ -288,12 +288,12 @@ test('contribute cusd to treasury and community over some days', () => {
     );
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
     assert.fieldEquals(
-        'UBIEntity',
+        'UBIDailyEntity',
         '0',
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'contributors', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'contributors', '2');
 
     // day 2
 
@@ -332,12 +332,12 @@ test('contribute cusd to treasury and community over some days', () => {
     );
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
     assert.fieldEquals(
-        'UBIEntity',
+        'UBIDailyEntity',
         '0',
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(5)).toString()).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'contributors', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'contributors', '3');
 
     // day 3
 
@@ -396,12 +396,12 @@ test('contribute cusd to treasury and community over some days', () => {
     );
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
     assert.fieldEquals(
-        'UBIEntity',
+        'UBIDailyEntity',
         '0',
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(8)).toString()).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'contributors', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'contributors', '3');
 
     // day 4
 
@@ -438,12 +438,12 @@ test('contribute cusd to treasury and community over some days', () => {
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '4');
     assert.fieldEquals(
-        'UBIEntity',
+        'UBIDailyEntity',
         '0',
         'contributed',
         normalize(fiveDollars.times(BigInt.fromI32(11)).toString()).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'contributors', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'contributors', '3');
 
     // day 1
 

@@ -8,7 +8,6 @@ import {
     ContributorContributionsEntity,
     ContributorEntity,
     UBIDailyEntity,
-    UBIEntity,
     UserTransactionWithEntity,
     UserTransactionsEntity
 } from '../../generated/schema';
@@ -22,7 +21,7 @@ function updateContributorHelper(
     event: Transfer,
     normalizedAmount: BigDecimal,
     dayId: i32,
-    ubi: UBIEntity,
+    ubi: UBIDailyEntity,
     ubiDaily: UBIDailyEntity
 ): void {
     // update contribuotrs data
@@ -89,7 +88,7 @@ export function handleTransferAsset(event: Transfer): void {
     if (event.params.to.equals(Address.fromString(treasuryAddress))) {
         const dayId = event.block.timestamp.toI32() / 86400;
         const normalizedAmount = normalize(event.params.amount.toString());
-        const ubi = UBIEntity.load('0')!;
+        const ubi = UBIDailyEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
         const asset = event.address;
         const contributionDailyId = `${asset.toHex()}-${dayId.toString()}`;
@@ -127,7 +126,7 @@ export function handleTransferAsset(event: Transfer): void {
         const normalizedAmount = normalize(event.params.amount.toString());
         const community = CommunityEntity.load(event.params.to.toHex())!;
         const communityDaily = loadOrCreateCommunityDaily(event.params.to, event.block.timestamp);
-        const ubi = UBIEntity.load('0')!;
+        const ubi = UBIDailyEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
         const asset = event.address;
         const to = event.params.to;
@@ -229,7 +228,7 @@ export function handleTransferAsset(event: Transfer): void {
             Address.fromString(beneficiary!.community),
             event.block.timestamp
         );
-        const ubi = UBIEntity.load('0')!;
+        const ubi = UBIDailyEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
 
         let transactionFrom = UserTransactionsEntity.load(event.params.from.toHex());

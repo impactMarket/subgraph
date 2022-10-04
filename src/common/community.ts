@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
-import { CommunityDailyEntity, CommunityEntity, UBIEntity } from '../../generated/schema';
+import { CommunityDailyEntity, CommunityEntity, UBIDailyEntity } from '../../generated/schema';
 import { fiveCents, normalize } from '../utils';
 import { genericHandleManagerAdded } from './manager';
 import { loadOrCreateDailyUbi } from './ubi';
@@ -105,10 +105,10 @@ export function generiHandleCommunityAdded(
     community.maxTranche = _maxTranche.isZero() ? BigDecimal.zero() : normalize(_maxTranche.toString());
     community.save();
     // create ubi if it doesn't exist
-    let ubi = UBIEntity.load('0');
+    let ubi = UBIDailyEntity.load('0');
 
     if (!ubi) {
-        ubi = new UBIEntity('0');
+        ubi = new UBIDailyEntity('0');
         // one already!
         ubi.communities = 1;
         ubi.beneficiaries = 0;
@@ -122,9 +122,11 @@ export function generiHandleCommunityAdded(
         ubi.claims = 0;
         ubi.contributed = BigDecimal.zero();
         ubi.contributors = 0;
+        ubi.contributions = new Array<string>();
         ubi.volume = BigDecimal.zero();
         ubi.transactions = 0;
         ubi.reach = 0;
+        ubi.fundingRate = BigDecimal.zero();
         ubi.save();
     } else {
         // one already!
@@ -161,7 +163,7 @@ export function generiHandleCommunityRemoved(_communityAddress: Address, _blockT
     community.state = 1;
     community.save();
     // update ubi
-    const ubi = UBIEntity.load('0')!;
+    const ubi = UBIDailyEntity.load('0')!;
 
     ubi.communities -= 1;
     ubi.beneficiaries -= community.beneficiaries;

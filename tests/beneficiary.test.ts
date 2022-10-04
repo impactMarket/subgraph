@@ -141,7 +141,7 @@ test('should add claim', () => {
 
     // assert ubi data
     assert.fieldEquals(
-        'UBIEntity',
+        'UBIDailyEntity',
         '0',
         'claimed',
         normalize(
@@ -152,7 +152,7 @@ test('should add claim', () => {
                 .toString()
         ).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '2');
 });
 
 test('should rotate claim timestamp', () => {
@@ -242,7 +242,7 @@ test('should remove beneficiary', () => {
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'address', beneficiaryAddress[0]);
     assert.fieldEquals('UserActivityEntity', beneficiaryAddedEvent1.transaction.hash.toHex(), 'activity', 'ADDED');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '2');
-    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '2');
 
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
 
@@ -257,7 +257,7 @@ test('should remove beneficiary', () => {
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '1');
     assert.fieldEquals('UserActivityEntity', beneficiaryRemovedEvent1.transaction.hash.toHex(), 'activity', 'REMOVED');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
-    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '1');
 
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
 
@@ -294,7 +294,7 @@ test('should be able to join migrated community', () => {
     handleBeneficiaryJoined(beneficiaryJoinedEvent1);
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'community', communityAddress[1]);
-    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '2');
 
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
 
@@ -345,7 +345,7 @@ test('should be able to be added to other community after removed', () => {
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'beneficiaries', '1');
-    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '2');
 
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '2');
 
@@ -387,7 +387,7 @@ test('should be able to be added to the same community after removal', () => {
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '0');
-    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '1');
 
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'added', '1');
 
@@ -418,7 +418,7 @@ test('should not count same beneficiary twice - alpha issue', () => {
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'removedBeneficiaries', '0');
-    assert.fieldEquals('UBIEntity', '0', 'beneficiaries', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '1');
 });
 
 test('lock/unlock beneficiary', () => {

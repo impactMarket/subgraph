@@ -4,7 +4,7 @@ import {
     AssetContributions,
     CommunityDailyEntity,
     CommunityEntity,
-    UBIEntity
+    UBIDailyEntity
 } from '../../generated/schema';
 import { Community } from '../../generated/templates';
 import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
@@ -168,7 +168,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 event.block.timestamp
             );
         }
-        const ubi = UBIEntity.load('0')!;
+        const ubi = UBIDailyEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
 
         // save entity state

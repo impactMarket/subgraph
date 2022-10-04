@@ -23,7 +23,7 @@ test('add manager', () => {
     handleCommunityAdded(community);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '1');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '1');
 
     const managerAddedEvent1 = createManagerAddedEvent(
         ambassadorAddress[0],
@@ -46,7 +46,7 @@ test('add manager', () => {
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'addedBy', ambassadorAddress[0]);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '3');
 
     const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
 
@@ -67,7 +67,7 @@ test('add later forbidden manager', () => {
     handleCommunityAdded(community);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '1');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '1');
 
     const managerAddedEvent1 = createManagerAddedEvent(
         ambassadorAddress[0],
@@ -97,7 +97,7 @@ test('add later forbidden manager', () => {
     assert.notInStore('ManagerEntity', communityAdminAddress);
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'address', managerAddress[1]);
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '3');
 
     const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
 
@@ -118,7 +118,7 @@ test('add forbidden manager at deploy', () => {
     handleCommunityAdded(community);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '1');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '1');
 
     const managerAddedEvent1 = createManagerAddedEvent(
         ambassadorAddress[0],
@@ -140,7 +140,7 @@ test('add forbidden manager at deploy', () => {
     assert.notInStore('ManagerEntity', communityAdminAddress);
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'address', managerAddress[1]);
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '3');
 
     const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
 
@@ -178,7 +178,7 @@ test('remove manager', () => {
     handleManagerAdded(managerAddedEvent2);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '3');
 
     const timestampRemove = 1646650971;
     const managerRemovedEvent1 = createManagerRemovedEvent(
@@ -193,7 +193,7 @@ test('remove manager', () => {
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '2');
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'until', timestampRemove.toString());
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'removedBy', ambassadorAddress[0]);
-    assert.fieldEquals('UBIEntity', '0', 'managers', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '2');
 
     const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
 
@@ -251,7 +251,7 @@ test('remove manager (and readd)', () => {
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '3');
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'until', '0');
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'removedBy', 'null');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '3');
 
     const dayId = managerAddedEvent2.block.timestamp.toI32() / 86400;
 
@@ -325,7 +325,7 @@ test('add manager - different days', () => {
     handleCommunityAdded(community);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '1');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '1');
 
     const day1Timestamp = 1646650969;
     const managerAddedEvent1 = createManagerAddedEvent(
@@ -381,7 +381,7 @@ test('add manager - different days', () => {
 
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'address', managerAddress[1]);
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '4');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '4');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '4');
 
     // first day
     const dayId = day1Timestamp / 86400;
@@ -429,7 +429,7 @@ test('add manager and migrate community', () => {
     const dayId = day1Timestamp / 86400;
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '2');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '2');
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'community', communityAddress[0]);
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`, 'managers', '2');
 
@@ -447,7 +447,7 @@ test('add manager and migrate community', () => {
 
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'community', communityAddress[1]);
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '2');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'managers', '2');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'managers', '2');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[1]}-${dayId}`, 'managers', '2');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[1]}-${dayId}`, 'managers', '2');

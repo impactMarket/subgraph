@@ -19,6 +19,7 @@ export function createCommunityAddedEvent(
     const communityAddedEvent = changetype<CommunityAdded>(newMockEvent());
 
     communityAddedEvent.parameters = [];
+    communityAddedEvent.block.timestamp = BigInt.fromI32(86400);
     if (timestamp !== 0) {
         communityAddedEvent.block.timestamp = BigInt.fromI32(timestamp);
     }
@@ -76,6 +77,7 @@ export function createCommunityRemovedEvent(communityAddress: string): Community
     const communityRemovedEvent = changetype<CommunityRemoved>(newMockEvent());
 
     communityRemovedEvent.parameters = [];
+    communityRemovedEvent.block.timestamp = BigInt.fromI32(86400);
     const communityAddressParam = new ethereum.EventParam(
         'communityAddress',
         ethereum.Value.fromAddress(Address.fromString(communityAddress))
@@ -95,6 +97,7 @@ export function createCommunityMigratedEvent(
     const communityMigratedEvent = changetype<CommunityMigrated>(newMockEvent());
 
     communityMigratedEvent.parameters = [];
+    communityMigratedEvent.block.timestamp = BigInt.fromI32(86400);
     if (timestamp !== 0) {
         communityMigratedEvent.block.timestamp = BigInt.fromI32(timestamp);
     }

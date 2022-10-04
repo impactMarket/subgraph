@@ -1,6 +1,6 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 
-import { CommunityEntity, ManagerEntity, UBIEntity, UserActivityEntity } from '../../generated/schema';
+import { CommunityEntity, ManagerEntity, UBIDailyEntity, UserActivityEntity } from '../../generated/schema';
 import { communityAdminAddress } from './addresses';
 import { loadOrCreateCommunityDaily } from './community';
 import { loadOrCreateDailyUbi } from './ubi';
@@ -109,7 +109,7 @@ export function genericHandleManagerAdded(
                 managerList.push(managerId);
                 _community.managerList = managerList;
                 // update ubi
-                const ubi = UBIEntity.load('0')!;
+                const ubi = UBIDailyEntity.load('0')!;
 
                 ubi.managers += 1;
                 ubi.save();
@@ -159,7 +159,7 @@ export function genericHandleManagerRemoved(
             managerList.splice(managerList.indexOf(managerId), 1);
             community.managerList = managerList;
             // update ubi
-            const ubi = UBIEntity.load('0')!;
+            const ubi = UBIDailyEntity.load('0')!;
 
             ubi.managers -= 1;
             ubi.save();

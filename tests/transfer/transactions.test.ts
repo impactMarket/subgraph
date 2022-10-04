@@ -1,7 +1,7 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import { BeneficiaryEntity, CommunityEntity, ManagerEntity, UBIEntity } from '../../generated/schema';
+import { BeneficiaryEntity, CommunityEntity, ManagerEntity, UBIDailyEntity } from '../../generated/schema';
 import {
     ambassadorAddress,
     beneficiaryAddress,
@@ -146,7 +146,7 @@ function createDummyEntities(): void {
     beneficiary4.addedBy = Address.fromString(managerAddress[1]);
     beneficiary4.save();
 
-    const ubi = new UBIEntity('0');
+    const ubi = new UBIDailyEntity('0');
 
     ubi.communities = 2;
     ubi.beneficiaries = 4;
@@ -154,10 +154,12 @@ function createDummyEntities(): void {
     ubi.claimed = BigDecimal.zero();
     ubi.contributed = BigDecimal.zero();
     ubi.contributors = 0;
+    ubi.contributions = new Array<string>();
     ubi.volume = BigDecimal.zero();
     ubi.transactions = 0;
     ubi.reach = 0;
     ubi.claims = 0;
+    ubi.fundingRate = BigDecimal.zero();
     ubi.save();
 }
 
@@ -184,8 +186,8 @@ test('should count first time user transactions', () => {
         normalize(fiveDollars.toString()).toString()
     );
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '1');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '1');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'reach', '1');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId.toString()}`, 'transactions', '1');
@@ -222,8 +224,8 @@ test('should count multiple user transactions, same day', () => {
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '2');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '2');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'reach', '1');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId.toString()}`, 'transactions', '2');
@@ -268,8 +270,8 @@ test('should count multiple users multiple transactions, same day', () => {
     );
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '2');
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'transactions', '2');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '3');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '3');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '3');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'reach', '3');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId.toString()}`, 'transactions', '3');
@@ -339,8 +341,8 @@ test('should count multiple users multiple transactions, different days', () => 
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'transactions', '2');
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[2], 'transactions', '3');
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[3], 'transactions', '1');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '4');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '4');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '3');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId2.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'reach', '2');
@@ -409,8 +411,8 @@ test('should count multiple user transactions, different days', () => {
         normalize(fiveDollars.times(BigInt.fromI32(4)).toString()).toString()
     );
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '4');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '4');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '4');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId2.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'reach', '1');
@@ -436,8 +438,8 @@ test('should not count user transactions if none parties are a beneficiary', () 
     handleTransferAsset(transferEvent1);
 
     assert.notInStore('UserTransactionsEntity', beneficiaryAddress[0]);
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '0');
 });
 
 test('should not count user transactions if from forbiden address', () => {
@@ -455,8 +457,8 @@ test('should not count user transactions if from forbiden address', () => {
     handleTransferAsset(transferEvent1);
 
     assert.notInStore('UserTransactionsEntity', beneficiaryAddress[0]);
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '0');
 });
 
 test('should not count user transactions if from community', () => {
@@ -474,6 +476,6 @@ test('should not count user transactions if from community', () => {
     handleTransferAsset(transferEvent1);
 
     assert.notInStore('UserTransactionsEntity', beneficiaryAddress[0]);
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '0');
 });

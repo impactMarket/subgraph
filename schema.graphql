@@ -187,57 +187,8 @@ type CommunityDailyEntity @entity {
 }
 
 """
-Global UBI activity since inception
-"""
-type UBIEntity @entity {
-  """
-  0, there's only one
-  """
-  id: ID!
-  """
-  total number of communities
-  """
-  communities: Int!
-  """
-  total number of beneficiaries
-  """
-  beneficiaries: Int!
-  """
-  total number of managers
-  """
-  managers: Int!
-  """
-  total claimed (normalized)
-  """
-  claimed: BigDecimal!
-  """
-  total claims
-  """
-  claims: Int!
-  """
-  total contributed (normalized)
-  """
-  contributed: BigDecimal!
-  """
-  total contributors (normalized)
-  """
-  contributors: Int!
-  """
-  volume transacted in cUSD (normalized)
-  """
-  volume: BigDecimal!
-  """
-  number of transactions
-  """
-  transactions: Int!
-  """
-  number of reached unique addresses
-  """
-  reach: Int!
-}
-
-"""
-Global UBI activity per day
+Global UBI activity per day. Be aware of the day id.
+Day id 0 (zero) is reserved to global activity.
 """
 type UBIDailyEntity @entity {
   """
