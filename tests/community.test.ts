@@ -45,7 +45,7 @@ test('create community', () => {
         'decreaseStep',
         normalize(communityProps[0].get('decreaseStep')!).toString()
     );
-    assert.fieldEquals('UBIEntity', '0', 'communities', '1');
+    assert.fieldEquals('UBIDailyEntity', '1', 'communities', '1');
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'community', communityAddress[0]);
 });
 
@@ -56,15 +56,15 @@ test('remove community', () => {
 
     handleCommunityAdded(community);
 
-    assert.fieldEquals('UBIEntity', '0', 'communities', '1');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+    assert.fieldEquals('UBIDailyEntity', '1', 'communities', '1');
+    assert.fieldEquals('UBIDailyEntity', '1', 'managers', '1');
 
     const communityRemove = createCommunityRemovedEvent(communityAddress[0]);
 
     handleCommunityRemoved(communityRemove);
 
-    assert.fieldEquals('UBIEntity', '0', 'communities', '0');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '0');
+    assert.fieldEquals('UBIDailyEntity', '1', 'communities', '0');
+    assert.fieldEquals('UBIDailyEntity', '1', 'managers', '0');
 });
 
 test('migrate community', () => {
@@ -82,8 +82,8 @@ test('migrate community', () => {
 
     handleCommunityMigrated(communityMigrated);
 
-    assert.fieldEquals('UBIEntity', '0', 'communities', '1');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+    assert.fieldEquals('UBIDailyEntity', '1', 'communities', '1');
+    assert.fieldEquals('UBIDailyEntity', '1', 'managers', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'previous', communityAddress[0]);
     assert.fieldEquals('ManagerEntity', managerAddress[0], 'community', communityAddress[1]);
@@ -104,8 +104,8 @@ test('migrate community with different managers', () => {
 
     handleCommunityMigrated(communityMigrated);
 
-    assert.fieldEquals('UBIEntity', '0', 'communities', '1');
-    assert.fieldEquals('UBIEntity', '0', 'managers', '1');
+    assert.fieldEquals('UBIDailyEntity', '1', 'communities', '1');
+    assert.fieldEquals('UBIDailyEntity', '1', 'managers', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'previous', communityAddress[0]);
     assert.fieldEquals('ManagerEntity', managerAddress[1], 'community', communityAddress[1]);

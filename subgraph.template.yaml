@@ -16,7 +16,6 @@ dataSources:
       entities:
         - CommunityEntity
         - CommunityDailyEntity
-        - UBIEntity
         - UBIDailyEntity
       abis:
         - name: CommunityAdmin
@@ -43,7 +42,6 @@ dataSources:
       entities:
         - CommunityEntity
         - CommunityDailyEntity
-        - UBIEntity
         - UBIDailyEntity
       abis:
         - name: OldImpactMarket
@@ -75,7 +73,7 @@ dataSources:
           file: ./abis/BaseERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransferCeloDollar
+          handler: handleTransferAsset
       file: ./src/mappings/transfer.ts
 templates:
   - name: Community
@@ -92,7 +90,6 @@ templates:
         - BeneficiaryEntity
         - CommunityEntity
         - CommunityDailyEntity
-        - UBIEntity
         - UBIDailyEntity
         - UserActivityEntity
       abis:
@@ -138,7 +135,6 @@ templates:
         - BeneficiaryEntity
         - CommunityEntity
         - CommunityDailyEntity
-        - UBIEntity
         - UBIDailyEntity
         - UserActivityEntity
       abis:

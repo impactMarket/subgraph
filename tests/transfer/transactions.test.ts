@@ -1,7 +1,7 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
-import { BeneficiaryEntity, CommunityEntity, ManagerEntity, UBIEntity } from '../../generated/schema';
+import { BeneficiaryEntity, CommunityEntity, ManagerEntity, UBIDailyEntity } from '../../generated/schema';
 import {
     ambassadorAddress,
     beneficiaryAddress,
@@ -10,12 +10,12 @@ import {
     toToken,
     userAddress
 } from '../utils/constants';
-import { attestationProxyAddress } from '../../src/common/addresses';
+import { attestationProxyAddress, celoDollarAddress } from '../../src/common/addresses';
 import { createTransferEvent } from '../utils/transfer';
-import { handleTransferCeloDollar } from '../../src/mappings/transfer';
+import { handleTransferAsset } from '../../src/mappings/transfer';
 import { normalize } from '../../src/utils/index';
 
-export { handleTransferCeloDollar };
+export { handleTransferAsset };
 
 const fiveDollars = toToken('5');
 
@@ -146,7 +146,7 @@ function createDummyEntities(): void {
     beneficiary4.addedBy = Address.fromString(managerAddress[1]);
     beneficiary4.save();
 
-    const ubi = new UBIEntity('0');
+    const ubi = new UBIDailyEntity('0');
 
     ubi.communities = 2;
     ubi.beneficiaries = 4;
@@ -154,10 +154,12 @@ function createDummyEntities(): void {
     ubi.claimed = BigDecimal.zero();
     ubi.contributed = BigDecimal.zero();
     ubi.contributors = 0;
+    ubi.contributions = new Array<string>();
     ubi.volume = BigDecimal.zero();
     ubi.transactions = 0;
     ubi.reach = 0;
     ubi.claims = 0;
+    ubi.fundingRate = BigDecimal.zero();
     ubi.save();
 }
 
@@ -166,9 +168,14 @@ test('should count first time user transactions', () => {
 
     createDummyEntities();
 
-    const transferEvent1 = createTransferEvent(beneficiaryAddress[0], beneficiaryAddress[1], fiveDollars.toString());
+    const transferEvent1 = createTransferEvent(
+        beneficiaryAddress[0],
+        beneficiaryAddress[1],
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
 
-    handleTransferCeloDollar(transferEvent1);
+    handleTransferAsset(transferEvent1);
 
     const dayId = transferEvent1.block.timestamp.toI32() / 86400;
 
@@ -179,8 +186,8 @@ test('should count first time user transactions', () => {
         normalize(fiveDollars.toString()).toString()
     );
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '1');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '1');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'reach', '1');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId.toString()}`, 'transactions', '1');
@@ -192,11 +199,21 @@ test('should count multiple user transactions, same day', () => {
 
     createDummyEntities();
 
-    const transferEvent1 = createTransferEvent(beneficiaryAddress[0], beneficiaryAddress[1], fiveDollars.toString());
-    const transferEvent2 = createTransferEvent(beneficiaryAddress[0], beneficiaryAddress[1], fiveDollars.toString());
+    const transferEvent1 = createTransferEvent(
+        beneficiaryAddress[0],
+        beneficiaryAddress[1],
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
+    const transferEvent2 = createTransferEvent(
+        beneficiaryAddress[0],
+        beneficiaryAddress[1],
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
 
-    handleTransferCeloDollar(transferEvent1);
-    handleTransferCeloDollar(transferEvent2);
+    handleTransferAsset(transferEvent1);
+    handleTransferAsset(transferEvent2);
 
     const dayId = transferEvent1.block.timestamp.toI32() / 86400;
 
@@ -207,8 +224,8 @@ test('should count multiple user transactions, same day', () => {
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '2');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '2');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'reach', '1');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId.toString()}`, 'transactions', '2');
@@ -220,13 +237,28 @@ test('should count multiple users multiple transactions, same day', () => {
 
     createDummyEntities();
 
-    const transferEvent1 = createTransferEvent(beneficiaryAddress[0], beneficiaryAddress[1], fiveDollars.toString());
-    const transferEvent2 = createTransferEvent(beneficiaryAddress[0], beneficiaryAddress[2], fiveDollars.toString());
-    const transferEvent3 = createTransferEvent(beneficiaryAddress[1], beneficiaryAddress[3], fiveDollars.toString());
+    const transferEvent1 = createTransferEvent(
+        beneficiaryAddress[0],
+        beneficiaryAddress[1],
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
+    const transferEvent2 = createTransferEvent(
+        beneficiaryAddress[0],
+        beneficiaryAddress[2],
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
+    const transferEvent3 = createTransferEvent(
+        beneficiaryAddress[1],
+        beneficiaryAddress[3],
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
 
-    handleTransferCeloDollar(transferEvent1);
-    handleTransferCeloDollar(transferEvent2);
-    handleTransferCeloDollar(transferEvent3);
+    handleTransferAsset(transferEvent1);
+    handleTransferAsset(transferEvent2);
+    handleTransferAsset(transferEvent3);
 
     const dayId = transferEvent1.block.timestamp.toI32() / 86400;
 
@@ -238,8 +270,8 @@ test('should count multiple users multiple transactions, same day', () => {
     );
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '2');
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'transactions', '2');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '3');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '3');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '3');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'reach', '3');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId.toString()}`, 'transactions', '3');
@@ -259,17 +291,19 @@ test('should count multiple users multiple transactions, different days', () => 
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
+        celoDollarAddress,
         day1Time
     );
     const transferEvent2 = createTransferEvent(
         beneficiaryAddress[0],
         beneficiaryAddress[2],
         fiveDollars.toString(),
+        celoDollarAddress,
         day1Time + 1
     );
 
-    handleTransferCeloDollar(transferEvent1);
-    handleTransferCeloDollar(transferEvent2);
+    handleTransferAsset(transferEvent1);
+    handleTransferAsset(transferEvent2);
 
     // day 2
 
@@ -279,6 +313,7 @@ test('should count multiple users multiple transactions, different days', () => 
         beneficiaryAddress[1],
         beneficiaryAddress[2],
         fiveDollars.toString(),
+        celoDollarAddress,
         day2Time
     );
 
@@ -286,11 +321,12 @@ test('should count multiple users multiple transactions, different days', () => 
         beneficiaryAddress[2],
         beneficiaryAddress[3],
         fiveDollars.toString(),
+        celoDollarAddress,
         day2Time + 1
     );
 
-    handleTransferCeloDollar(transferEvent3);
-    handleTransferCeloDollar(transferEvent4);
+    handleTransferAsset(transferEvent3);
+    handleTransferAsset(transferEvent4);
 
     const dayId1 = day1Time / 86400;
     const dayId2 = day2Time / 86400;
@@ -305,8 +341,8 @@ test('should count multiple users multiple transactions, different days', () => 
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'transactions', '2');
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[2], 'transactions', '3');
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[3], 'transactions', '1');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '4');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '3');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '4');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '3');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId2.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'reach', '2');
@@ -330,17 +366,19 @@ test('should count multiple user transactions, different days', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
+        celoDollarAddress,
         1640716193
     );
     const transferEvent2 = createTransferEvent(
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
+        celoDollarAddress,
         1640716194
     );
 
-    handleTransferCeloDollar(transferEvent1);
-    handleTransferCeloDollar(transferEvent2);
+    handleTransferAsset(transferEvent1);
+    handleTransferAsset(transferEvent2);
 
     // day 2
 
@@ -348,6 +386,7 @@ test('should count multiple user transactions, different days', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
+        celoDollarAddress,
         1640802593
     );
 
@@ -355,11 +394,12 @@ test('should count multiple user transactions, different days', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
+        celoDollarAddress,
         1640802594
     );
 
-    handleTransferCeloDollar(transferEvent3);
-    handleTransferCeloDollar(transferEvent4);
+    handleTransferAsset(transferEvent3);
+    handleTransferAsset(transferEvent4);
 
     const dayId1 = transferEvent1.block.timestamp.toI32() / 86400;
     const dayId2 = transferEvent3.block.timestamp.toI32() / 86400;
@@ -371,8 +411,8 @@ test('should count multiple user transactions, different days', () => {
         normalize(fiveDollars.times(BigInt.fromI32(4)).toString()).toString()
     );
     assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '4');
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '4');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '1');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '4');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId2.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'reach', '1');
@@ -388,13 +428,18 @@ test('should not count user transactions if none parties are a beneficiary', () 
 
     createDummyEntities();
 
-    const transferEvent1 = createTransferEvent(userAddress[0], userAddress[1], fiveDollars.toString());
+    const transferEvent1 = createTransferEvent(
+        userAddress[0],
+        userAddress[1],
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
 
-    handleTransferCeloDollar(transferEvent1);
+    handleTransferAsset(transferEvent1);
 
     assert.notInStore('UserTransactionsEntity', beneficiaryAddress[0]);
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '0');
 });
 
 test('should not count user transactions if from forbiden address', () => {
@@ -402,13 +447,18 @@ test('should not count user transactions if from forbiden address', () => {
 
     createDummyEntities();
 
-    const transferEvent1 = createTransferEvent(beneficiaryAddress[0], attestationProxyAddress, fiveDollars.toString());
+    const transferEvent1 = createTransferEvent(
+        beneficiaryAddress[0],
+        attestationProxyAddress,
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
 
-    handleTransferCeloDollar(transferEvent1);
+    handleTransferAsset(transferEvent1);
 
     assert.notInStore('UserTransactionsEntity', beneficiaryAddress[0]);
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '0');
 });
 
 test('should not count user transactions if from community', () => {
@@ -416,11 +466,16 @@ test('should not count user transactions if from community', () => {
 
     createDummyEntities();
 
-    const transferEvent1 = createTransferEvent(communityAddress[0], beneficiaryAddress[0], fiveDollars.toString());
+    const transferEvent1 = createTransferEvent(
+        communityAddress[0],
+        beneficiaryAddress[0],
+        fiveDollars.toString(),
+        celoDollarAddress,
+    );
 
-    handleTransferCeloDollar(transferEvent1);
+    handleTransferAsset(transferEvent1);
 
     assert.notInStore('UserTransactionsEntity', beneficiaryAddress[0]);
-    assert.fieldEquals('UBIEntity', '0', 'transactions', '0');
-    assert.fieldEquals('UBIEntity', '0', 'reach', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '0');
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '0');
 });

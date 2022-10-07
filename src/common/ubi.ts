@@ -16,6 +16,7 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
         ubiDaily.claims = 0;
         ubiDaily.contributed = BigDecimal.zero();
         ubiDaily.contributors = 0;
+        ubiDaily.contributions = new Array<string>();
         ubiDaily.volume = BigDecimal.zero();
         ubiDaily.transactions = 0;
         ubiDaily.reach = 0;
@@ -25,13 +26,13 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
         const yesterdayUbiDaily = UBIDailyEntity.load(previousDayIdInt.toString());
 
         if (yesterdayUbiDaily && yesterdayUbiDaily.fundingRate.equals(BigDecimal.zero())) {
-            let mongthlyContributed = BigDecimal.zero();
+            let monthlyContributed = BigDecimal.zero();
             let monthlyClaimed = BigDecimal.zero();
             let previousUbiDaily = UBIDailyEntity.load(previousDayIdInt.toString());
 
             do {
                 if (previousUbiDaily) {
-                    mongthlyContributed = previousUbiDaily.contributed.plus(mongthlyContributed);
+                    monthlyContributed = previousUbiDaily.contributed.plus(monthlyContributed);
                     monthlyClaimed = previousUbiDaily.claimed.plus(monthlyClaimed);
                 }
 
@@ -41,10 +42,10 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
 
             let fundingRate = BigDecimal.zero();
 
-            if (mongthlyContributed.gt(BigDecimal.zero())) {
-                fundingRate = mongthlyContributed
+            if (monthlyContributed.gt(BigDecimal.zero())) {
+                fundingRate = monthlyContributed
                     .minus(monthlyClaimed)
-                    .div(mongthlyContributed)
+                    .div(monthlyContributed)
                     .times(BigDecimal.fromString('100'));
             }
 

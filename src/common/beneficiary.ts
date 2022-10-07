@@ -4,7 +4,7 @@ import {
     BeneficiaryEntity,
     CommunityEntity,
     ManagerEntity,
-    UBIEntity,
+    UBIDailyEntity,
     UserActivityEntity
 } from '../../generated/schema';
 import { fiveCents, normalize } from '../utils';
@@ -116,7 +116,7 @@ export function genericHandleBeneficiaryAdded(
             activity.timestamp = _blockTimestamp.toI32();
             activity.activity = 'ADDED';
             // update ubi
-            const ubi = UBIEntity.load('0')!;
+            const ubi = UBIDailyEntity.load('0')!;
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
 
             if (previouslyRemoved) {
@@ -164,7 +164,7 @@ export function genericHandleBeneficiaryRemoved(
         // validate current state (prevent issue)
         if (beneficiary && beneficiary.state !== 1) {
             const communityDaily = loadOrCreateCommunityDaily(_community, _blockTimestamp);
-            const ubi = UBIEntity.load('0')!;
+            const ubi = UBIDailyEntity.load('0')!;
             const ubiDaily = loadOrCreateDailyUbi(_blockTimestamp);
             const activity = new UserActivityEntity(_hash);
 
@@ -227,7 +227,7 @@ export function genericHandleBeneficiaryClaim(
             const communityDaily = loadOrCreateCommunityDaily(_community, _blockTimestamp);
             const normalizedAmount = normalize(_amount.toString());
             // update ubi
-            const ubi = UBIEntity.load('0')!;
+            const ubi = UBIDailyEntity.load('0')!;
 
             ubi.claimed = ubi.claimed.plus(normalizedAmount);
             ubi.claims += 1;

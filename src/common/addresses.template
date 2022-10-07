@@ -1,5 +1,6 @@
 const communityAdminAddress: string = '{{CommunityAdmin}}';
 const treasuryAddress: string = '{{Treasury}}';
 const attestationProxyAddress: string = '{{AttestationProxy}}';
+const celoDollarAddress: string = '{{CeloDollar}}';
 
-export { communityAdminAddress, treasuryAddress, attestationProxyAddress };
+export { celoDollarAddress, communityAdminAddress, treasuryAddress, attestationProxyAddress };

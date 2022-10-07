@@ -1,13 +1,13 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 
 import {
+    AssetContributions,
     BeneficiaryEntity,
     CommunityDailyEntity,
     CommunityEntity,
     ContributorContributionsEntity,
     ContributorEntity,
     UBIDailyEntity,
-    UBIEntity,
     UserTransactionWithEntity,
     UserTransactionsEntity
 } from '../../generated/schema';
@@ -21,7 +21,7 @@ function updateContributorHelper(
     event: Transfer,
     normalizedAmount: BigDecimal,
     dayId: i32,
-    ubi: UBIEntity,
+    ubi: UBIDailyEntity,
     ubiDaily: UBIDailyEntity
 ): void {
     // update contribuotrs data
@@ -69,10 +69,6 @@ function updateContributorContributionsHelper(
         // update ubi data
         if (community) {
             community.contributors += 1;
-            const contributions = community.contributions;
-
-            contributions.push(contributorContributionsId);
-            community.contributions = contributions;
         }
         if (communityDaily) {
             communityDaily.contributors += 1;
@@ -87,25 +83,121 @@ function updateContributorContributionsHelper(
     contributorContributions.save();
 }
 
-export function handleTransferCeloDollar(event: Transfer): void {
-    const community = CommunityEntity.load(event.params.to.toHex());
-    const dayId = event.block.timestamp.toI32() / 86400;
-    const normalizedAmount = normalize(event.params.amount.toString());
-
-    if (community) {
-        const communityDaily = loadOrCreateCommunityDaily(event.params.to, event.block.timestamp);
-        const ubi = UBIEntity.load('0')!;
+export function handleTransferAsset(event: Transfer): void {
+    // because this is executed for every transfer, performance is very important
+    if (event.params.to.equals(Address.fromString(treasuryAddress))) {
+        const dayId = event.block.timestamp.toI32() / 86400;
+        const normalizedAmount = normalize(event.params.amount.toString());
+        const ubi = UBIDailyEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
+        const asset = event.address;
+        const contributionDailyId = `${asset.toHex()}-${dayId.toString()}`;
+        let contributionDaily = AssetContributions.load(contributionDailyId);
+
+        ubi.contributed = ubi.contributed.plus(normalizedAmount);
+        // TODO: next line is deprecated
+        ubiDaily.contributed = ubiDaily.contributed.plus(normalizedAmount);
+
+
+        // update communty daily contribution
+        if (contributionDaily) {
+            // add if exists
+            contributionDaily.amount = contributionDaily.amount.plus(normalizedAmount);
+        } else {
+            // if it doesn't, create and add to the list
+            const contributionsDaily = ubiDaily.contributions;
+
+            contributionDaily = new AssetContributions(contributionDailyId);
+            contributionDaily.asset = asset;
+            contributionDaily.amount = normalizedAmount;
+            contributionsDaily.push(contributionDaily.id);
+
+            ubiDaily.contributions = contributionsDaily;
+        }
+        contributionDaily.save();
+
+        updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
+        updateContributorContributionsHelper(event, normalizedAmount, dayId, null, null);
+
+        ubi.save();
+        ubiDaily.save();
+    } else if (CommunityEntity.load(event.params.to.toHex())) {
+        const dayId = event.block.timestamp.toI32() / 86400;
+        const normalizedAmount = normalize(event.params.amount.toString());
+        const community = CommunityEntity.load(event.params.to.toHex())!;
+        const communityDaily = loadOrCreateCommunityDaily(event.params.to, event.block.timestamp);
+        const ubi = UBIDailyEntity.load('0')!;
+        const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
+        const asset = event.address;
+        const to = event.params.to;
+        const contributionCommunityId = `${asset.toHex()}-${to.toHex()}`;
+        const contributionCommunityDailyId = `${asset.toHex()}-${to.toHex()}-${dayId.toString()}`;
+        const contributionDailyId = `${asset.toHex()}-${dayId.toString()}`;
+        let contributionCommunity = AssetContributions.load(contributionCommunityId);
+        let contributionCommunityDaily = AssetContributions.load(contributionCommunityDailyId);
+        let contributionDaily = AssetContributions.load(contributionDailyId);
 
         updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
         updateContributorContributionsHelper(event, normalizedAmount, dayId, community, communityDaily);
 
         if (event.params.from.notEqual(Address.fromString(treasuryAddress))) {
             ubi.contributed = ubi.contributed.plus(normalizedAmount);
+            // TODO: next line is deprecated
             ubiDaily.contributed = ubiDaily.contributed.plus(normalizedAmount);
+
+
+            // update communty daily contribution
+            if (contributionDaily) {
+                // add if exists
+                contributionDaily.amount = contributionDaily.amount.plus(normalizedAmount);
+            } else {
+                // if it doesn't, create and add to the list
+                const contributionsDaily = ubiDaily.contributions;
+
+                contributionDaily = new AssetContributions(contributionDailyId);
+                contributionDaily.asset = asset;
+                contributionDaily.amount = normalizedAmount;
+                contributionsDaily.push(contributionDaily.id);
+
+                ubiDaily.contributions = contributionsDaily;
+            }
+            contributionDaily.save();
         }
         ubi.save();
         ubiDaily.save();
+        // update community contribution
+        if (contributionCommunity) {
+            // add if exists
+            contributionCommunity.amount = contributionCommunity.amount.plus(normalizedAmount);
+        } else {
+            // if it doesn't, create and add to the list
+            const contributions = community.contributions;
+
+            contributionCommunity = new AssetContributions(contributionCommunityId);
+            contributionCommunity.asset = asset;
+            contributionCommunity.amount = normalizedAmount;
+
+            contributions.push(contributionCommunity.id);
+            community.contributions = contributions;
+        }
+        // update communty daily contribution
+        if (contributionCommunityDaily) {
+            // add if exists
+            contributionCommunityDaily.amount = contributionCommunityDaily.amount.plus(normalizedAmount);
+        } else {
+            // if it doesn't, create and add to the list
+            const contributionsCommunityDaily = communityDaily.contributions;
+
+            contributionCommunityDaily = new AssetContributions(contributionCommunityDailyId);
+            contributionCommunityDaily.asset = asset;
+            contributionCommunityDaily.amount = normalizedAmount;
+            contributionsCommunityDaily.push(contributionCommunityDaily.id);
+
+            communityDaily.contributions = contributionsCommunityDaily;
+        }
+        // update contribution
+        contributionCommunity.save();
+        contributionCommunityDaily.save();
         // update community
         community.contributed = community.contributed.plus(normalizedAmount);
         community.estimatedFunds = community.estimatedFunds.plus(normalizedAmount);
@@ -113,18 +205,6 @@ export function handleTransferCeloDollar(event: Transfer): void {
         // update community daily
         communityDaily.contributed = communityDaily.contributed.plus(normalizedAmount);
         communityDaily.save();
-    } else if (event.params.to.equals(Address.fromString(treasuryAddress))) {
-        const ubi = UBIEntity.load('0')!;
-        const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
-
-        ubi.contributed = ubi.contributed.plus(normalizedAmount);
-        ubiDaily.contributed = ubiDaily.contributed.plus(normalizedAmount);
-
-        updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
-        updateContributorContributionsHelper(event, normalizedAmount, dayId, null, null);
-
-        ubi.save();
-        ubiDaily.save();
     } else if (
         // do not count from communities [eg. claims]
         !CommunityEntity.load(event.params.from.toHex()) &&
@@ -137,6 +217,8 @@ export function handleTransferCeloDollar(event: Transfer): void {
         // any values >0.0009cUSD (999999999999999) [eg. cUSD fees]
         event.params.amount.toString().length > 15
     ) {
+        const dayId = event.block.timestamp.toI32() / 86400;
+        const normalizedAmount = normalize(event.params.amount.toString());
         let beneficiary = BeneficiaryEntity.load(event.params.from.toHex());
 
         if (!beneficiary) {
@@ -146,7 +228,7 @@ export function handleTransferCeloDollar(event: Transfer): void {
             Address.fromString(beneficiary!.community),
             event.block.timestamp
         );
-        const ubi = UBIEntity.load('0')!;
+        const ubi = UBIDailyEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
 
         let transactionFrom = UserTransactionsEntity.load(event.params.from.toHex());

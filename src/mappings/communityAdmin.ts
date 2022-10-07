@@ -1,13 +1,13 @@
 import { Address, BigDecimal, BigInt, store } from '@graphprotocol/graph-ts';
 
-import { Community } from '../../generated/templates';
-import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
 import {
+    AssetContributions,
     CommunityDailyEntity,
     CommunityEntity,
-    ContributorContributionsEntity,
-    UBIEntity
+    UBIDailyEntity
 } from '../../generated/schema';
+import { Community } from '../../generated/templates';
+import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
 import { generiHandleCommunityAdded, generiHandleCommunityRemoved } from '../common/community';
 import { genericHandleManagerAdded } from '../common/manager';
 import { loadOrCreateDailyUbi } from '../common/ubi';
@@ -69,6 +69,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 communityDaily.claims = previousCommunityDaily.claims;
                 communityDaily.contributed = previousCommunityDaily.contributed;
                 communityDaily.contributors = previousCommunityDaily.contributors;
+                communityDaily.contributions = previousCommunityDaily.contributions;
                 communityDaily.volume = previousCommunityDaily.volume;
                 communityDaily.transactions = previousCommunityDaily.transactions;
                 communityDaily.reach = previousCommunityDaily.reach;
@@ -83,24 +84,22 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         // TODO: test
         for (let index = 0; index < previousCommunity.contributions.length; index++) {
             const pastContributionId = previousCommunity.contributions[index];
-            const pastContributorContributions = ContributorContributionsEntity.load(pastContributionId)!;
-            const contributorContributionsId = `${pastContributionId.slice(
+            const pastAssetContributions = AssetContributions.load(pastContributionId)!;
+            const assetContributionsId = `${pastContributionId.slice(
                 0,
                 pastContributionId.indexOf('-')
             )}-${event.params.communityAddress.toHex()}`;
 
-            const contributorContributions = new ContributorContributionsEntity(contributorContributionsId);
+            const assetContributions = new AssetContributions(assetContributionsId);
 
-            contributorContributions.to = pastContributorContributions.to;
-            contributorContributions.contributed = pastContributorContributions.contributed;
-            contributorContributions.contributions = pastContributorContributions.contributions;
-            contributorContributions.lastContribution = pastContributorContributions.lastContribution;
-            contributorContributions.save();
+            assetContributions.asset = pastAssetContributions.asset;
+            assetContributions.amount = pastAssetContributions.amount;
+            assetContributions.save();
             const contributions = community.contributions;
 
-            contributions.push(contributorContributionsId);
+            contributions.push(assetContributionsId);
             community.contributions = contributions;
-            store.remove('ContributorContributionsEntity', pastContributionId);
+            store.remove('AssetContributions', pastContributionId);
         }
         const totalNewManagers = event.params.managers.length;
 
@@ -169,7 +168,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
                 event.block.timestamp
             );
         }
-        const ubi = UBIEntity.load('0')!;
+        const ubi = UBIDailyEntity.load('0')!;
         const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
 
         // save entity state

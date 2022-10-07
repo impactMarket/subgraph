@@ -1,4 +1,25 @@
 """
+Contributions of an asset to an entity
+"""
+type AssetContributions @entity {
+  """
+  "asset-0" for global
+  "asset-number" for daily global
+  "asset-address" for community
+  "asset-address-number" for daily community
+  """
+  id: ID!
+  """
+  contributed asset
+  """
+  asset: Bytes!
+  """
+  contributed amount (normalized)
+  """
+  amount: BigDecimal!
+}
+
+"""
 UBI community
 """
 type CommunityEntity @entity {
@@ -78,7 +99,10 @@ type CommunityEntity @entity {
   total contributors (normalized)
   """
   contributors: Int!
-  contributions: [ContributorContributionsEntity!]!
+  """
+  contributions in each asset
+  """
+  contributions: [AssetContributions!]!
   """
   active community managers array
   """
@@ -141,6 +165,10 @@ type CommunityDailyEntity @entity {
   """
   contributors: Int!
   """
+  contributions in each asset
+  """
+  contributions: [AssetContributions!]!
+  """
   volume transacted in cUSD (normalized)
   """
   volume: BigDecimal!
@@ -159,57 +187,8 @@ type CommunityDailyEntity @entity {
 }
 
 """
-Global UBI activity since inception
-"""
-type UBIEntity @entity {
-  """
-  0, there's only one
-  """
-  id: ID!
-  """
-  total number of communities
-  """
-  communities: Int!
-  """
-  total number of beneficiaries
-  """
-  beneficiaries: Int!
-  """
-  total number of managers
-  """
-  managers: Int!
-  """
-  total claimed (normalized)
-  """
-  claimed: BigDecimal!
-  """
-  total claims
-  """
-  claims: Int!
-  """
-  total contributed (normalized)
-  """
-  contributed: BigDecimal!
-  """
-  total contributors (normalized)
-  """
-  contributors: Int!
-  """
-  volume transacted in cUSD (normalized)
-  """
-  volume: BigDecimal!
-  """
-  number of transactions
-  """
-  transactions: Int!
-  """
-  number of reached unique addresses
-  """
-  reach: Int!
-}
-
-"""
-Global UBI activity per day
+Global UBI activity per day. Be aware of the day id.
+Day id 0 (zero) is reserved to global activity.
 """
 type UBIDailyEntity @entity {
   """
@@ -244,6 +223,10 @@ type UBIDailyEntity @entity {
   total contributors (normalized)
   """
   contributors: Int!
+  """
+  contributions in each asset
+  """
+  contributions: [AssetContributions!]!
   """
   volume transacted in cUSD (normalized)
   """
