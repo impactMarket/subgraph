@@ -306,8 +306,18 @@ test('add managers that already belong to a community', () => {
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'managers', '2');
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'managers', '2');
-    assert.fieldEquals('CommunityEntity', communityAddress[0], 'managerList', `[${managerAddress[0]}, ${managerAddress[3]}]`);
-    assert.fieldEquals('CommunityEntity', communityAddress[1], 'managerList', `[${managerAddress[1]}, ${managerAddress[2]}]`);
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[0],
+        'managerList',
+        `[${managerAddress[0]}, ${managerAddress[3]}]`
+    );
+    assert.fieldEquals(
+        'CommunityEntity',
+        communityAddress[1],
+        'managerList',
+        `[${managerAddress[1]}, ${managerAddress[2]}]`
+    );
 });
 
 test('add manager - different days', () => {

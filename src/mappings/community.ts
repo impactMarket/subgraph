@@ -101,7 +101,7 @@ export function handleBeneficiaryLocked(event: BeneficiaryLocked): void {
     if (beneficiary) {
         beneficiary.state = 2;
         community.lockedBeneficiaries += 1;
-        
+
         if (manager) {
             community.lastActivity = event.block.timestamp.toI32();
             manager.lastActivity = event.block.timestamp.toI32();
@@ -121,7 +121,7 @@ export function handleBeneficiaryUnlocked(event: BeneficiaryUnlocked): void {
     if (beneficiary) {
         beneficiary.state = 0;
         community.lockedBeneficiaries -= 1;
-        
+
         if (manager) {
             community.lastActivity = event.block.timestamp.toI32();
             manager.lastActivity = event.block.timestamp.toI32();
