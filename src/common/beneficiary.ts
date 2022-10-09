@@ -133,6 +133,9 @@ export function genericHandleBeneficiaryAdded(
             community.claimed = community.claimed.plus(fiveCents);
             community.estimatedFunds = community.estimatedFunds.minus(fiveCents);
             community.maxClaim = community.maxClaim.minus(community.decreaseStep);
+            community.lastActivity = _blockTimestamp.toI32();
+            // update manager's last activity
+            manager.lastActivity = _blockTimestamp.toI32();
             // update community daily
             communityDaily.claimed = communityDaily.claimed.plus(fiveCents);
             // save
@@ -185,6 +188,9 @@ export function genericHandleBeneficiaryRemoved(
             community.beneficiaries -= 1;
             community.removedBeneficiaries += 1;
             community.maxClaim = community.maxClaim.plus(community.decreaseStep);
+            community.lastActivity = _blockTimestamp.toI32();
+            // update manager's last activity
+            manager.lastActivity = _blockTimestamp.toI32();
             // update community daily
             communityDaily.beneficiaries -= 1;
             // update manager
@@ -243,11 +249,13 @@ export function genericHandleBeneficiaryClaim(
             beneficiary.lastClaimAt = _blockTimestamp.toI32();
             beneficiary.claims += 1;
             beneficiary.claimed = beneficiary.claimed.plus(normalizedAmount);
+            beneficiary.lastActivity = _blockTimestamp.toI32();
             beneficiary.save();
             // update community
             community.claims += 1;
             community.claimed = community.claimed.plus(normalizedAmount);
             community.estimatedFunds = community.estimatedFunds.minus(normalizedAmount);
+            community.lastActivity = _blockTimestamp.toI32();
             community.save();
             // update community daily
             communityDaily.claimed = communityDaily.claimed.plus(normalizedAmount);

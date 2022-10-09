@@ -316,6 +316,15 @@ export class CommunityEntity extends Entity {
   set maxTranche(value: BigDecimal) {
     this.set("maxTranche", Value.fromBigDecimal(value));
   }
+
+  get lastActivity(): i32 {
+    let value = this.get("lastActivity");
+    return value!.toI32();
+  }
+
+  set lastActivity(value: i32) {
+    this.set("lastActivity", Value.fromI32(value));
+  }
 }
 
 export class CommunityDailyEntity extends Entity {
@@ -728,6 +737,15 @@ export class ManagerEntity extends Entity {
       this.set("removedBy", Value.fromBytes(<Bytes>value));
     }
   }
+
+  get lastActivity(): i32 {
+    let value = this.get("lastActivity");
+    return value!.toI32();
+  }
+
+  set lastActivity(value: i32) {
+    this.set("lastActivity", Value.fromI32(value));
+  }
 }
 
 export class BeneficiaryEntity extends Entity {
@@ -859,6 +877,15 @@ export class BeneficiaryEntity extends Entity {
     } else {
       this.set("removedBy", Value.fromBytes(<Bytes>value));
     }
+  }
+
+  get lastActivity(): i32 {
+    let value = this.get("lastActivity");
+    return value!.toI32();
+  }
+
+  set lastActivity(value: i32) {
+    this.set("lastActivity", Value.fromI32(value));
   }
 }
 

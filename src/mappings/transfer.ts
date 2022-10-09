@@ -7,6 +7,7 @@ import {
     CommunityEntity,
     ContributorContributionsEntity,
     ContributorEntity,
+    ManagerEntity,
     UBIDailyEntity,
     UserTransactionWithEntity,
     UserTransactionsEntity
@@ -141,6 +142,15 @@ export function handleTransferAsset(event: Transfer): void {
         updateContributorContributionsHelper(event, normalizedAmount, dayId, community, communityDaily);
 
         if (event.params.from.notEqual(Address.fromString(treasuryAddress))) {
+            // from the treasury, to the community, it was likely a "requestFunds" action
+            const manager = ManagerEntity.load(event.transaction.from.toHex());
+            
+            if (manager) {
+                manager.lastActivity = event.block.timestamp.toI32();
+                community.lastActivity = event.block.timestamp.toI32();
+            }
+
+            
             ubi.contributed = ubi.contributed.plus(normalizedAmount);
             // TODO: next line is deprecated
             ubiDaily.contributed = ubiDaily.contributed.plus(normalizedAmount);
@@ -221,7 +231,15 @@ export function handleTransferAsset(event: Transfer): void {
         const normalizedAmount = normalize(event.params.amount.toString());
         let beneficiary = BeneficiaryEntity.load(event.params.from.toHex());
 
-        if (!beneficiary) {
+        if (beneficiary) {
+            // if transaction from beneficiary, update last activity
+            beneficiary.lastActivity = event.block.timestamp.toI32();
+            // update community
+            const commuity = CommunityEntity.load(beneficiary.community)!;
+            
+            commuity.lastActivity = event.block.timestamp.toI32();
+            commuity.save();
+        } else {
             beneficiary = BeneficiaryEntity.load(event.params.to.toHex());
         }
         const communityDaily = loadOrCreateCommunityDaily(
