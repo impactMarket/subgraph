@@ -12,7 +12,7 @@ import {
     ManagerAdded,
     ManagerRemoved
 } from '../../generated/templates/Community/Community';
-import { BeneficiaryEntity, CommunityEntity } from '../../generated/schema';
+import { BeneficiaryEntity, CommunityEntity, ManagerEntity } from '../../generated/schema';
 import {
     genericHandleBeneficiaryAdded,
     genericHandleBeneficiaryClaim,
@@ -96,10 +96,17 @@ export function handleCommunityParamsUpdated(event: CommunityParamsUpdated): voi
 export function handleBeneficiaryLocked(event: BeneficiaryLocked): void {
     const beneficiary = BeneficiaryEntity.load(event.params.beneficiary.toHex());
     const community = CommunityEntity.load(event.address.toHex())!;
+    const manager = ManagerEntity.load(event.transaction.from.toHex());
 
     if (beneficiary) {
         beneficiary.state = 2;
         community.lockedBeneficiaries += 1;
+
+        if (manager) {
+            community.lastActivity = event.block.timestamp.toI32();
+            manager.lastActivity = event.block.timestamp.toI32();
+            manager.save();
+        }
         // save
         beneficiary.save();
         community.save();
@@ -109,10 +116,17 @@ export function handleBeneficiaryLocked(event: BeneficiaryLocked): void {
 export function handleBeneficiaryUnlocked(event: BeneficiaryUnlocked): void {
     const beneficiary = BeneficiaryEntity.load(event.params.beneficiary.toHex());
     const community = CommunityEntity.load(event.address.toHex())!;
+    const manager = ManagerEntity.load(event.transaction.from.toHex());
 
     if (beneficiary) {
         beneficiary.state = 0;
         community.lockedBeneficiaries -= 1;
+
+        if (manager) {
+            community.lastActivity = event.block.timestamp.toI32();
+            manager.lastActivity = event.block.timestamp.toI32();
+            manager.save();
+        }
         // save
         beneficiary.save();
         community.save();

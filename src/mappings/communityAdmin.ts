@@ -1,11 +1,6 @@
 import { Address, BigDecimal, BigInt, store } from '@graphprotocol/graph-ts';
 
-import {
-    AssetContributions,
-    CommunityDailyEntity,
-    CommunityEntity,
-    UBIDailyEntity
-} from '../../generated/schema';
+import { AssetContributions, CommunityDailyEntity, CommunityEntity, UBIDailyEntity } from '../../generated/schema';
 import { Community } from '../../generated/templates';
 import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
 import { generiHandleCommunityAdded, generiHandleCommunityRemoved } from '../common/community';

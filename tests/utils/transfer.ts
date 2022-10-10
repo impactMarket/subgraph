@@ -4,7 +4,13 @@ import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import { Transfer } from '../../generated/CeloDollar/CeloDollar';
 
-export function createTransferEvent(from: string, to: string, amount: string, transferedAsset: string, timestamp: i32 = 1640716193): Transfer {
+export function createTransferEvent(
+    from: string,
+    to: string,
+    amount: string,
+    transferedAsset: string,
+    timestamp: i32 = 1640716193
+): Transfer {
     const transferEvent = changetype<Transfer>(newMockEvent());
 
     transferEvent.parameters = [];

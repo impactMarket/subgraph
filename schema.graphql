@@ -119,6 +119,10 @@ type CommunityEntity @entity {
   community max tranche (normalized)
   """
   maxTranche: BigDecimal!
+  """
+  community's last activity, either any activity from manager or beneficiary
+  """
+  lastActivity: Int
 }
 
 # when a community is migrated, CommunityDataEntity are migrated too
@@ -289,6 +293,10 @@ type ManagerEntity @entity {
   removed by
   """
   removedBy: Bytes
+  """
+  manager's last activity
+  """
+  lastActivity: Int
 }
 
 """
@@ -339,6 +347,10 @@ type BeneficiaryEntity @entity {
   removed by
   """
   removedBy: Bytes
+  """
+  beneficiary's last activity
+  """
+  lastActivity: Int
 }
 
 enum ActivityCode {

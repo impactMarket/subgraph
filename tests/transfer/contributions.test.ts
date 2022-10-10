@@ -24,13 +24,13 @@ test('contribute cusd to community', () => {
         userAddress[0],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -107,13 +107,13 @@ test('contribute cusd to treasury', () => {
         userAddress[0],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -159,7 +159,7 @@ test('contribute cusd to treasury and community', () => {
         userAddress[0],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     // to treasury
@@ -167,7 +167,7 @@ test('contribute cusd to treasury and community', () => {
         userAddress[1],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     // to community
@@ -175,7 +175,7 @@ test('contribute cusd to treasury and community', () => {
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     // from treasury to community
@@ -183,7 +183,7 @@ test('contribute cusd to treasury and community', () => {
         treasuryAddress,
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -605,13 +605,13 @@ test('contribute cusd to community and update contributor entities', () => {
         userAddress[0],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -630,7 +630,7 @@ test('contribute cusd to community and update contributor entities', () => {
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
     const dayId = transferEvent3.block.timestamp.toI32() / 86400;
 
@@ -666,19 +666,19 @@ test('contribute cusd to community and update contributor entities, many communi
         userAddress[0],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
     const transferEvent3 = createTransferEvent(
         userAddress[0],
         communityAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -709,7 +709,7 @@ test('contribute cusd to community and update contributor entities, many communi
         userAddress[1],
         communityAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress,
+        celoDollarAddress
     );
 
     handleTransferAsset(transferEvent4);
