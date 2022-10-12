@@ -24,8 +24,10 @@ function createDummyEntities(): void {
 
     community.state = 0;
     community.startDayId = 1;
+    community.originalClaimAmount = normalize(fiveDollars.toString());
     community.claimAmount = normalize(fiveDollars.toString());
     community.maxClaim = normalize(fiveDollars.toString());
+    community.maxTotalClaim = normalize(fiveDollars.toString());
     community.decreaseStep = normalize(fiveDollars.toString());
     community.baseInterval = 17280;
     community.incrementInterval = 12;
@@ -87,8 +89,10 @@ function createDummyEntities(): void {
 
     community1.state = 0;
     community1.startDayId = 1;
+    community1.originalClaimAmount = normalize(fiveDollars.toString());
     community1.claimAmount = normalize(fiveDollars.toString());
     community1.maxClaim = normalize(fiveDollars.toString());
+    community1.maxTotalClaim = normalize(fiveDollars.toString());
     community1.decreaseStep = normalize(fiveDollars.toString());
     community1.baseInterval = 17280;
     community1.incrementInterval = 12;

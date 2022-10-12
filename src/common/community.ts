@@ -65,8 +65,8 @@ export function loadOrCreateCommunityDaily(_community: Address, _blockTimestamp:
 export function generiHandleCommunityAdded(
     _communityAddress: Address,
     _managers: Array<Address>,
-    _claimAmount: BigInt,
-    _maxClaim: BigInt,
+    _originalClaimAmount: BigInt,
+    _maxTotalClaim: BigInt,
     _decreaseStep: BigInt,
     _baseInterval: i32,
     _incrementInterval: i32,
@@ -84,8 +84,10 @@ export function generiHandleCommunityAdded(
     }
     community.state = 0;
     community.startDayId = _blockTimestamp.toI32() / 86400;
-    community.claimAmount = normalize(_claimAmount.toString());
-    community.maxClaim = normalize(_maxClaim.toString());
+    community.claimAmount = normalize(_originalClaimAmount.toString());
+    community.originalClaimAmount = normalize(_originalClaimAmount.toString());
+    community.maxClaim = normalize(_maxTotalClaim.toString());
+    community.maxTotalClaim = normalize(_maxTotalClaim.toString());
     community.decreaseStep = normalize(_decreaseStep.toString());
     community.baseInterval = _baseInterval;
     community.incrementInterval = _incrementInterval;

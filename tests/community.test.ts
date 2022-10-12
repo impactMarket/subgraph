@@ -36,8 +36,8 @@ test('create community', () => {
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'claimAmount',
-        normalize(communityProps[0].get('claimAmount')!).toString()
+        'originalClaimAmount',
+        normalize(communityProps[0].get('originalClaimAmount')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
@@ -121,14 +121,14 @@ test('edit parameters new community', () => {
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'claimAmount',
-        normalize(communityProps[0].get('claimAmount')!).toString()
+        'originalClaimAmount',
+        normalize(communityProps[0].get('originalClaimAmount')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'maxClaim',
-        normalize(communityProps[0].get('maxClaim')!).toString()
+        'maxTotalClaim',
+        normalize(communityProps[0].get('maxTotalClaim')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
@@ -150,14 +150,14 @@ test('edit parameters new community', () => {
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'claimAmount',
-        normalize(communityProps[1].get('claimAmount')!).toString()
+        'originalClaimAmount',
+        normalize(communityProps[1].get('originalClaimAmount')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'maxClaim',
-        normalize(communityProps[1].get('maxClaim')!).toString()
+        'maxTotalClaim',
+        normalize(communityProps[1].get('maxTotalClaim')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
@@ -183,14 +183,14 @@ test('edit parameters old community', () => {
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'claimAmount',
-        normalize(communityProps[0].get('claimAmount')!).toString()
+        'originalClaimAmount',
+        normalize(communityProps[0].get('originalClaimAmount')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'maxClaim',
-        normalize(communityProps[0].get('maxClaim')!).toString()
+        'maxTotalClaim',
+        normalize(communityProps[0].get('maxTotalClaim')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
@@ -212,14 +212,14 @@ test('edit parameters old community', () => {
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'claimAmount',
-        normalize(communityProps[1].get('claimAmount')!).toString()
+        'originalClaimAmount',
+        normalize(communityProps[1].get('originalClaimAmount')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',
         communityAddress[0],
-        'maxClaim',
-        normalize(communityProps[1].get('maxClaim')!).toString()
+        'maxTotalClaim',
+        normalize(communityProps[1].get('maxTotalClaim')!).toString()
     );
     assert.fieldEquals(
         'CommunityEntity',

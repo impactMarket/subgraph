@@ -89,12 +89,12 @@ test('should add claim', () => {
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        communityProps[0].get('claimAmount')!,
+        communityProps[0].get('originalClaimAmount')!,
         communityAddress[0]
     );
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[1],
-        communityProps[0].get('claimAmount')!,
+        communityProps[0].get('originalClaimAmount')!,
         communityAddress[0]
     );
 
@@ -119,7 +119,7 @@ test('should add claim', () => {
         'BeneficiaryEntity',
         beneficiaryAddress[1],
         'claimed',
-        normalize(BigInt.fromString(communityProps[0].get('claimAmount')!).toString()).toString()
+        normalize(BigInt.fromString(communityProps[0].get('originalClaimAmount')!).toString()).toString()
     );
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'preLastClaimAt', '0');
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[1], 'preLastClaimAt', '0');
@@ -130,7 +130,7 @@ test('should add claim', () => {
         communityAddress[0],
         'claimed',
         normalize(
-            BigInt.fromString(communityProps[0].get('claimAmount')!)
+            BigInt.fromString(communityProps[0].get('originalClaimAmount')!)
                 .times(BigInt.fromI32(2))
                 // two beneficiaries + initial manager
                 .plus(fiveCents.times(BigInt.fromI32(3)))
@@ -145,7 +145,7 @@ test('should add claim', () => {
         '0',
         'claimed',
         normalize(
-            BigInt.fromString(communityProps[0].get('claimAmount')!)
+            BigInt.fromString(communityProps[0].get('originalClaimAmount')!)
                 .times(BigInt.fromI32(2))
                 // two beneficiaries + initial manager
                 .plus(fiveCents.times(BigInt.fromI32(3)))
@@ -175,7 +175,7 @@ test('should rotate claim timestamp', () => {
     // add claim
     const beneficiaryClaimEvent1 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        communityProps[0].get('claimAmount')!,
+        communityProps[0].get('originalClaimAmount')!,
         communityAddress[0],
         1640716194
     );
@@ -183,7 +183,7 @@ test('should rotate claim timestamp', () => {
     handleBeneficiaryClaim(beneficiaryClaimEvent1);
     const beneficiaryClaimEvent2 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        communityProps[0].get('claimAmount')!,
+        communityProps[0].get('originalClaimAmount')!,
         communityAddress[0],
         1640716195
     );
@@ -196,7 +196,7 @@ test('should rotate claim timestamp', () => {
 
     const beneficiaryClaimEvent3 = createBeneficiaryClaimEvent(
         beneficiaryAddress[0],
-        communityProps[0].get('claimAmount')!,
+        communityProps[0].get('originalClaimAmount')!,
         communityAddress[0],
         1640716196
     );
@@ -212,7 +212,7 @@ test('should rotate claim timestamp', () => {
         beneficiaryAddress[0],
         'claimed',
         normalize(
-            BigInt.fromString(communityProps[0].get('claimAmount')!).times(BigInt.fromI32(3)).toString()
+            BigInt.fromString(communityProps[0].get('originalClaimAmount')!).times(BigInt.fromI32(3)).toString()
         ).toString()
     );
 });

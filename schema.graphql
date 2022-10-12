@@ -48,9 +48,17 @@ type CommunityEntity @entity {
   """
   claimAmount: BigDecimal!
   """
-  UBI parameter max claim (normalized)
+  UBI parameter original claim amount (normalized)
+  """
+  originalClaimAmount: BigDecimal!
+  """
+  deprecated
   """
   maxClaim: BigDecimal!
+  """
+  UBI parameter max total claim (normalized)
+  """
+  maxTotalClaim: BigDecimal!
   """
   UBI parameter decrease step (normalized)
   """
