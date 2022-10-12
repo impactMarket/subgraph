@@ -11,8 +11,8 @@ export function handleCommunityAdded(event: CommunityAdded): void {
     generiHandleCommunityAdded(
         event.params.communityAddress,
         event.params.managers,
-        event.params.claimAmount,
-        event.params.maxClaim,
+        event.params.originalClaimAmount,
+        event.params.maxTotalClaim,
         event.params.decreaseStep,
         event.params.baseInterval.gt(BigInt.fromI32(500000)) ? 0 : event.params.baseInterval.toI32(),
         event.params.incrementInterval.gt(BigInt.fromI32(500000)) ? 0 : event.params.incrementInterval.toI32(),
@@ -104,7 +104,9 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.startDayId = previousCommunity.startDayId;
         community.state = previousCommunity.state;
         community.claimAmount = previousCommunity.claimAmount;
+        community.originalClaimAmount = previousCommunity.originalClaimAmount;
         community.maxClaim = previousCommunity.maxClaim;
+        community.maxTotalClaim = previousCommunity.maxTotalClaim;
         // 18962 = 1 december 2021
         if (previousCommunity.decreaseStep.equals(BigDecimal.zero()) && previousCommunity.startDayId < 18962) {
             community.decreaseStep = BigDecimal.fromString('0.01');

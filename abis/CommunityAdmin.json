@@ -17,13 +17,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "claimAmount",
+        "name": "originalClaimAmount",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "maxClaim",
+        "name": "maxTotalClaim",
         "type": "uint256"
       },
       {

@@ -36,8 +36,8 @@ const normalize = (amount: string): BigDecimal =>
 
 const communityProps0 = new Map<string, string>();
 
-communityProps0.set('claimAmount', toToken('5').toString());
-communityProps0.set('maxClaim', toToken('500').toString());
+communityProps0.set('originalClaimAmount', toToken('5').toString());
+communityProps0.set('maxTotalClaim', toToken('500').toString());
 communityProps0.set('decreaseStep', BigInt.fromString('1').times(BigInt.fromI32(10).pow(16)).toString());
 communityProps0.set('baseInterval', '120960');
 communityProps0.set('incrementInterval', '360');
@@ -46,8 +46,8 @@ communityProps0.set('maxTranche', '0');
 
 const communityProps1 = new Map<string, string>();
 
-communityProps1.set('claimAmount', toToken('1').toString());
-communityProps1.set('maxClaim', toToken('100').toString());
+communityProps1.set('originalClaimAmount', toToken('1').toString());
+communityProps1.set('maxTotalClaim', toToken('100').toString());
 communityProps1.set('decreaseStep', BigInt.fromString('2').times(BigInt.fromI32(10).pow(16)).toString());
 communityProps1.set('baseInterval', '17280');
 communityProps1.set('incrementInterval', '30');

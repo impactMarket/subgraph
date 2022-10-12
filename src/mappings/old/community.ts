@@ -65,7 +65,9 @@ export function handleCommunityEdited(event: CommunityEdited): void {
 
     if (community) {
         community.claimAmount = normalize(event.params._claimAmount.toString());
+        community.originalClaimAmount = normalize(event.params._claimAmount.toString());
         community.maxClaim = normalize(event.params._maxClaim.toString());
+        community.maxTotalClaim = normalize(event.params._maxClaim.toString());
         community.incrementInterval = event.params._incrementInterval.gt(BigInt.fromI32(500000))
             ? 0
             : event.params._incrementInterval.toI32();

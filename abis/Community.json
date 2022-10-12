@@ -22,6 +22,25 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldClaimAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newClaimAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "ClaimAmountUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": true,
           "internalType": "address",
           "name": "beneficiary",
@@ -75,13 +94,13 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "oldClaimAmount",
+          "name": "oldOriginalClaimAmount",
           "type": "uint256"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "oldMaxClaim",
+          "name": "oldMaxTotalClaim",
           "type": "uint256"
         },
         {
@@ -105,13 +124,13 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "newClaimAmount",
+          "name": "newOriginalClaimAmount",
           "type": "uint256"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "newMaxClaim",
+          "name": "newMaxTotalClaim",
           "type": "uint256"
         },
         {

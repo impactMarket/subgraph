@@ -6,6 +6,7 @@ import {
     BeneficiaryParamsUpdated,
     BeneficiaryRemoved,
     BeneficiaryUnlocked,
+    ClaimAmountUpdated,
     CommunityLocked,
     CommunityParamsUpdated,
     CommunityUnlocked,
@@ -74,8 +75,9 @@ export function handleBeneficiaryParamsUpdated(event: BeneficiaryParamsUpdated):
     const community = CommunityEntity.load(event.address.toHex());
 
     if (community) {
-        community.claimAmount = normalize(event.params.newClaimAmount.toString());
-        community.maxClaim = normalize(event.params.newMaxClaim.toString());
+        community.originalClaimAmount = normalize(event.params.newOriginalClaimAmount.toString());
+        community.maxClaim = normalize(event.params.newMaxTotalClaim.toString());
+        community.maxTotalClaim = normalize(event.params.newMaxTotalClaim.toString());
         community.incrementInterval = event.params.newIncrementInterval.toI32();
         community.baseInterval = event.params.newBaseInterval.toI32();
         community.decreaseStep = normalize(event.params.newDecreaseStep.toString());
@@ -147,6 +149,15 @@ export function handleCommunityUnlocked(event: CommunityUnlocked): void {
 
     if (community) {
         community.state = 0;
+        community.save();
+    }
+}
+
+export function handleClaimAmountUpdated(event: ClaimAmountUpdated): void {
+    const community = CommunityEntity.load(event.address.toHex());
+
+    if (community) {
+        community.claimAmount = normalize(event.params.newClaimAmount.toString());
         community.save();
     }
 }

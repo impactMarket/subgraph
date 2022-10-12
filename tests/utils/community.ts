@@ -31,13 +31,13 @@ export function createCommunityAddedEvent(
         'managers',
         ethereum.Value.fromAddressArray(managers.map<Address>(m => Address.fromString(m)))
     );
-    const claimAmountParam = new ethereum.EventParam(
-        'claimAmount',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('claimAmount')))
+    const originalClaimAmountParam = new ethereum.EventParam(
+        'originalClaimAmount',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('originalClaimAmount')))
     );
-    const maxClaimParam = new ethereum.EventParam(
-        'maxClaim',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('maxClaim')))
+    const maxTotalClaimParam = new ethereum.EventParam(
+        'maxTotalClaim',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('maxTotalClaim')))
     );
     const decreaseStepParam = new ethereum.EventParam(
         'decreaseStep',
@@ -62,8 +62,8 @@ export function createCommunityAddedEvent(
 
     communityAddedEvent.parameters.push(communityAddressParam);
     communityAddedEvent.parameters.push(managersParam);
-    communityAddedEvent.parameters.push(claimAmountParam);
-    communityAddedEvent.parameters.push(maxClaimParam);
+    communityAddedEvent.parameters.push(originalClaimAmountParam);
+    communityAddedEvent.parameters.push(maxTotalClaimParam);
     communityAddedEvent.parameters.push(decreaseStepParam);
     communityAddedEvent.parameters.push(baseIntervalParam);
     communityAddedEvent.parameters.push(incrementIntervalParam);
@@ -130,12 +130,12 @@ export function createBeneficiaryParamsUpdatedEvent(
     beneficiaryParamsUpdatedEvent.address = Address.fromString(community);
     beneficiaryParamsUpdatedEvent.parameters = [];
     // we don't use the old parameters, so they can be anything
-    const oldClaimAmountParam = new ethereum.EventParam(
-        'oldClaimAmount',
+    const oldOriginalClaimAmountParam = new ethereum.EventParam(
+        'oldOriginalClaimAmount',
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(0))
     );
-    const oldMaxClaimParam = new ethereum.EventParam(
-        'oldMaxClaim',
+    const oldMaxTotalClaimParam = new ethereum.EventParam(
+        'oldMaxTotalClaim',
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(0))
     );
     const oldDecreaseStepParam = new ethereum.EventParam(
@@ -151,13 +151,13 @@ export function createBeneficiaryParamsUpdatedEvent(
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(0))
     );
     //
-    const newClaimAmountParam = new ethereum.EventParam(
-        'newClaimAmount',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('claimAmount')))
+    const newOriginalClaimAmountParam = new ethereum.EventParam(
+        'newOriginalClaimAmount',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('originalClaimAmount')))
     );
-    const newMaxClaimParam = new ethereum.EventParam(
-        'newMaxClaim',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('maxClaim')))
+    const newMaxTotalClaimParam = new ethereum.EventParam(
+        'newMaxTotalClaim',
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('maxTotalClaim')))
     );
     const newDecreaseStepParam = new ethereum.EventParam(
         'newDecreaseStep',
@@ -172,13 +172,13 @@ export function createBeneficiaryParamsUpdatedEvent(
         ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('incrementInterval')))
     );
 
-    beneficiaryParamsUpdatedEvent.parameters.push(oldClaimAmountParam);
-    beneficiaryParamsUpdatedEvent.parameters.push(oldMaxClaimParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(oldOriginalClaimAmountParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(oldMaxTotalClaimParam);
     beneficiaryParamsUpdatedEvent.parameters.push(oldDecreaseStepParam);
     beneficiaryParamsUpdatedEvent.parameters.push(oldBaseIntervalParam);
     beneficiaryParamsUpdatedEvent.parameters.push(oldIncrementIntervalParam);
-    beneficiaryParamsUpdatedEvent.parameters.push(newClaimAmountParam);
-    beneficiaryParamsUpdatedEvent.parameters.push(newMaxClaimParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(newOriginalClaimAmountParam);
+    beneficiaryParamsUpdatedEvent.parameters.push(newMaxTotalClaimParam);
     beneficiaryParamsUpdatedEvent.parameters.push(newDecreaseStepParam);
     beneficiaryParamsUpdatedEvent.parameters.push(newBaseIntervalParam);
     beneficiaryParamsUpdatedEvent.parameters.push(newIncrementIntervalParam);
@@ -186,6 +186,7 @@ export function createBeneficiaryParamsUpdatedEvent(
     return beneficiaryParamsUpdatedEvent;
 }
 
+// community edited is an old event not used currently, only to support vAlpha contracts
 export function createCommunityEditedEvent(community: string, props: Map<string, string>): CommunityEdited {
     const communityEditedEvent = changetype<CommunityEdited>(newMockEvent());
 
@@ -193,11 +194,11 @@ export function createCommunityEditedEvent(community: string, props: Map<string,
     communityEditedEvent.parameters = [];
     const claimAmountParam = new ethereum.EventParam(
         '_claimAmount',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('claimAmount')))
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('originalClaimAmount')))
     );
     const maxClaimParam = new ethereum.EventParam(
         '_maxClaim',
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('maxClaim')))
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromString(props.get('maxTotalClaim')))
     );
     const baseIntervalParam = new ethereum.EventParam(
         '_baseInterval',

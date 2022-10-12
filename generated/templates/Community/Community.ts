@@ -32,6 +32,28 @@ export class BeneficiaryAdded__Params {
   }
 }
 
+export class ClaimAmountUpdated extends ethereum.Event {
+  get params(): ClaimAmountUpdated__Params {
+    return new ClaimAmountUpdated__Params(this);
+  }
+}
+
+export class ClaimAmountUpdated__Params {
+  _event: ClaimAmountUpdated;
+
+  constructor(event: ClaimAmountUpdated) {
+    this._event = event;
+  }
+
+  get oldClaimAmount(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get newClaimAmount(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class BeneficiaryClaim extends ethereum.Event {
   get params(): BeneficiaryClaim__Params {
     return new BeneficiaryClaim__Params(this);
@@ -107,11 +129,11 @@ export class BeneficiaryParamsUpdated__Params {
     this._event = event;
   }
 
-  get oldClaimAmount(): BigInt {
+  get oldOriginalClaimAmount(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get oldMaxClaim(): BigInt {
+  get oldMaxTotalClaim(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
@@ -127,11 +149,11 @@ export class BeneficiaryParamsUpdated__Params {
     return this._event.parameters[4].value.toBigInt();
   }
 
-  get newClaimAmount(): BigInt {
+  get newOriginalClaimAmount(): BigInt {
     return this._event.parameters[5].value.toBigInt();
   }
 
-  get newMaxClaim(): BigInt {
+  get newMaxTotalClaim(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
 

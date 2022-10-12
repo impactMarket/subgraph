@@ -155,6 +155,15 @@ export class CommunityEntity extends Entity {
     this.set("claimAmount", Value.fromBigDecimal(value));
   }
 
+  get originalClaimAmount(): BigDecimal {
+    let value = this.get("originalClaimAmount");
+    return value!.toBigDecimal();
+  }
+
+  set originalClaimAmount(value: BigDecimal) {
+    this.set("originalClaimAmount", Value.fromBigDecimal(value));
+  }
+
   get maxClaim(): BigDecimal {
     let value = this.get("maxClaim");
     return value!.toBigDecimal();
@@ -162,6 +171,15 @@ export class CommunityEntity extends Entity {
 
   set maxClaim(value: BigDecimal) {
     this.set("maxClaim", Value.fromBigDecimal(value));
+  }
+
+  get maxTotalClaim(): BigDecimal {
+    let value = this.get("maxTotalClaim");
+    return value!.toBigDecimal();
+  }
+
+  set maxTotalClaim(value: BigDecimal) {
+    this.set("maxTotalClaim", Value.fromBigDecimal(value));
   }
 
   get decreaseStep(): BigDecimal {
