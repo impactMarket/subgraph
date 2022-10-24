@@ -12,8 +12,8 @@ import {
     UserTransactionWithEntity,
     UserTransactionsEntity
 } from '../../generated/schema';
-import { Transfer } from '../../generated/CeloDollar/CeloDollar';
-import { attestationProxyAddress, treasuryAddress } from '../common/addresses';
+import { Transfer } from '../../generated/cUSD/cUSD';
+import { attestationProxyAddress, pactAddress, stakingAddress, treasuryAddress } from '../common/addresses';
 import { loadOrCreateCommunityDaily } from '../common/community';
 import { loadOrCreateDailyUbi } from '../common/ubi';
 import { normalize } from '../utils';
@@ -26,12 +26,16 @@ function updateContributorHelper(
     ubiDaily: UBIDailyEntity
 ): void {
     // update contribuotrs data
+    const asset = event.address;
+    const contributionId = `${asset.toHex()}-${event.params.from.toHex()}`;
     let contributor = ContributorEntity.load(event.params.from.toHex());
+    let contribution = AssetContributions.load(contributionId);
 
     if (!contributor) {
         contributor = new ContributorEntity(event.params.from.toHex());
-        contributor.contributed = BigDecimal.zero();
-        contributor.contributions = 0;
+        contributor.contributions = new Array<string>();
+        contributor.pact = BigDecimal.zero();
+        contributor.staking = BigDecimal.zero();
         contributor.lastContribution = dayId;
         // update ubi data
         if (event.params.from.notEqual(Address.fromString(treasuryAddress))) {
@@ -44,15 +48,30 @@ function updateContributorHelper(
     ) {
         ubiDaily.contributors += 1;
     }
-    contributor.contributed = contributor.contributed.plus(normalizedAmount);
-    contributor.contributions += 1;
+
+    // update contributor contribution
+    if (contribution) {
+        // add if exists
+        contribution.amount = contribution.amount.plus(normalizedAmount);
+    } else {
+        // if it doesn't, create and add to the list
+        const contributionsContributor = contributor.contributions;
+
+        contribution = new AssetContributions(contributionId);
+        contribution.asset = asset;
+        contribution.amount = normalizedAmount;
+        contributionsContributor.push(contribution.id);
+
+        contributor.contributions = contributionsContributor;
+    }
+
     contributor.lastContribution = dayId;
     contributor.save();
+    contribution.save();
 }
 
 function updateContributorContributionsHelper(
     event: Transfer,
-    normalizedAmount: BigDecimal,
     dayId: i32,
     community: CommunityEntity | null,
     communityDaily: CommunityDailyEntity | null
@@ -63,9 +82,6 @@ function updateContributorContributionsHelper(
 
     if (!contributorContributions) {
         contributorContributions = new ContributorContributionsEntity(contributorContributionsId);
-        contributorContributions.to = event.params.to;
-        contributorContributions.contributed = BigDecimal.zero();
-        contributorContributions.contributions = 0;
         contributorContributions.lastContribution = dayId;
         // update ubi data
         if (community) {
@@ -78,14 +94,44 @@ function updateContributorContributionsHelper(
     if (communityDaily && contributorContributions.lastContribution !== dayId) {
         communityDaily.contributors += 1;
     }
-    contributorContributions.contributed = contributorContributions.contributed.plus(normalizedAmount);
-    contributorContributions.contributions += 1;
     contributorContributions.lastContribution = dayId;
     contributorContributions.save();
 }
 
 export function handleTransferAsset(event: Transfer): void {
     // because this is executed for every transfer, performance is very important
+
+    // this registers action only related to PACT holding/staking
+    if (event.address.equals(Address.fromString(pactAddress))) {
+        const normalizedAmount = normalize(event.params.amount.toString());
+        let contributor = ContributorEntity.load(event.transaction.from.toHex());
+
+        if (!contributor) {
+            const dayId = event.block.timestamp.toI32() / 86400;
+
+            contributor = new ContributorEntity(event.transaction.from.toHex());
+            contributor.contributions = new Array<string>();
+            contributor.pact = BigDecimal.zero();
+            contributor.staking = BigDecimal.zero();
+            contributor.lastContribution = 0;
+            contributor.lastPACTActivity = dayId;
+        }
+
+        if (event.params.to.equals(Address.fromString(stakingAddress))) {
+            contributor.staking = contributor.staking.plus(normalizedAmount);
+        } else if (event.params.from.equals(Address.fromString(stakingAddress))) {
+            contributor.staking = contributor.staking.minus(normalizedAmount);
+        }
+
+        if (event.params.from.equals(event.transaction.from)) {
+            contributor.pact = contributor.pact.minus(normalizedAmount);
+        } else {
+            contributor.pact = contributor.pact.plus(normalizedAmount);
+        }
+        contributor.save();
+    }
+
+    // everything else goes here
     if (event.params.to.equals(Address.fromString(treasuryAddress))) {
         const dayId = event.block.timestamp.toI32() / 86400;
         const normalizedAmount = normalize(event.params.amount.toString());
@@ -117,7 +163,7 @@ export function handleTransferAsset(event: Transfer): void {
         contributionDaily.save();
 
         updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
-        updateContributorContributionsHelper(event, normalizedAmount, dayId, null, null);
+        updateContributorContributionsHelper(event, dayId, null, null);
 
         ubi.save();
         ubiDaily.save();
@@ -138,7 +184,7 @@ export function handleTransferAsset(event: Transfer): void {
         let contributionDaily = AssetContributions.load(contributionDailyId);
 
         updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
-        updateContributorContributionsHelper(event, normalizedAmount, dayId, community, communityDaily);
+        updateContributorContributionsHelper(event, dayId, community, communityDaily);
 
         if (event.params.from.notEqual(Address.fromString(treasuryAddress))) {
             // from the treasury, to the community, it was likely a "requestFunds" action

@@ -2,7 +2,7 @@
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
-import { Transfer } from '../../generated/CeloDollar/CeloDollar';
+import { Transfer } from '../../generated/cUSD/cUSD';
 
 export function createTransferEvent(
     from: string,

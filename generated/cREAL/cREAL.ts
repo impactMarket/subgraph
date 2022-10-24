@@ -36,8 +36,8 @@ export class Transfer__Params {
   }
 }
 
-export class CeloDollar extends ethereum.SmartContract {
-  static bind(address: Address): CeloDollar {
-    return new CeloDollar("CeloDollar", address);
+export class cREAL extends ethereum.SmartContract {
+  static bind(address: Address): cREAL {
+    return new cREAL("cREAL", address);
   }
 }

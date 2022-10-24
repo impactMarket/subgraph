@@ -1,10 +1,15 @@
 {
     "startBlockAlpha": 11008453,
     "startBlockV1": 11005140,
+    "startBlockMultiCurrency": 14236227,
     "network": "celo-alfajores",
-    "Treasury": "0xB0deEE097B5227C5E6bbE787665e4e62b4fE85f3",
-    "CommunityAdmin": "0x1c33D75bcE52132c7a0e220c1C338B9db7cf3f3A",
-    "OldImpactMarket": "0x32A163D149B78153239b14b95ccc7c8ea8682B82",
-    "CeloDollar": "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
-    "AttestationProxy": "0xad5e5722427d79dff28a4ab30249729d1f8b4cc0"
+    "Treasury": "0xb0deee097b5227c5e6bbe787665e4e62b4fe85f3",
+    "CommunityAdmin": "0x1c33d75bce52132c7a0e220c1c338b9db7cf3f3a",
+    "OldImpactMarket": "0x32a163d149b78153239b14b95ccc7c8ea8682b82",
+    "cUSD": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
+    "cEUR": "0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f",
+    "cREAL": "0xe4d517785d091d3c54818832db6094bcc2744545",
+    "AttestationProxy": "0xad5e5722427d79dff28a4ab30249729d1f8b4cc0",
+    "PACT": "0x73a2de6a8370108d43c3c80430c84c30df323ed2",
+    "Staking": "0x2bdd85857edd9a4faa72b663536189e38d8e3c71"
 }

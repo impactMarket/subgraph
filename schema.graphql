@@ -5,7 +5,7 @@ type AssetContributions @entity {
   """
   "asset-0" for global
   "asset-number" for daily global
-  "asset-address" for community
+  "asset-address" for community or contributor
   "asset-address-number" for daily community
   """
   id: ID!
@@ -437,18 +437,6 @@ type ContributorContributionsEntity @entity {
   """
   id: ID!
   """
-  community address or treasury address
-  """
-  to: Bytes!
-  """
-  contributed amount in cUSD (normalized)
-  """
-  contributed: BigDecimal!
-  """
-  number of contributions
-  """
-  contributions: Int!
-  """
   last contribution day id (block timestamp / 86400)
   """
   lastContribution: Int!
@@ -463,15 +451,23 @@ type ContributorEntity @entity {
   """
   id: ID!
   """
-  contributed amount in cUSD (normalized)
+  contributions in each asset
   """
-  contributed: BigDecimal!
-  """
-  number of contributions
-  """
-  contributions: Int!
+  contributions: [AssetContributions!]!
   """
   last contribution day id (block timestamp / 86400)
   """
   lastContribution: Int!
+  """
+  amount of PACT on wallet (normalized)
+  """
+  pact: BigDecimal!
+  """
+  amount of PACT staking (normalized)
+  """
+  staking: BigDecimal!
+  """
+  last PACT activity day id (block timestamp / 86400)
+  """
+  lastPACTActivity: Int
 }

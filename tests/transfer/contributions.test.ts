@@ -1,7 +1,7 @@
-import { BigInt } from '@graphprotocol/graph-ts';
-import { assert, clearStore, test } from 'matchstick-as/assembly/index';
+import { BigInt, log } from '@graphprotocol/graph-ts';
+import { assert, clearStore, logStore, test } from 'matchstick-as/assembly/index';
 
-import { celoDollarAddress, treasuryAddress } from '../../src/common/addresses';
+import { cUSDAddress, treasuryAddress } from '../../src/common/addresses';
 import { communityAddress, communityProps, managerAddress, toToken, userAddress } from '../utils/constants';
 import { createCommunityAddedEvent } from '../utils/community';
 import { createTransferEvent } from '../utils/transfer';
@@ -24,13 +24,13 @@ test('contribute cusd to community', () => {
         userAddress[0],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -47,19 +47,19 @@ test('contribute cusd to community', () => {
     );
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}`,
+        `${cUSDAddress}-${communityAddress[0]}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}-${dayId}`,
+        `${cUSDAddress}-${communityAddress[0]}-${dayId}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${dayId}`,
+        `${cUSDAddress}-${dayId}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
@@ -67,15 +67,15 @@ test('contribute cusd to community', () => {
         'CommunityEntity',
         communityAddress[0],
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}]`
+        `[${cUSDAddress}-${communityAddress[0]}]`
     );
     assert.fieldEquals(
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId}`,
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}-${dayId}]`
+        `[${cUSDAddress}-${communityAddress[0]}-${dayId}]`
     );
-    assert.fieldEquals('UBIDailyEntity', `${dayId}`, 'contributions', `[${celoDollarAddress.toLowerCase()}-${dayId}]`);
+    assert.fieldEquals('UBIDailyEntity', `${dayId}`, 'contributions', `[${cUSDAddress}-${dayId}]`);
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`, 'contributors', '2');
 
     // assert ubi daily data
@@ -107,13 +107,13 @@ test('contribute cusd to treasury', () => {
         userAddress[0],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -132,11 +132,11 @@ test('contribute cusd to treasury', () => {
     assert.notInStore('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`);
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${dayId}`,
+        `${cUSDAddress}-${dayId}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-    assert.fieldEquals('UBIDailyEntity', `${dayId}`, 'contributions', `[${celoDollarAddress.toLowerCase()}-${dayId}]`);
+    assert.fieldEquals('UBIDailyEntity', `${dayId}`, 'contributions', `[${cUSDAddress}-${dayId}]`);
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'contributors', '2');
     assert.fieldEquals(
         'UBIDailyEntity',
@@ -159,7 +159,7 @@ test('contribute cusd to treasury and community', () => {
         userAddress[0],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     // to treasury
@@ -167,7 +167,7 @@ test('contribute cusd to treasury and community', () => {
         userAddress[1],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     // to community
@@ -175,7 +175,7 @@ test('contribute cusd to treasury and community', () => {
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     // from treasury to community
@@ -183,7 +183,7 @@ test('contribute cusd to treasury and community', () => {
         treasuryAddress,
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -238,7 +238,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[0],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day1Time
     );
 
@@ -247,7 +247,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[1],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day1Time
     );
 
@@ -256,7 +256,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day1Time
     );
 
@@ -265,7 +265,7 @@ test('contribute cusd to treasury and community over some days', () => {
         treasuryAddress,
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day1Time
     );
 
@@ -276,7 +276,7 @@ test('contribute cusd to treasury and community over some days', () => {
 
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}`,
+        `${cUSDAddress}-${communityAddress[0]}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
@@ -284,7 +284,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'CommunityEntity',
         communityAddress[0],
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}]`
+        `[${cUSDAddress}-${communityAddress[0]}]`
     );
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
     assert.fieldEquals(
@@ -302,7 +302,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[2],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day2Time
     );
 
@@ -311,7 +311,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day2Time
     );
 
@@ -320,7 +320,7 @@ test('contribute cusd to treasury and community over some days', () => {
 
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}`,
+        `${cUSDAddress}-${communityAddress[0]}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
     );
@@ -328,7 +328,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'CommunityEntity',
         communityAddress[0],
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}]`
+        `[${cUSDAddress}-${communityAddress[0]}]`
     );
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
     assert.fieldEquals(
@@ -346,7 +346,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[0],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day3Time
     );
 
@@ -355,7 +355,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[0],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day3Time
     );
 
@@ -364,7 +364,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[1],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day3Time
     );
 
@@ -373,7 +373,7 @@ test('contribute cusd to treasury and community over some days', () => {
         treasuryAddress,
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day3Time
     );
 
@@ -384,7 +384,7 @@ test('contribute cusd to treasury and community over some days', () => {
 
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}`,
+        `${cUSDAddress}-${communityAddress[0]}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(4)).toString()).toString()
     );
@@ -392,7 +392,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'CommunityEntity',
         communityAddress[0],
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}]`
+        `[${cUSDAddress}-${communityAddress[0]}]`
     );
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
     assert.fieldEquals(
@@ -410,7 +410,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[0],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day4Time
     );
 
@@ -419,7 +419,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[2],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day4Time
     );
 
@@ -428,7 +428,7 @@ test('contribute cusd to treasury and community over some days', () => {
         userAddress[1],
         treasuryAddress,
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day4Time
     );
 
@@ -451,13 +451,13 @@ test('contribute cusd to treasury and community over some days', () => {
 
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}-${dayId1}`,
+        `${cUSDAddress}-${communityAddress[0]}-${dayId1}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${dayId1}`,
+        `${cUSDAddress}-${dayId1}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
     );
@@ -465,13 +465,13 @@ test('contribute cusd to treasury and community over some days', () => {
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId1}`,
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}-${dayId1}]`
+        `[${cUSDAddress}-${communityAddress[0]}-${dayId1}]`
     );
     assert.fieldEquals(
         'UBIDailyEntity',
         `${dayId1}`,
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${dayId1}]`
+        `[${cUSDAddress}-${dayId1}]`
     );
     assert.fieldEquals(
         'CommunityDailyEntity',
@@ -494,13 +494,13 @@ test('contribute cusd to treasury and community over some days', () => {
 
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}-${dayId2}`,
+        `${cUSDAddress}-${communityAddress[0]}-${dayId2}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(1)).toString()).toString()
     );
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${dayId2}`,
+        `${cUSDAddress}-${dayId2}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
@@ -508,13 +508,13 @@ test('contribute cusd to treasury and community over some days', () => {
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId2}`,
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}-${dayId2}]`
+        `[${cUSDAddress}-${communityAddress[0]}-${dayId2}]`
     );
     assert.fieldEquals(
         'UBIDailyEntity',
         `${dayId2}`,
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${dayId2}]`
+        `[${cUSDAddress}-${dayId2}]`
     );
     assert.fieldEquals(
         'CommunityDailyEntity',
@@ -537,13 +537,13 @@ test('contribute cusd to treasury and community over some days', () => {
 
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}-${dayId3}`,
+        `${cUSDAddress}-${communityAddress[0]}-${dayId3}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(1)).toString()).toString()
     );
     assert.fieldEquals(
         'AssetContributions',
-        `${celoDollarAddress.toLowerCase()}-${dayId3}`,
+        `${cUSDAddress}-${dayId3}`,
         'amount',
         normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
     );
@@ -551,13 +551,13 @@ test('contribute cusd to treasury and community over some days', () => {
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId3}`,
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${communityAddress[0].toLowerCase()}-${dayId3}]`
+        `[${cUSDAddress}-${communityAddress[0]}-${dayId3}]`
     );
     assert.fieldEquals(
         'UBIDailyEntity',
         `${dayId3}`,
         'contributions',
-        `[${celoDollarAddress.toLowerCase()}-${dayId3}]`
+        `[${cUSDAddress}-${dayId3}]`
     );
     assert.fieldEquals(
         'CommunityDailyEntity',
@@ -605,13 +605,13 @@ test('contribute cusd to community and update contributor entities', () => {
         userAddress[0],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -620,17 +620,17 @@ test('contribute cusd to community and update contributor entities', () => {
     assert.fieldEquals(
         'ContributorEntity',
         userAddress[0],
-        'contributed',
-        normalize(fiveDollars.toString()).toString()
+        'contributions',
+        `[${cUSDAddress}-${userAddress[0]}]`
     );
-    assert.fieldEquals('ContributorEntity', userAddress[0], 'contributions', '1');
+    
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
 
     const transferEvent3 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const dayId = transferEvent3.block.timestamp.toI32() / 86400;
 
@@ -639,16 +639,15 @@ test('contribute cusd to community and update contributor entities', () => {
     assert.fieldEquals(
         'ContributorEntity',
         userAddress[1],
-        'contributed',
-        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
+        'contributions',
+        `[${cUSDAddress}-${userAddress[1]}]`
     );
-    assert.fieldEquals('ContributorEntity', userAddress[1], 'contributions', '2');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`, 'contributors', '2');
     assert.fieldEquals(
-        'ContributorContributionsEntity',
-        `${userAddress[1]}-${communityAddress[0]}`,
-        'contributed',
+        'AssetContributions',
+        `${cUSDAddress}-${userAddress[1]}`,
+        'amount',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
 });
@@ -666,19 +665,19 @@ test('contribute cusd to community and update contributor entities, many communi
         userAddress[0],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const transferEvent2 = createTransferEvent(
         userAddress[1],
         communityAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const transferEvent3 = createTransferEvent(
         userAddress[0],
         communityAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -688,28 +687,15 @@ test('contribute cusd to community and update contributor entities, many communi
     assert.fieldEquals(
         'ContributorEntity',
         userAddress[0],
-        'contributed',
-        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
-    );
-    assert.fieldEquals('ContributorEntity', userAddress[0], 'contributions', '2');
-    assert.fieldEquals(
-        'ContributorContributionsEntity',
-        `${userAddress[0]}-${communityAddress[0]}`,
-        'contributed',
-        normalize(fiveDollars.toString()).toString()
-    );
-    assert.fieldEquals(
-        'ContributorContributionsEntity',
-        `${userAddress[1]}-${communityAddress[0]}`,
-        'contributed',
-        normalize(fiveDollars.toString()).toString()
+        'contributions',
+        `[${cUSDAddress}-${userAddress[0]}]`
     );
 
     const transferEvent4 = createTransferEvent(
         userAddress[1],
         communityAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent4);
@@ -717,14 +703,13 @@ test('contribute cusd to community and update contributor entities, many communi
     assert.fieldEquals(
         'ContributorEntity',
         userAddress[1],
-        'contributed',
-        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
+        'contributions',
+        `[${cUSDAddress}-${userAddress[1]}]`
     );
-    assert.fieldEquals('ContributorEntity', userAddress[1], 'contributions', '2');
     assert.fieldEquals(
-        'ContributorContributionsEntity',
-        `${userAddress[1]}-${communityAddress[0]}`,
-        'contributed',
-        normalize(fiveDollars.toString()).toString()
+        'AssetContributions',
+        `${cUSDAddress}-${userAddress[1]}`,
+        'amount',
+        normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
 });

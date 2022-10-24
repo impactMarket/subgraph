@@ -53,11 +53,11 @@ dataSources:
           handler: handleOldCommunityRemoved
       file: ./src/mappings/old/impactMarket.ts
   - kind: ethereum/contract
-    name: CeloDollar
+    name: cUSD
     network: {{network}}
     source:
-      address: "{{CeloDollar}}"
-      abi: CeloDollar
+      address: "{{cUSD}}"
+      abi: cUSD
       startBlock: {{startBlockAlpha}}
     mapping:
       kind: ethereum/events
@@ -66,10 +66,75 @@ dataSources:
       entities:
         - UserTransactionsEntity
         - UserTransactionWithEntity
-        - ContributorContributionsEntity
         - ContributorEntity
       abis:
-        - name: CeloDollar
+        - name: cUSD
+          file: ./abis/BaseERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferAsset
+      file: ./src/mappings/transfer.ts
+  - kind: ethereum/contract
+    name: PACT
+    network: {{network}}
+    source:
+      address: "{{PACT}}"
+      abi: PACT
+      startBlock: {{startBlockV1}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - UserTransactionsEntity
+        - UserTransactionWithEntity
+        - ContributorEntity
+      abis:
+        - name: PACT
+          file: ./abis/BaseERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferAsset
+      file: ./src/mappings/transfer.ts
+  - kind: ethereum/contract
+    name: cEUR
+    network: {{network}}
+    source:
+      address: "{{cEUR}}"
+      abi: cEUR
+      startBlock: {{startBlockV1}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - UserTransactionsEntity
+        - UserTransactionWithEntity
+        - ContributorEntity
+      abis:
+        - name: cEUR
+          file: ./abis/BaseERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferAsset
+      file: ./src/mappings/transfer.ts
+  - kind: ethereum/contract
+    name: cREAL
+    network: {{network}}
+    source:
+      address: "{{cREAL}}"
+      abi: cREAL
+      startBlock: {{startBlockV1}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - UserTransactionsEntity
+        - UserTransactionWithEntity
+        - ContributorEntity
+      abis:
+        - name: cREAL
           file: ./abis/BaseERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)

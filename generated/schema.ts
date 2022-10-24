@@ -1123,33 +1123,6 @@ export class ContributorContributionsEntity extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get to(): Bytes {
-    let value = this.get("to");
-    return value!.toBytes();
-  }
-
-  set to(value: Bytes) {
-    this.set("to", Value.fromBytes(value));
-  }
-
-  get contributed(): BigDecimal {
-    let value = this.get("contributed");
-    return value!.toBigDecimal();
-  }
-
-  set contributed(value: BigDecimal) {
-    this.set("contributed", Value.fromBigDecimal(value));
-  }
-
-  get contributions(): i32 {
-    let value = this.get("contributions");
-    return value!.toI32();
-  }
-
-  set contributions(value: i32) {
-    this.set("contributions", Value.fromI32(value));
-  }
-
   get lastContribution(): i32 {
     let value = this.get("lastContribution");
     return value!.toI32();
@@ -1193,22 +1166,13 @@ export class ContributorEntity extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get contributed(): BigDecimal {
-    let value = this.get("contributed");
-    return value!.toBigDecimal();
-  }
-
-  set contributed(value: BigDecimal) {
-    this.set("contributed", Value.fromBigDecimal(value));
-  }
-
-  get contributions(): i32 {
+  get contributions(): Array<string> {
     let value = this.get("contributions");
-    return value!.toI32();
+    return value!.toStringArray();
   }
 
-  set contributions(value: i32) {
-    this.set("contributions", Value.fromI32(value));
+  set contributions(value: Array<string>) {
+    this.set("contributions", Value.fromStringArray(value));
   }
 
   get lastContribution(): i32 {
@@ -1218,5 +1182,32 @@ export class ContributorEntity extends Entity {
 
   set lastContribution(value: i32) {
     this.set("lastContribution", Value.fromI32(value));
+  }
+
+  get pact(): BigDecimal {
+    let value = this.get("pact");
+    return value!.toBigDecimal();
+  }
+
+  set pact(value: BigDecimal) {
+    this.set("pact", Value.fromBigDecimal(value));
+  }
+
+  get staking(): BigDecimal {
+    let value = this.get("staking");
+    return value!.toBigDecimal();
+  }
+
+  set staking(value: BigDecimal) {
+    this.set("staking", Value.fromBigDecimal(value));
+  }
+
+  get lastPACTActivity(): i32 {
+    let value = this.get("lastPACTActivity");
+    return value!.toI32();
+  }
+
+  set lastPACTActivity(value: i32) {
+    this.set("lastPACTActivity", Value.fromI32(value));
   }
 }
