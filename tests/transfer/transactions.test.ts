@@ -10,7 +10,7 @@ import {
     toToken,
     userAddress
 } from '../utils/constants';
-import { attestationProxyAddress, celoDollarAddress } from '../../src/common/addresses';
+import { attestationProxyAddress, cUSDAddress } from '../../src/common/addresses';
 import { createTransferEvent } from '../utils/transfer';
 import { handleTransferAsset } from '../../src/mappings/transfer';
 import { normalize } from '../../src/utils/index';
@@ -176,7 +176,7 @@ test('should count first time user transactions', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -207,13 +207,13 @@ test('should count multiple user transactions, same day', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const transferEvent2 = createTransferEvent(
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -245,19 +245,19 @@ test('should count multiple users multiple transactions, same day', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const transferEvent2 = createTransferEvent(
         beneficiaryAddress[0],
         beneficiaryAddress[2],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
     const transferEvent3 = createTransferEvent(
         beneficiaryAddress[1],
         beneficiaryAddress[3],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -295,14 +295,14 @@ test('should count multiple users multiple transactions, different days', () => 
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day1Time
     );
     const transferEvent2 = createTransferEvent(
         beneficiaryAddress[0],
         beneficiaryAddress[2],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day1Time + 1
     );
 
@@ -317,7 +317,7 @@ test('should count multiple users multiple transactions, different days', () => 
         beneficiaryAddress[1],
         beneficiaryAddress[2],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day2Time
     );
 
@@ -325,7 +325,7 @@ test('should count multiple users multiple transactions, different days', () => 
         beneficiaryAddress[2],
         beneficiaryAddress[3],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         day2Time + 1
     );
 
@@ -370,14 +370,14 @@ test('should count multiple user transactions, different days', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         1640716193
     );
     const transferEvent2 = createTransferEvent(
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         1640716194
     );
 
@@ -390,7 +390,7 @@ test('should count multiple user transactions, different days', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         1640802593
     );
 
@@ -398,7 +398,7 @@ test('should count multiple user transactions, different days', () => {
         beneficiaryAddress[0],
         beneficiaryAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress,
+        cUSDAddress,
         1640802594
     );
 
@@ -436,7 +436,7 @@ test('should not count user transactions if none parties are a beneficiary', () 
         userAddress[0],
         userAddress[1],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -455,7 +455,7 @@ test('should not count user transactions if from forbiden address', () => {
         beneficiaryAddress[0],
         attestationProxyAddress,
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
@@ -474,7 +474,7 @@ test('should not count user transactions if from community', () => {
         communityAddress[0],
         beneficiaryAddress[0],
         fiveDollars.toString(),
-        celoDollarAddress
+        cUSDAddress
     );
 
     handleTransferAsset(transferEvent1);
