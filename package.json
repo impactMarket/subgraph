@@ -2,12 +2,12 @@
     "name": "subgraph",
     "license": "Apache-2.0",
     "engines": {
-        "node": ">=16"
+        "node": "18.x"
     },
     "scripts": {
         "codegen": "graph codegen",
         "build": "graph build",
-        "test": "graph test --version 0.5.3",
+        "test": "graph test --version 0.5.4",
         "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ impactmarket/subgraph",
         "deploy:alfajores": "graph deploy --node https://api.thegraph.com/deploy/ impactmarket/alfajores-subgraph",
         "create-local": "graph create --node http://localhost:8020/ impactmarket/subgraph",
@@ -25,16 +25,16 @@
         "prepare:alfajores": "yarn prepare:alfajores:subgraph && yarn prepare:alfajores:addresses"
     },
     "dependencies": {
-        "@graphprotocol/graph-cli": "0.33.0",
-        "@graphprotocol/graph-ts": "0.27.0",
+        "@graphprotocol/graph-cli": "0.37.1",
+        "@graphprotocol/graph-ts": "0.29.1",
         "matchstick-as": "0.5.0"
     },
     "devDependencies": {
-        "@babel/core": "7.18.10",
-        "eslint": "8.21.0",
+        "@babel/core": "7.20.7",
+        "eslint": "8.30.0",
         "eslint-config-impact-market": "2.0.3",
         "mustache": "4.2.0",
-        "prettier": "2.7.1",
+        "prettier": "2.8.1",
         "typescript": "~4.1.6"
     }
 }

@@ -6,10 +6,10 @@ ENV ARGS=""
 
 RUN apt update \
   && apt install -y sudo curl postgresql \
-  && curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash - \
+  && curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash - \
   && sudo apt install -y nodejs
 
-RUN curl -OL https://github.com/LimeChain/matchstick/releases/download/0.5.3/binary-linux-20 \
+RUN curl -OL https://github.com/LimeChain/matchstick/releases/download/0.5.4/binary-linux-20 \
   && chmod a+x binary-linux-20
 
 RUN mkdir matchstick
