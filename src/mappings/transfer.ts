@@ -313,20 +313,22 @@ export function handleTransferAsset(event: Transfer): void {
         if (!transactionFrom) {
             transactionFrom = new UserTransactionsEntity(event.params.from.toHex());
             transactionFrom.volume = BigDecimal.zero();
-            transactionFrom.transactions = 0;
+            transactionFrom.receivedTxs = 0;
+            transactionFrom.sentTxs = 0;
         }
         if (!transactionTo) {
             transactionTo = new UserTransactionsEntity(event.params.to.toHex());
             transactionTo.volume = BigDecimal.zero();
-            transactionTo.transactions = 0;
+            transactionTo.receivedTxs = 0;
+            transactionTo.sentTxs = 0;
         }
         if (!transactionWith) {
             transactionWith = new UserTransactionWithEntity(transactionWithId);
         }
         transactionFrom.volume = transactionFrom.volume.plus(normalizedAmount);
-        transactionFrom.transactions += 1;
+        transactionFrom.sentTxs += 1;
         transactionTo.volume = transactionTo.volume.plus(normalizedAmount);
-        transactionTo.transactions += 1;
+        transactionTo.receivedTxs += 1;
         transactionWith.lastTransaction = dayId;
 
         ubi.volume = ubi.volume.plus(normalizedAmount);
