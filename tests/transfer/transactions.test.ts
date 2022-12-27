@@ -189,7 +189,7 @@ test('should count first time user transactions', () => {
         'volume',
         normalize(fiveDollars.toString()).toString()
     );
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'sentTxs', '1');
     assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '1');
     assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '1');
@@ -227,7 +227,7 @@ test('should count multiple user transactions, same day', () => {
         'volume',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '2');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'sentTxs', '2');
     assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '2');
@@ -272,8 +272,9 @@ test('should count multiple users multiple transactions, same day', () => {
         'volume',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '2');
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'transactions', '2');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'sentTxs', '2');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'sentTxs', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'receivedTxs', '1');
     assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '3');
     assert.fieldEquals('UBIDailyEntity', '0', 'reach', '3');
     assert.fieldEquals('UBIDailyEntity', dayId.toString(), 'transactions', '3');
@@ -341,12 +342,94 @@ test('should count multiple users multiple transactions, different days', () => 
         'volume',
         normalize(fiveDollars.times(BigInt.fromI32(2)).toString()).toString()
     );
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '2');
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'transactions', '2');
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[2], 'transactions', '3');
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[3], 'transactions', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'sentTxs', '2');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'sentTxs', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'receivedTxs', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[2], 'sentTxs', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[2], 'receivedTxs', '2');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[3], 'receivedTxs', '1');
     assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '4');
     assert.fieldEquals('UBIDailyEntity', '0', 'reach', '3');
+    assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'transactions', '2');
+    assert.fieldEquals('UBIDailyEntity', dayId2.toString(), 'transactions', '2');
+    assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'reach', '2');
+    assert.fieldEquals('UBIDailyEntity', dayId2.toString(), 'reach', '2');
+    assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId1.toString()}`, 'transactions', '2');
+    assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId1.toString()}`, 'reach', '2');
+    assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId2.toString()}`, 'transactions', '1');
+    assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId2.toString()}`, 'reach', '1');
+    assert.fieldEquals('CommunityDailyEntity', `${communityAddress[1]}-${dayId2.toString()}`, 'transactions', '1');
+    assert.fieldEquals('CommunityDailyEntity', `${communityAddress[1]}-${dayId2.toString()}`, 'reach', '1');
+});
+
+test('should count multiple users multiple transactions, different days (2)', () => {
+    clearStore();
+
+    createDummyEntities();
+
+    // day 1
+
+    const day1Time = 1640716193;
+
+    const transferEvent1 = createTransferEvent(
+        beneficiaryAddress[0],
+        beneficiaryAddress[1],
+        fiveDollars.toString(),
+        cUSDAddress,
+        day1Time
+    );
+    const transferEvent2 = createTransferEvent(
+        beneficiaryAddress[0],
+        beneficiaryAddress[2],
+        fiveDollars.toString(),
+        cUSDAddress,
+        day1Time + 1
+    );
+
+    handleTransferAsset(transferEvent1);
+    handleTransferAsset(transferEvent2);
+
+    // day 2
+
+    const day2Time = 1640802593;
+
+    const transferEvent3 = createTransferEvent(
+        beneficiaryAddress[1],
+        beneficiaryAddress[2],
+        fiveDollars.toString(),
+        cUSDAddress,
+        day2Time
+    );
+
+    const transferEvent4 = createTransferEvent(
+        beneficiaryAddress[2],
+        beneficiaryAddress[0],
+        fiveDollars.toString(),
+        cUSDAddress,
+        day2Time + 1
+    );
+
+    handleTransferAsset(transferEvent3);
+    handleTransferAsset(transferEvent4);
+
+    const dayId1 = day1Time / 86400;
+    const dayId2 = day2Time / 86400;
+
+    assert.fieldEquals(
+        'UserTransactionsEntity',
+        beneficiaryAddress[0],
+        'volume',
+        normalize(fiveDollars.times(BigInt.fromI32(3)).toString()).toString()
+    );
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'sentTxs', '2');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'receivedTxs', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'sentTxs', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[1], 'receivedTxs', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[2], 'sentTxs', '1');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[2], 'receivedTxs', '2');
+    assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '4');
+    // probably should be 3
+    assert.fieldEquals('UBIDailyEntity', '0', 'reach', '2');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId2.toString(), 'transactions', '2');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'reach', '2');
@@ -414,7 +497,7 @@ test('should count multiple user transactions, different days', () => {
         'volume',
         normalize(fiveDollars.times(BigInt.fromI32(4)).toString()).toString()
     );
-    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'transactions', '4');
+    assert.fieldEquals('UserTransactionsEntity', beneficiaryAddress[0], 'sentTxs', '4');
     assert.fieldEquals('UBIDailyEntity', '0', 'transactions', '4');
     assert.fieldEquals('UBIDailyEntity', '0', 'reach', '1');
     assert.fieldEquals('UBIDailyEntity', dayId1.toString(), 'transactions', '2');

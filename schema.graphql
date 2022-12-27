@@ -409,9 +409,13 @@ type UserTransactionsEntity @entity {
   """
   volume: BigDecimal!
   """
-  number of transactions made by this user
+  number of transactions sent by this user
   """
-  transactions: Int!
+  sentTxs: Int!
+  """
+  number of transactions received by this user
+  """
+  receivedTxs: Int!
 }
 
 """

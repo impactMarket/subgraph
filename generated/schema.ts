@@ -1031,13 +1031,22 @@ export class UserTransactionsEntity extends Entity {
     this.set("volume", Value.fromBigDecimal(value));
   }
 
-  get transactions(): i32 {
-    let value = this.get("transactions");
+  get sentTxs(): i32 {
+    let value = this.get("sentTxs");
     return value!.toI32();
   }
 
-  set transactions(value: i32) {
-    this.set("transactions", Value.fromI32(value));
+  set sentTxs(value: i32) {
+    this.set("sentTxs", Value.fromI32(value));
+  }
+
+  get receivedTxs(): i32 {
+    let value = this.get("receivedTxs");
+    return value!.toI32();
+  }
+
+  set receivedTxs(value: i32) {
+    this.set("receivedTxs", Value.fromI32(value));
   }
 }
 
