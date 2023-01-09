@@ -29,6 +29,37 @@ dataSources:
           handler: handleCommunityMigrated
       file: ./src/mappings/communityAdmin.ts
   - kind: ethereum/contract
+    name: DepositRedirect
+    network: {{network}}
+    source:
+      address: "{{DepositRedirect}}"
+      abi: DepositRedirect
+      startBlock: {{startBlockV2}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - DepositAsset
+        - Depositor
+        - DepositRedirectDaily
+        - DepositRedirectToken
+      abis:
+        - name: DepositRedirect
+          file: ./abis/DepositRedirect.json
+      eventHandlers:
+        - event: TokenAdded(indexed address)
+          handler: handleTokenAdded
+        - event: TokenRemoved(indexed address)
+          handler: handleTokenRemoved
+        - event: DepositAdded(indexed address,indexed address,uint256)
+          handler: handleDepositAdded
+        - event: DonateInterest(indexed address,indexed address,uint256,uint256)
+          handler: handleDonateInterest
+        - event: Withdraw(indexed address,indexed address,uint256,uint256)
+          handler: handleWithdraw
+      file: ./src/mappings/depositRedirect.ts
+  - kind: ethereum/contract
     name: OldImpactMarket
     network: {{network}}
     source:

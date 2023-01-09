@@ -475,3 +475,44 @@ type ContributorEntity @entity {
   """
   lastPACTActivity: Int
 }
+
+# Deposit and Redirect
+
+type DepositAsset @entity {
+  """
+  {{ key }}-{{ tokenAddress }}-{{ dayId }} for Depositor
+  {{ key }}-{{ tokenAddress }}-{{ depositorAddress }} for DepositRedirectDaily
+  """
+  id: ID!
+  # asset deposited
+  asset: Bytes!
+  # amount deposited (normalized)
+  deposited: BigDecimal!
+  # interest donated (normalized)
+  interest: BigDecimal!
+}
+
+type Depositor @entity {
+  # depositor address
+  id: ID!
+  # deposited assets
+  assets: [DepositAsset!]!
+}
+
+type DepositRedirectDaily @entity {
+  # day id
+  id: ID!
+  # deposited assets
+  assets: [DepositAsset!]!
+}
+
+type DepositRedirectToken @entity {
+  # token address
+  id: ID!
+  # is token active
+  active: Boolean!
+  # amount deposited (normalized)
+  deposited: BigDecimal!
+  # interest donated (normalized)
+  interest: BigDecimal!
+}

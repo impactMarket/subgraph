@@ -29,6 +29,11 @@ const ambassadorAddress: string[] = [
     '0x07cec7b5c997720f7351718400664beeb02b747a'
 ];
 
+const CELOAddress = '0xf194afdf50b03e69bd7d057c1aa9e10c9954e4c9';
+const cEURAddress = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f';
+const cREALAddress = '0xe4d517785d091d3c54818832db6094bcc2744545';
+const cUSDAddress = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1';
+
 const fiveCents = BigInt.fromString('5').times(BigInt.fromI32(10).pow(16));
 const toToken = (amount: string): BigInt => BigInt.fromString(amount).times(BigInt.fromI32(10).pow(18));
 const normalize = (amount: string): BigDecimal =>
@@ -64,6 +69,10 @@ export {
     userAddress,
     communityProps,
     fiveCents,
+    CELOAddress,
+    cEURAddress,
+    cREALAddress,
+    cUSDAddress,
     toToken,
     normalize
 };
