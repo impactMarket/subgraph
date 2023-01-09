@@ -6,7 +6,7 @@ orbs:
 jobs:
   test:
     docker:
-      - image: cimg/node:16.13.0
+      - image: cimg/node:18.12.1
     steps:
       - checkout
       - run: yarn
@@ -14,7 +14,7 @@ jobs:
       - run: yarn test
   lint:
     docker:
-      - image: cimg/node:16.13.0
+      - image: cimg/node:18.12.1
     steps:
       - checkout
       - run: yarn
