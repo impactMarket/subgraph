@@ -12,8 +12,8 @@ export function handleTokenAdded(event: TokenAdded): void {
         token.active = true;
         token.deposited = BigDecimal.zero();
         token.interest = BigDecimal.zero();
+        token.save();
     }
-    token.save();
 }
 
 export function handleTokenRemoved(event: TokenRemoved): void {
@@ -89,17 +89,8 @@ export function handleDepositAdded(event: DepositAdded): void {
 
 export function handleWithdraw(event: Withdraw): void {
     // validate depositor asset entity
-    const depositorDepositAssetId = `depositor-${event.params.depositorAddress.toHex()}`;
+    const depositorDepositAssetId = `depositor-${event.params.token.toHex()}-${event.params.depositorAddress.toHex()}`;
     const depositorAsset = DepositAsset.load(depositorDepositAssetId)!;
-
-    // validate depositRedirectDaily entity
-    const depositRedirectDailyId = `${event.block.timestamp.toI32() / 86400}`;
-    let depositRedirectDaily = DepositRedirectDaily.load(depositRedirectDailyId);
-
-    if (!depositRedirectDaily) {
-        depositRedirectDaily = new DepositRedirectDaily(depositRedirectDailyId);
-        depositRedirectDaily.assets = new Array<string>();
-    }
 
     // validate depositRedirectDaily asset entity
     const depositRedirectDailyAssetId = `depositRedirectDaily-${event.params.token.toHex()}-${event.block.timestamp.toI32() / 86400}`;
@@ -110,6 +101,15 @@ export function handleWithdraw(event: Withdraw): void {
         depositRedirectDailyAsset.asset = event.params.token;
         depositRedirectDailyAsset.deposited = BigDecimal.zero();
         depositRedirectDailyAsset.interest = BigDecimal.zero();
+
+        // validate depositRedirectDaily entity
+        const depositRedirectDailyId = `${event.block.timestamp.toI32() / 86400}`;
+        let depositRedirectDaily = DepositRedirectDaily.load(depositRedirectDailyId);
+
+        if (!depositRedirectDaily) {
+            depositRedirectDaily = new DepositRedirectDaily(depositRedirectDailyId);
+            depositRedirectDaily.assets = new Array<string>();
+        }
 
         const depositRedirectDailyAssets = depositRedirectDaily.assets;
 
@@ -124,6 +124,10 @@ export function handleWithdraw(event: Withdraw): void {
     depositorAsset.deposited = depositorAsset.deposited.minus(normalize(event.params.amount.toString()));
     depositRedirectDailyAsset.deposited = depositRedirectDailyAsset.deposited.minus(normalize(event.params.amount.toString()));
     depositRedirectToken.deposited = depositRedirectToken.deposited.minus(normalize(event.params.amount.toString()));
+
+    depositorAsset.interest = depositorAsset.interest.plus(normalize(event.params.interest.toString()));
+    depositRedirectDailyAsset.interest = depositRedirectDailyAsset.interest.plus(normalize(event.params.interest.toString()));
+    depositRedirectToken.interest = depositRedirectToken.interest.plus(normalize(event.params.interest.toString()));
     
     depositorAsset.save();
     depositRedirectDailyAsset.save();
@@ -132,17 +136,8 @@ export function handleWithdraw(event: Withdraw): void {
 
 export function handleDonateInterest(event: DonateInterest): void {
     // validate depositor asset entity
-    const depositorDepositAssetId = `depositor-${event.params.depositorAddress.toHex()}`;
+    const depositorDepositAssetId = `depositor-${event.params.token.toHex()}-${event.params.depositorAddress.toHex()}`;
     const depositorAsset = DepositAsset.load(depositorDepositAssetId)!;
-
-    // validate depositRedirectDaily entity
-    const depositRedirectDailyId = `${event.block.timestamp.toI32() / 86400}`;
-    let depositRedirectDaily = DepositRedirectDaily.load(depositRedirectDailyId);
-
-    if (!depositRedirectDaily) {
-        depositRedirectDaily = new DepositRedirectDaily(depositRedirectDailyId);
-        depositRedirectDaily.assets = new Array<string>();
-    }
 
     // validate depositRedirectDaily asset entity
     const depositRedirectDailyAssetId = `depositRedirectDaily-${event.params.token.toHex()}-${event.block.timestamp.toI32() / 86400}`;
@@ -154,6 +149,15 @@ export function handleDonateInterest(event: DonateInterest): void {
         depositRedirectDailyAsset.deposited = BigDecimal.zero();
         depositRedirectDailyAsset.interest = BigDecimal.zero();
 
+        // validate depositRedirectDaily entity
+        const depositRedirectDailyId = `${event.block.timestamp.toI32() / 86400}`;
+        let depositRedirectDaily = DepositRedirectDaily.load(depositRedirectDailyId);
+
+        if (!depositRedirectDaily) {
+            depositRedirectDaily = new DepositRedirectDaily(depositRedirectDailyId);
+            depositRedirectDaily.assets = new Array<string>();
+        }
+
         const depositRedirectDailyAssets = depositRedirectDaily.assets;
 
         depositRedirectDailyAssets.push(depositRedirectDailyAssetId);
@@ -164,9 +168,9 @@ export function handleDonateInterest(event: DonateInterest): void {
     // validate depositRedirectToken asset entity
     const depositRedirectToken = DepositRedirectToken.load(event.params.token.toHex())!;
 
-    depositorAsset.interest = depositorAsset.interest.plus(normalize(event.params.amount.toString()));
-    depositRedirectDailyAsset.interest = depositRedirectDailyAsset.interest.plus(normalize(event.params.amount.toString()));
-    depositRedirectToken.interest = depositRedirectToken.interest.plus(normalize(event.params.amount.toString()));
+    depositorAsset.interest = depositorAsset.interest.plus(normalize(event.params.interest.toString()));
+    depositRedirectDailyAsset.interest = depositRedirectDailyAsset.interest.plus(normalize(event.params.interest.toString()));
+    depositRedirectToken.interest = depositRedirectToken.interest.plus(normalize(event.params.interest.toString()));
     
     depositorAsset.save();
     depositRedirectDailyAsset.save();
