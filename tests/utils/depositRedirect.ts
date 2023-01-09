@@ -10,25 +10,26 @@ import {
     Withdraw
 } from '../../generated/DepositRedirect/DepositRedirect';
 
-
-export function createTokenAddedEvent(
-    tokenAddress: string
-): TokenAdded {
+export function createTokenAddedEvent(tokenAddress: string): TokenAdded {
     const tokenAddedEvent = changetype<TokenAdded>(newMockEvent());
 
-    const tokenAddressParam = new ethereum.EventParam('tokenAddress', ethereum.Value.fromAddress(Address.fromString(tokenAddress)));
+    const tokenAddressParam = new ethereum.EventParam(
+        'tokenAddress',
+        ethereum.Value.fromAddress(Address.fromString(tokenAddress))
+    );
 
     tokenAddedEvent.parameters.push(tokenAddressParam);
 
     return tokenAddedEvent;
 }
 
-export function createTokenRemovedEvent(
-    tokenAddress: string
-): TokenRemoved {
+export function createTokenRemovedEvent(tokenAddress: string): TokenRemoved {
     const tokenRemovedEvent = changetype<TokenRemoved>(newMockEvent());
 
-    const tokenAddressParam = new ethereum.EventParam('tokenAddress', ethereum.Value.fromAddress(Address.fromString(tokenAddress)));
+    const tokenAddressParam = new ethereum.EventParam(
+        'tokenAddress',
+        ethereum.Value.fromAddress(Address.fromString(tokenAddress))
+    );
 
     tokenRemovedEvent.parameters.push(tokenAddressParam);
 
@@ -45,7 +46,10 @@ export function createDepositAddedEvent(
 
     depositAddedEvent.block.timestamp = BigInt.fromI32(timestamp);
 
-    const depositorAddressParam = new ethereum.EventParam('depositorAddress', ethereum.Value.fromAddress(Address.fromString(depositorAddress)));
+    const depositorAddressParam = new ethereum.EventParam(
+        'depositorAddress',
+        ethereum.Value.fromAddress(Address.fromString(depositorAddress))
+    );
     const tokenParam = new ethereum.EventParam('token', ethereum.Value.fromAddress(Address.fromString(token)));
     const amountParam = new ethereum.EventParam('amount', ethereum.Value.fromUnsignedBigInt(amount));
 
@@ -64,10 +68,13 @@ export function createDonateInterestEvent(
     timestamp: i32 = 1640716193
 ): DonateInterest {
     const donateInterestEvent = changetype<DonateInterest>(newMockEvent());
-    
+
     donateInterestEvent.block.timestamp = BigInt.fromI32(timestamp);
 
-    const depositorAddressParam = new ethereum.EventParam('depositorAddress', ethereum.Value.fromAddress(Address.fromString(depositorAddress)));
+    const depositorAddressParam = new ethereum.EventParam(
+        'depositorAddress',
+        ethereum.Value.fromAddress(Address.fromString(depositorAddress))
+    );
     const tokenParam = new ethereum.EventParam('token', ethereum.Value.fromAddress(Address.fromString(token)));
     const amountParam = new ethereum.EventParam('amount', ethereum.Value.fromUnsignedBigInt(amount));
     const interestParam = new ethereum.EventParam('interest', ethereum.Value.fromUnsignedBigInt(interest));
@@ -88,10 +95,13 @@ export function createWithdrawEvent(
     timestamp: i32 = 1640716193
 ): Withdraw {
     const withdrawEvent = changetype<Withdraw>(newMockEvent());
-    
+
     withdrawEvent.block.timestamp = BigInt.fromI32(timestamp);
 
-    const depositorAddressParam = new ethereum.EventParam('depositorAddress', ethereum.Value.fromAddress(Address.fromString(depositorAddress)));
+    const depositorAddressParam = new ethereum.EventParam(
+        'depositorAddress',
+        ethereum.Value.fromAddress(Address.fromString(depositorAddress))
+    );
     const tokenParam = new ethereum.EventParam('token', ethereum.Value.fromAddress(Address.fromString(token)));
     const amountParam = new ethereum.EventParam('amount', ethereum.Value.fromUnsignedBigInt(amount));
     const interestParam = new ethereum.EventParam('interest', ethereum.Value.fromUnsignedBigInt(interest));
@@ -103,4 +113,3 @@ export function createWithdrawEvent(
 
     return withdrawEvent;
 }
-
