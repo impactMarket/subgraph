@@ -19,6 +19,7 @@ export function handleOldCommunityAdded(event: OldCommunityAdded): void {
         BigInt.fromI32(0),
         BigInt.fromI32(0),
         event.transaction.hash.toHex(),
+        event.block.number,
         event.block.timestamp
     );
     // create community entry

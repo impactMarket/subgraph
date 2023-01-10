@@ -218,6 +218,15 @@ export class CommunityEntity extends Entity {
     this.set("beneficiaries", Value.fromI32(value));
   }
 
+  get maxBeneficiaries(): i32 {
+    let value = this.get("maxBeneficiaries");
+    return value!.toI32();
+  }
+
+  set maxBeneficiaries(value: i32) {
+    this.set("maxBeneficiaries", Value.fromI32(value));
+  }
+
   get removedBeneficiaries(): i32 {
     let value = this.get("removedBeneficiaries");
     return value!.toI32();

@@ -7,7 +7,7 @@ module.exports = {
     },
     extends: ['impact-market/node'],
     rules: {
-        'max-params': ['error', 12],
+        'max-params': ['error', 13],
         'no-underscore-dangle': 'off',
         'prefer-destructuring': 'off'
     }

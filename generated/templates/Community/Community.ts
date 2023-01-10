@@ -324,6 +324,28 @@ export class ManagerRemoved__Params {
   }
 }
 
+export class MaxBeneficiariesUpdated extends ethereum.Event {
+  get params(): MaxBeneficiariesUpdated__Params {
+    return new MaxBeneficiariesUpdated__Params(this);
+  }
+}
+
+export class MaxBeneficiariesUpdated__Params {
+  _event: MaxBeneficiariesUpdated;
+
+  constructor(event: MaxBeneficiariesUpdated) {
+    this._event = event;
+  }
+
+  get oldMaxBeneficiaries(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get newMaxBeneficiaries(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class Community extends ethereum.SmartContract {
   static bind(address: Address): Community {
     return new Community("Community", address);

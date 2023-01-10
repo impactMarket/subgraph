@@ -73,6 +73,7 @@ export function generiHandleCommunityAdded(
     _minTranche: BigInt,
     _maxTranche: BigInt,
     _hash: string,
+    _blockNumber: BigInt,
     _blockTimestamp: BigInt,
     _firstManagerFunded: boolean = false
 ): void {
@@ -92,6 +93,11 @@ export function generiHandleCommunityAdded(
     community.baseInterval = _baseInterval;
     community.incrementInterval = _incrementInterval;
     community.beneficiaries = 0;
+    if (_blockNumber.toI32() >= 13825990) {
+        community.maxBeneficiaries = 50;
+    } else {
+        community.maxBeneficiaries = 0;
+    }
     community.removedBeneficiaries = 0;
     community.lockedBeneficiaries = 0;
     community.managers = 0;

@@ -11,7 +11,8 @@ import {
     CommunityParamsUpdated,
     CommunityUnlocked,
     ManagerAdded,
-    ManagerRemoved
+    ManagerRemoved,
+    MaxBeneficiariesUpdated
 } from '../../generated/templates/Community/Community';
 import { BeneficiaryEntity, CommunityEntity, ManagerEntity } from '../../generated/schema';
 import {
@@ -158,6 +159,15 @@ export function handleClaimAmountUpdated(event: ClaimAmountUpdated): void {
 
     if (community) {
         community.claimAmount = normalize(event.params.newClaimAmount.toString());
+        community.save();
+    }
+}
+
+export function handleMaxBeneficiariesUpdated(event: MaxBeneficiariesUpdated): void {
+    const community = CommunityEntity.load(event.address.toHex());
+
+    if (community) {
+        community.maxBeneficiaries = event.params.newMaxBeneficiaries.toI32();
         community.save();
     }
 }

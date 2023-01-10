@@ -76,6 +76,10 @@ type CommunityEntity @entity {
   """
   beneficiaries: Int!
   """
+  max beneficiaries
+  """
+  maxBeneficiaries: Int!
+  """
   total removed beneficiaries
   """
   removedBeneficiaries: Int!
