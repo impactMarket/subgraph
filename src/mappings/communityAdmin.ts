@@ -117,6 +117,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.baseInterval = previousCommunity.baseInterval;
         community.incrementInterval = previousCommunity.incrementInterval;
         community.beneficiaries = previousCommunity.beneficiaries;
+        community.maxBeneficiaries = previousCommunity.maxBeneficiaries;
         community.removedBeneficiaries = previousCommunity.removedBeneficiaries;
         community.managers = totalNewManagers;
         community.removedManagers = previousCommunity.removedManagers;

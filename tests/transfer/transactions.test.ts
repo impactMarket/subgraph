@@ -32,6 +32,7 @@ function createDummyEntities(): void {
     community.baseInterval = 17280;
     community.incrementInterval = 12;
     community.beneficiaries = 2;
+    community.maxBeneficiaries = 5;
     community.removedBeneficiaries = 0;
     community.lockedBeneficiaries = 0;
     community.managers = 1;
@@ -97,6 +98,7 @@ function createDummyEntities(): void {
     community1.baseInterval = 17280;
     community1.incrementInterval = 12;
     community1.beneficiaries = 2;
+    community1.maxBeneficiaries = 5;
     community1.removedBeneficiaries = 0;
     community1.lockedBeneficiaries = 0;
     community1.managers = 1;
