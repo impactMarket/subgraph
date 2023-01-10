@@ -287,5 +287,24 @@
         ],
         "name": "ManagerRemoved",
         "type": "event"
-    }
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "oldMaxBeneficiaries",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "newMaxBeneficiaries",
+            "type": "uint256"
+          }
+        ],
+        "name": "MaxBeneficiariesUpdated",
+        "type": "event"
+      }
 ]

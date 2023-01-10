@@ -19,6 +19,7 @@ export function handleCommunityAdded(event: CommunityAdded): void {
         event.params.minTranche,
         event.params.maxTranche,
         event.transaction.hash.toHex(),
+        event.block.number,
         event.block.timestamp,
         true
     );

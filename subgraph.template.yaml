@@ -218,6 +218,8 @@ templates:
           handler: handleCommunityParamsUpdated
         - event: ClaimAmountUpdated(uint256,uint256)
           handler: handleClaimAmountUpdated
+        - event: MaxBeneficiariesUpdated(uint256,uint256)
+          handler: handleMaxBeneficiariesUpdated
       file: ./src/mappings/community.ts
   - name: OldCommunity
     kind: ethereum/contract
