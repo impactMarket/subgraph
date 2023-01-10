@@ -515,12 +515,7 @@ test('should not count user transactions if none parties are a beneficiary', () 
 
     createDummyEntities();
 
-    const transferEvent1 = createTransferEvent(
-        userAddress[0],
-        userAddress[1],
-        fiveDollars.toString(),
-        cUSDAddress
-    );
+    const transferEvent1 = createTransferEvent(userAddress[0], userAddress[1], fiveDollars.toString(), cUSDAddress);
 
     handleTransferAsset(transferEvent1);
 

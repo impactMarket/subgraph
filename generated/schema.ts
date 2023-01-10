@@ -1220,3 +1220,207 @@ export class ContributorEntity extends Entity {
     this.set("lastPACTActivity", Value.fromI32(value));
   }
 }
+
+export class DepositAsset extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DepositAsset entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DepositAsset must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("DepositAsset", id.toString(), this);
+    }
+  }
+
+  static load(id: string): DepositAsset | null {
+    return changetype<DepositAsset | null>(store.get("DepositAsset", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get asset(): Bytes {
+    let value = this.get("asset");
+    return value!.toBytes();
+  }
+
+  set asset(value: Bytes) {
+    this.set("asset", Value.fromBytes(value));
+  }
+
+  get deposited(): BigDecimal {
+    let value = this.get("deposited");
+    return value!.toBigDecimal();
+  }
+
+  set deposited(value: BigDecimal) {
+    this.set("deposited", Value.fromBigDecimal(value));
+  }
+
+  get interest(): BigDecimal {
+    let value = this.get("interest");
+    return value!.toBigDecimal();
+  }
+
+  set interest(value: BigDecimal) {
+    this.set("interest", Value.fromBigDecimal(value));
+  }
+}
+
+export class Depositor extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Depositor entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Depositor must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Depositor", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Depositor | null {
+    return changetype<Depositor | null>(store.get("Depositor", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get assets(): Array<string> {
+    let value = this.get("assets");
+    return value!.toStringArray();
+  }
+
+  set assets(value: Array<string>) {
+    this.set("assets", Value.fromStringArray(value));
+  }
+}
+
+export class DepositRedirectDaily extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DepositRedirectDaily entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DepositRedirectDaily must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("DepositRedirectDaily", id.toString(), this);
+    }
+  }
+
+  static load(id: string): DepositRedirectDaily | null {
+    return changetype<DepositRedirectDaily | null>(
+      store.get("DepositRedirectDaily", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get assets(): Array<string> {
+    let value = this.get("assets");
+    return value!.toStringArray();
+  }
+
+  set assets(value: Array<string>) {
+    this.set("assets", Value.fromStringArray(value));
+  }
+}
+
+export class DepositRedirectToken extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DepositRedirectToken entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DepositRedirectToken must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("DepositRedirectToken", id.toString(), this);
+    }
+  }
+
+  static load(id: string): DepositRedirectToken | null {
+    return changetype<DepositRedirectToken | null>(
+      store.get("DepositRedirectToken", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get active(): boolean {
+    let value = this.get("active");
+    return value!.toBoolean();
+  }
+
+  set active(value: boolean) {
+    this.set("active", Value.fromBoolean(value));
+  }
+
+  get deposited(): BigDecimal {
+    let value = this.get("deposited");
+    return value!.toBigDecimal();
+  }
+
+  set deposited(value: BigDecimal) {
+    this.set("deposited", Value.fromBigDecimal(value));
+  }
+
+  get interest(): BigDecimal {
+    let value = this.get("interest");
+    return value!.toBigDecimal();
+  }
+
+  set interest(value: BigDecimal) {
+    this.set("interest", Value.fromBigDecimal(value));
+  }
+}

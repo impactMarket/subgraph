@@ -1,5 +1,5 @@
-import { BigInt, log } from '@graphprotocol/graph-ts';
-import { assert, clearStore, logStore, test } from 'matchstick-as/assembly/index';
+import { BigInt } from '@graphprotocol/graph-ts';
+import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
 import { cUSDAddress, treasuryAddress } from '../../src/common/addresses';
 import { communityAddress, communityProps, managerAddress, toToken, userAddress } from '../utils/constants';
@@ -103,18 +103,8 @@ test('contribute cusd to treasury', () => {
 
     handleCommunityAdded(community);
 
-    const transferEvent1 = createTransferEvent(
-        userAddress[0],
-        treasuryAddress,
-        fiveDollars.toString(),
-        cUSDAddress
-    );
-    const transferEvent2 = createTransferEvent(
-        userAddress[1],
-        treasuryAddress,
-        fiveDollars.toString(),
-        cUSDAddress
-    );
+    const transferEvent1 = createTransferEvent(userAddress[0], treasuryAddress, fiveDollars.toString(), cUSDAddress);
+    const transferEvent2 = createTransferEvent(userAddress[1], treasuryAddress, fiveDollars.toString(), cUSDAddress);
 
     handleTransferAsset(transferEvent1);
     handleTransferAsset(transferEvent2);
@@ -155,20 +145,10 @@ test('contribute cusd to treasury and community', () => {
     handleCommunityAdded(community);
 
     // to treasury
-    const transferEvent1 = createTransferEvent(
-        userAddress[0],
-        treasuryAddress,
-        fiveDollars.toString(),
-        cUSDAddress
-    );
+    const transferEvent1 = createTransferEvent(userAddress[0], treasuryAddress, fiveDollars.toString(), cUSDAddress);
 
     // to treasury
-    const transferEvent2 = createTransferEvent(
-        userAddress[1],
-        treasuryAddress,
-        fiveDollars.toString(),
-        cUSDAddress
-    );
+    const transferEvent2 = createTransferEvent(userAddress[1], treasuryAddress, fiveDollars.toString(), cUSDAddress);
 
     // to community
     const transferEvent3 = createTransferEvent(
@@ -467,12 +447,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'contributions',
         `[${cUSDAddress}-${communityAddress[0]}-${dayId1}]`
     );
-    assert.fieldEquals(
-        'UBIDailyEntity',
-        `${dayId1}`,
-        'contributions',
-        `[${cUSDAddress}-${dayId1}]`
-    );
+    assert.fieldEquals('UBIDailyEntity', `${dayId1}`, 'contributions', `[${cUSDAddress}-${dayId1}]`);
     assert.fieldEquals(
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId1}`,
@@ -510,12 +485,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'contributions',
         `[${cUSDAddress}-${communityAddress[0]}-${dayId2}]`
     );
-    assert.fieldEquals(
-        'UBIDailyEntity',
-        `${dayId2}`,
-        'contributions',
-        `[${cUSDAddress}-${dayId2}]`
-    );
+    assert.fieldEquals('UBIDailyEntity', `${dayId2}`, 'contributions', `[${cUSDAddress}-${dayId2}]`);
     assert.fieldEquals(
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId2}`,
@@ -553,12 +523,7 @@ test('contribute cusd to treasury and community over some days', () => {
         'contributions',
         `[${cUSDAddress}-${communityAddress[0]}-${dayId3}]`
     );
-    assert.fieldEquals(
-        'UBIDailyEntity',
-        `${dayId3}`,
-        'contributions',
-        `[${cUSDAddress}-${dayId3}]`
-    );
+    assert.fieldEquals('UBIDailyEntity', `${dayId3}`, 'contributions', `[${cUSDAddress}-${dayId3}]`);
     assert.fieldEquals(
         'CommunityDailyEntity',
         `${communityAddress[0]}-${dayId3}`,
@@ -617,13 +582,8 @@ test('contribute cusd to community and update contributor entities', () => {
     handleTransferAsset(transferEvent1);
     handleTransferAsset(transferEvent2);
 
-    assert.fieldEquals(
-        'ContributorEntity',
-        userAddress[0],
-        'contributions',
-        `[${cUSDAddress}-${userAddress[0]}]`
-    );
-    
+    assert.fieldEquals('ContributorEntity', userAddress[0], 'contributions', `[${cUSDAddress}-${userAddress[0]}]`);
+
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
 
     const transferEvent3 = createTransferEvent(
@@ -636,12 +596,7 @@ test('contribute cusd to community and update contributor entities', () => {
 
     handleTransferAsset(transferEvent3);
 
-    assert.fieldEquals(
-        'ContributorEntity',
-        userAddress[1],
-        'contributions',
-        `[${cUSDAddress}-${userAddress[1]}]`
-    );
+    assert.fieldEquals('ContributorEntity', userAddress[1], 'contributions', `[${cUSDAddress}-${userAddress[1]}]`);
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'contributors', '2');
     assert.fieldEquals('CommunityDailyEntity', `${communityAddress[0]}-${dayId}`, 'contributors', '2');
     assert.fieldEquals(
@@ -684,12 +639,7 @@ test('contribute cusd to community and update contributor entities, many communi
     handleTransferAsset(transferEvent2);
     handleTransferAsset(transferEvent3);
 
-    assert.fieldEquals(
-        'ContributorEntity',
-        userAddress[0],
-        'contributions',
-        `[${cUSDAddress}-${userAddress[0]}]`
-    );
+    assert.fieldEquals('ContributorEntity', userAddress[0], 'contributions', `[${cUSDAddress}-${userAddress[0]}]`);
 
     const transferEvent4 = createTransferEvent(
         userAddress[1],
@@ -700,12 +650,7 @@ test('contribute cusd to community and update contributor entities, many communi
 
     handleTransferAsset(transferEvent4);
 
-    assert.fieldEquals(
-        'ContributorEntity',
-        userAddress[1],
-        'contributions',
-        `[${cUSDAddress}-${userAddress[1]}]`
-    );
+    assert.fieldEquals('ContributorEntity', userAddress[1], 'contributions', `[${cUSDAddress}-${userAddress[1]}]`);
     assert.fieldEquals(
         'AssetContributions',
         `${cUSDAddress}-${userAddress[1]}`,
