@@ -2,6 +2,7 @@
     "startBlockAlpha": 2627648,
     "startBlockV1": 10494981,
     "startBlockMultiCurrency": 15775207,
+    "startBlockV2": 15775207,
     "network": "celo",
     "Treasury": "0xa302dd52a4a85e6778E6A64A0E5EB0e8C76463d6",
     "CommunityAdmin": "0xd61c407c3A00dFD8C355973f7a14c55ebaFDf6F9",
@@ -11,5 +12,6 @@
     "cREAL": "0xe8537a3d056DA446677B9E9d6c5dB704EaAb4787",
     "AttestationProxy": "0xd787384d91a7ffac85d51c63ef71580df6c677b7",
     "PACT": "0x46c9757C5497c5B1f2eb73aE79b6B67D119B0B58",
-    "Staking": "0x1751e740379FC08b7f0eF6d49183fc0931Bd8179"
+    "Staking": "0x1751e740379FC08b7f0eF6d49183fc0931Bd8179",
+    "DepositRedirect": "0x0A547bdE3FB47Bd59A78B0A285dB07C3Fce8b8B6"
 }
