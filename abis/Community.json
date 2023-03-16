@@ -291,20 +291,58 @@
     {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "oldMaxBeneficiaries",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "newMaxBeneficiaries",
-            "type": "uint256"
-          }
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "oldMaxBeneficiaries",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "newMaxBeneficiaries",
+                "type": "uint256"
+            }
         ],
         "name": "MaxBeneficiariesUpdated",
         "type": "event"
-      }
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "manager",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "beneficiary",
+                "type": "address"
+            }
+        ],
+        "name": "BeneficiaryCopied",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "beneficiary1",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "beneficiary2",
+                "type": "address"
+            }
+        ],
+        "name": "BeneficiaryAddressChanged",
+        "type": "event"
+    }
 ]

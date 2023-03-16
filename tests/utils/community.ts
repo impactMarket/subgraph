@@ -7,7 +7,12 @@ import {
     CommunityLocked,
     CommunityUnlocked
 } from '../../generated/templates/Community/Community';
-import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
+import {
+    CommunityAdded,
+    CommunityCopied,
+    CommunityMigrated,
+    CommunityRemoved
+} from '../../generated/CommunityAdmin/CommunityAdmin';
 import { CommunityEdited } from '../../generated/templates/OldCommunity/OldCommunity';
 
 export function createCommunityAddedEvent(
@@ -245,4 +250,23 @@ export function createCommunityUnlockedEvent(ambassadorEntity: string, community
     communityUnlockedEvent.parameters.push(ambassadorEntityParam);
 
     return communityUnlockedEvent;
+}
+
+export function createCommunityCopiedEvent(originalCommunity: string, copyCommunity: string): CommunityCopied {
+    const communityCopiedEvent = changetype<CommunityCopied>(newMockEvent());
+
+    communityCopiedEvent.parameters = [];
+    const originalCommunityParam = new ethereum.EventParam(
+        'originalCommunity',
+        ethereum.Value.fromAddress(Address.fromString(originalCommunity))
+    );
+    const copyCommunityParam = new ethereum.EventParam(
+        'copyCommunity',
+        ethereum.Value.fromAddress(Address.fromString(copyCommunity))
+    );
+
+    communityCopiedEvent.parameters.push(originalCommunityParam);
+    communityCopiedEvent.parameters.push(copyCommunityParam);
+
+    return communityCopiedEvent;
 }

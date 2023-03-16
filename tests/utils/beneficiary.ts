@@ -4,7 +4,9 @@ import { newMockEvent } from 'matchstick-as/assembly/defaults';
 
 import {
     BeneficiaryAdded,
+    BeneficiaryAddressChanged,
     BeneficiaryClaim,
+    BeneficiaryCopied,
     BeneficiaryJoined,
     BeneficiaryLocked,
     BeneficiaryRemoved,
@@ -138,4 +140,49 @@ export function createBeneficiaryUnlockedEvent(
     beneficiaryUnlockedEvent.parameters.push(beneficiaryParam);
 
     return beneficiaryUnlockedEvent;
+}
+
+export function createBeneficiaryAddressChangedEvent(
+    beneficiary1: string,
+    beneficiary2: string,
+    communityAddress: string
+): BeneficiaryAddressChanged {
+    const beneficiaryAddressChangedEvent = changetype<BeneficiaryAddressChanged>(newMockEvent());
+
+    beneficiaryAddressChangedEvent.parameters = [];
+    beneficiaryAddressChangedEvent.address = Address.fromString(communityAddress);
+    const beneficiary1Param = new ethereum.EventParam(
+        'beneficiary1',
+        ethereum.Value.fromAddress(Address.fromString(beneficiary1))
+    );
+    const beneficiary2Param = new ethereum.EventParam(
+        'beneficiary2',
+        ethereum.Value.fromAddress(Address.fromString(beneficiary2))
+    );
+
+    beneficiaryAddressChangedEvent.parameters.push(beneficiary1Param);
+    beneficiaryAddressChangedEvent.parameters.push(beneficiary2Param);
+
+    return beneficiaryAddressChangedEvent;
+}
+
+export function createBeneficiaryCopiedEvent(
+    manager: string,
+    beneficiary: string,
+    communityAddress: string
+): BeneficiaryCopied {
+    const beneficiaryCopiedEvent = changetype<BeneficiaryCopied>(newMockEvent());
+
+    beneficiaryCopiedEvent.parameters = [];
+    beneficiaryCopiedEvent.address = Address.fromString(communityAddress);
+    const managerParam = new ethereum.EventParam('manager', ethereum.Value.fromAddress(Address.fromString(manager)));
+    const beneficiaryParam = new ethereum.EventParam(
+        'beneficiary',
+        ethereum.Value.fromAddress(Address.fromString(beneficiary))
+    );
+
+    beneficiaryCopiedEvent.parameters.push(managerParam);
+    beneficiaryCopiedEvent.parameters.push(beneficiaryParam);
+
+    return beneficiaryCopiedEvent;
 }

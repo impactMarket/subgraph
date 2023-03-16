@@ -36,13 +36,13 @@ type CommunityEntity @entity {
   """
   state: Int!
   """
-  address of the previous community, if migrated. Might not have a previous
+  address of the previous community, if migrated/copied.
   """
   previous: Bytes
   """
-  address of the community it was migrated to, if migrated. Might not have a been migrated
+  address of the community it was migrated/copied to
   """
-  migrated: Bytes
+  next: Bytes
   """
   UBI parameter claim amount (normalized)
   """

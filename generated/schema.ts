@@ -129,8 +129,8 @@ export class CommunityEntity extends Entity {
     }
   }
 
-  get migrated(): Bytes | null {
-    let value = this.get("migrated");
+  get next(): Bytes | null {
+    let value = this.get("next");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -138,11 +138,11 @@ export class CommunityEntity extends Entity {
     }
   }
 
-  set migrated(value: Bytes | null) {
+  set next(value: Bytes | null) {
     if (!value) {
-      this.unset("migrated");
+      this.unset("next");
     } else {
-      this.set("migrated", Value.fromBytes(<Bytes>value));
+      this.set("next", Value.fromBytes(<Bytes>value));
     }
   }
 

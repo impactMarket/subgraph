@@ -2,7 +2,12 @@ import { Address, BigDecimal, BigInt, store } from '@graphprotocol/graph-ts';
 
 import { AssetContributions, CommunityDailyEntity, CommunityEntity, UBIDailyEntity } from '../../generated/schema';
 import { Community } from '../../generated/templates';
-import { CommunityAdded, CommunityMigrated, CommunityRemoved } from '../../generated/CommunityAdmin/CommunityAdmin';
+import {
+    CommunityAdded,
+    CommunityCopied,
+    CommunityMigrated,
+    CommunityRemoved
+} from '../../generated/CommunityAdmin/CommunityAdmin';
 import { generiHandleCommunityAdded, generiHandleCommunityRemoved } from '../common/community';
 import { genericHandleManagerAdded } from '../common/manager';
 import { loadOrCreateDailyUbi } from '../common/ubi';
@@ -100,7 +105,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         const totalNewManagers = event.params.managers.length;
 
         // update previous community
-        previousCommunity.migrated = event.params.communityAddress;
+        previousCommunity.next = event.params.communityAddress;
         // create new community
         community.startDayId = previousCommunity.startDayId;
         community.state = previousCommunity.state;
@@ -179,4 +184,46 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.save();
         previousCommunity.save();
     }
+}
+
+export function handleCommunityCopied(event: CommunityCopied): void {
+    const originalCommunity = CommunityEntity.load(event.params.originalCommunity.toHex())!;
+    const newCommunity = new CommunityEntity(event.params.copyCommunity.toHex());
+
+    newCommunity.merge([originalCommunity]);
+
+    originalCommunity.next = event.params.copyCommunity;
+
+    newCommunity.id = event.params.copyCommunity.toHex();
+    newCommunity.previous = event.params.originalCommunity;
+    newCommunity.startDayId = event.block.timestamp.toI32() / 86400;
+    newCommunity.beneficiaries = 0;
+    newCommunity.removedBeneficiaries = 0;
+    newCommunity.lockedBeneficiaries = 0;
+    newCommunity.managers = 0;
+    newCommunity.removedManagers = 0;
+    newCommunity.claimed = BigDecimal.zero();
+    newCommunity.claims = 0;
+    newCommunity.contributed = BigDecimal.zero();
+    newCommunity.contributors = 0;
+    newCommunity.contributions = new Array<string>();
+    newCommunity.managerList = new Array<string>();
+    newCommunity.estimatedFunds = BigDecimal.zero();
+    newCommunity.lastActivity = event.block.timestamp.toI32();
+    // remaining properties are the same
+    // newCommunity.state = originalCommunity.state;
+    // newCommunity.previous = event.params.originalCommunity;
+    // newCommunity.claimAmount = originalCommunity.claimAmount;
+    // newCommunity.originalClaimAmount = originalCommunity.originalClaimAmount;
+    // newCommunity.maxClaim = originalCommunity.maxClaim;
+    // newCommunity.maxTotalClaim = originalCommunity.maxTotalClaim;
+    // newCommunity.decreaseStep = originalCommunity.decreaseStep;
+    // newCommunity.baseInterval = originalCommunity.baseInterval;
+    // newCommunity.incrementInterval = originalCommunity.incrementInterval;
+    // newCommunity.maxBeneficiaries = originalCommunity.maxBeneficiaries;
+    // newCommunity.minTranche = originalCommunity.minTranche;
+    // newCommunity.maxTranche = originalCommunity.maxTranche;
+
+    originalCommunity.save();
+    newCommunity.save();
 }

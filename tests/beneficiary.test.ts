@@ -11,29 +11,35 @@ import {
 } from './utils/constants';
 import {
     createBeneficiaryAddedEvent,
+    createBeneficiaryAddressChangedEvent,
     createBeneficiaryClaimEvent,
+    createBeneficiaryCopiedEvent,
     createBeneficiaryJoinedEvent,
     createBeneficiaryLockedEvent,
     createBeneficiaryRemovedEvent,
     createBeneficiaryUnlockedEvent
 } from './utils/beneficiary';
-import { createCommunityAddedEvent } from './utils/community';
+import { createCommunityAddedEvent, createCommunityCopiedEvent } from './utils/community';
 import {
     handleBeneficiaryAdded,
+    handleBeneficiaryAddressChanged,
     handleBeneficiaryClaim,
+    handleBeneficiaryCopied,
     handleBeneficiaryJoined,
     handleBeneficiaryLocked,
     handleBeneficiaryRemoved,
     handleBeneficiaryUnlocked
 } from '../src/mappings/community';
-import { handleCommunityAdded } from '../src/mappings/communityAdmin';
+import { handleCommunityAdded, handleCommunityCopied } from '../src/mappings/communityAdmin';
 
 export {
     handleCommunityAdded,
     handleBeneficiaryAdded,
     handleBeneficiaryRemoved,
     handleBeneficiaryClaim,
-    handleBeneficiaryJoined
+    handleBeneficiaryJoined,
+    handleBeneficiaryAddressChanged,
+    handleBeneficiaryCopied
 };
 
 test('should add beneficiary', () => {
@@ -456,4 +462,72 @@ test('lock/unlock beneficiary', () => {
 
     assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'state', '0');
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'lockedBeneficiaries', '0');
+});
+
+test('change beneficiary address', () => {
+    clearStore();
+
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
+
+    handleCommunityAdded(community);
+
+    const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryAdded(beneficiaryAddedEvent1);
+
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'addedBy', managerAddress[0]);
+
+    const beneficiaryAddressChanged = createBeneficiaryAddressChangedEvent(
+        beneficiaryAddress[0],
+        beneficiaryAddress[1],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryAddressChanged(beneficiaryAddressChanged);
+
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[1], 'addedBy', managerAddress[0]);
+    assert.notInStore('BeneficiaryEntity', beneficiaryAddress[0]);
+});
+
+test('split community and copy beneficiaries', () => {
+    clearStore();
+
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
+
+    handleCommunityAdded(community);
+
+    const beneficiaryAddedEvent1 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[0],
+        communityAddress[0]
+    );
+    const beneficiaryAddedEvent2 = createBeneficiaryAddedEvent(
+        managerAddress[0],
+        beneficiaryAddress[1],
+        communityAddress[0]
+    );
+
+    handleBeneficiaryAdded(beneficiaryAddedEvent1);
+    handleBeneficiaryAdded(beneficiaryAddedEvent2);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '2');
+
+    const copiedCommunity = createCommunityCopiedEvent(communityAddress[0], communityAddress[1]);
+
+    handleCommunityCopied(copiedCommunity);
+
+    const beneficiaryCopiedEvent = createBeneficiaryCopiedEvent(
+        managerAddress[1],
+        beneficiaryAddress[0],
+        communityAddress[1]
+    );
+
+    handleBeneficiaryCopied(beneficiaryCopiedEvent);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'beneficiaries', '1');
 });

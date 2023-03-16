@@ -97,5 +97,24 @@
         ],
         "name": "CommunityRemoved",
         "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "originalCommunity",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "copyCommunity",
+                "type": "address"
+            }
+        ],
+        "name": "CommunityCopied",
+        "type": "event"
     }
 ]

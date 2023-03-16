@@ -4,6 +4,7 @@ import { communityAddress, communityProps, managerAddress, normalize, userAddres
 import {
     createBeneficiaryParamsUpdatedEvent,
     createCommunityAddedEvent,
+    createCommunityCopiedEvent,
     createCommunityEditedEvent,
     createCommunityLockedEvent,
     createCommunityMigratedEvent,
@@ -15,7 +16,12 @@ import {
     handleCommunityLocked,
     handleCommunityUnlocked
 } from '../src/mappings/community';
-import { handleCommunityAdded, handleCommunityMigrated, handleCommunityRemoved } from '../src/mappings/communityAdmin';
+import {
+    handleCommunityAdded,
+    handleCommunityCopied,
+    handleCommunityMigrated,
+    handleCommunityRemoved
+} from '../src/mappings/communityAdmin';
 import { handleCommunityEdited } from '../src/mappings/old/community';
 
 export {
@@ -23,7 +29,8 @@ export {
     handleCommunityRemoved,
     handleCommunityMigrated,
     handleBeneficiaryParamsUpdated,
-    handleCommunityEdited
+    handleCommunityEdited,
+    handleCommunityCopied
 };
 
 test('create community', () => {
@@ -259,4 +266,22 @@ test('lock/unlock community', () => {
     handleCommunityUnlocked(unlockCommunity);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'state', '0');
+});
+
+test('split community without users', () => {
+    clearStore();
+
+    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
+
+    handleCommunityAdded(community);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'state', '0');
+
+    const copiedCommunity = createCommunityCopiedEvent(communityAddress[0], communityAddress[1]);
+
+    handleCommunityCopied(copiedCommunity);
+
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'state', '0');
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'next', communityAddress[1]);
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'previous', communityAddress[0]);
 });
