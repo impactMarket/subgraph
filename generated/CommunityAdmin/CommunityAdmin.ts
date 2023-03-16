@@ -104,6 +104,28 @@ export class CommunityRemoved__Params {
   }
 }
 
+export class CommunityCopied extends ethereum.Event {
+  get params(): CommunityCopied__Params {
+    return new CommunityCopied__Params(this);
+  }
+}
+
+export class CommunityCopied__Params {
+  _event: CommunityCopied;
+
+  constructor(event: CommunityCopied) {
+    this._event = event;
+  }
+
+  get originalCommunity(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get copyCommunity(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class CommunityAdmin extends ethereum.SmartContract {
   static bind(address: Address): CommunityAdmin {
     return new CommunityAdmin("CommunityAdmin", address);

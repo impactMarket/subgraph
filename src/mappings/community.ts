@@ -1,6 +1,8 @@
 import {
     BeneficiaryAdded,
+    BeneficiaryAddressChanged,
     BeneficiaryClaim,
+    BeneficiaryCopied,
     BeneficiaryJoined,
     BeneficiaryLocked,
     BeneficiaryParamsUpdated,
@@ -23,6 +25,7 @@ import {
 } from '../common/beneficiary';
 import { genericHandleManagerAdded, genericHandleManagerRemoved } from '../common/manager';
 import { normalize } from '../utils';
+import { store } from '@graphprotocol/graph-ts';
 
 export function handleManagerAdded(event: ManagerAdded): void {
     genericHandleManagerAdded(
@@ -170,4 +173,31 @@ export function handleMaxBeneficiariesUpdated(event: MaxBeneficiariesUpdated): v
         community.maxBeneficiaries = event.params.newMaxBeneficiaries.toI32();
         community.save();
     }
+}
+
+export function handleBeneficiaryCopied(event: BeneficiaryCopied): void {
+    const newCommunity = CommunityEntity.load(event.address.toHex())!;
+    const beneficiary = BeneficiaryEntity.load(event.params.beneficiary.toHex())!;
+    const oldCommunity = CommunityEntity.load(beneficiary.community)!;
+
+    newCommunity.beneficiaries += 1;
+    oldCommunity.beneficiaries -= 1;
+    beneficiary.community = event.address.toHex();
+    beneficiary.addedBy = event.params.manager;
+
+    // save
+    newCommunity.save();
+    oldCommunity.save();
+    beneficiary.save();
+}
+
+export function handleBeneficiaryAddressChanged(event: BeneficiaryAddressChanged): void {
+    const beneficiary1 = BeneficiaryEntity.load(event.params.beneficiary1.toHex())!;
+    const beneficiary2 = new BeneficiaryEntity(event.params.beneficiary2.toHex());
+
+    beneficiary2.merge([beneficiary1]);
+    beneficiary2.id = event.params.beneficiary2.toHex();
+
+    beneficiary2.save();
+    store.remove('BeneficiaryEntity', beneficiary1.id);
 }

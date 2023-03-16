@@ -346,6 +346,50 @@ export class MaxBeneficiariesUpdated__Params {
   }
 }
 
+export class BeneficiaryCopied extends ethereum.Event {
+  get params(): BeneficiaryCopied__Params {
+    return new BeneficiaryCopied__Params(this);
+  }
+}
+
+export class BeneficiaryCopied__Params {
+  _event: BeneficiaryCopied;
+
+  constructor(event: BeneficiaryCopied) {
+    this._event = event;
+  }
+
+  get manager(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get beneficiary(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class BeneficiaryAddressChanged extends ethereum.Event {
+  get params(): BeneficiaryAddressChanged__Params {
+    return new BeneficiaryAddressChanged__Params(this);
+  }
+}
+
+export class BeneficiaryAddressChanged__Params {
+  _event: BeneficiaryAddressChanged;
+
+  constructor(event: BeneficiaryAddressChanged) {
+    this._event = event;
+  }
+
+  get beneficiary1(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get beneficiary2(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class Community extends ethereum.SmartContract {
   static bind(address: Address): Community {
     return new Community("Community", address);

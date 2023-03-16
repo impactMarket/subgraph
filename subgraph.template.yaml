@@ -27,6 +27,8 @@ dataSources:
           handler: handleCommunityRemoved
         - event: CommunityMigrated(address[],indexed address,indexed address)
           handler: handleCommunityMigrated
+        - event: CommunityCopied(indexed address,indexed address)
+          handler: handleCommunityCopied
       file: ./src/mappings/communityAdmin.ts
   - kind: ethereum/contract
     name: DepositRedirect
@@ -142,6 +144,10 @@ templates:
           handler: handleBeneficiaryLocked
         - event: BeneficiaryUnlocked(indexed address,indexed address)
           handler: handleBeneficiaryUnlocked
+        - event: BeneficiaryCopied(indexed address,indexed address)
+          handler: handleBeneficiaryCopied
+        - event: BeneficiaryAddressChanged(indexed address,indexed address)
+          handler: handleBeneficiaryAddressChanged
         - event: CommunityLocked(indexed address)
           handler: handleCommunityLocked
         - event: CommunityUnlocked(indexed address)
