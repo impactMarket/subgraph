@@ -20,3 +20,9 @@ $ yarn codegen
 $ yarn build
 $ yarn deploy:alfajores # or mainnet
 ```
+
+## Generate types and pre-package
+```
+$ yarn types
+$ yarn package
+```
