@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "noUnusedParameters": false,
+      "noUnusedLocals": true,
+      "skipLibCheck": true,
+      "moduleResolution": "node",
+      "importHelpers": true,
+      "target": "es2017",
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "removeComments": false,
+      "declaration": true,
+      "experimentalDecorators": true,
+      "resolveJsonModule": true,
+      "outDir": "./dist",
+      "lib": [
+        "es2017",
+        "esnext.asynciterable",
+        "dom"
+      ],
+      "allowJs": true,
+      "strict": true,
+    },
+    "include": [
+      "generated-types/*.ts",
+    ]
+  }
+  

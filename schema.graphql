@@ -1,3 +1,6 @@
+scalar Bytes
+scalar BigDecimal
+
 """
 Contributions of an asset to an entity
 """

@@ -3,3 +3,5 @@ build
 .bin
 subgraph.yaml
 addresses.ts
+generated-types
+dist
