@@ -1,5 +1,5 @@
 {
-    "name": "subgraph",
+    "name": "@impact-market/subgraph",
     "license": "Apache-2.0",
     "version": "1.0.0",
     "files": ["dist"],
@@ -8,7 +8,7 @@
     },
     "scripts": {
         "types": "graphql-codegen --config codegen.ts",
-        "package": "rimraf dist && tsc -p tsconfig.package.json",
+        "package": "rimraf dist generated-types && yarn types && tsc -p tsconfig.package.json",
         "codegen": "graph codegen",
         "build": "graph build",
         "test": "graph test --version 0.5.4",
@@ -28,18 +28,16 @@
         "prepare:alfajores:addresses": "mustache config/alfajores.json src/common/addresses.template > src/common/addresses.ts",
         "prepare:alfajores": "yarn prepare:alfajores:subgraph && yarn prepare:alfajores:addresses"
     },
-    "dependencies": {
-        "@graphprotocol/graph-cli": "0.37.1",
-        "@graphprotocol/graph-ts": "0.29.1",
-        "matchstick-as": "0.5.0"
-    },
     "devDependencies": {
         "@babel/core": "7.20.7",
         "@graphql-codegen/cli": "3.2.2",
+        "@graphprotocol/graph-cli": "0.37.1",
+        "@graphprotocol/graph-ts": "0.29.1",
         "@graphql-codegen/typescript": "3.0.2",
         "@graphql-codegen/typescript-resolvers": "3.1.1",
         "eslint": "8.30.0",
         "eslint-config-impact-market": "2.0.3",
+        "matchstick-as": "0.5.0",
         "mustache": "4.2.0",
         "prettier": "2.8.1",
         "rimraf": "4.4.0",

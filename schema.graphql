@@ -1,6 +1,3 @@
-scalar Bytes
-scalar BigDecimal
-
 """
 Contributions of an asset to an entity
 """
@@ -41,11 +38,11 @@ type CommunityEntity @entity {
   """
   address of the previous community, if migrated/copied.
   """
-  previous: Bytes
+  previous: CommunityEntity
   """
-  address of the community it was migrated/copied to
+  address of communities it was migrated/copied to
   """
-  next: Bytes
+  next: [CommunityEntity!]
   """
   UBI parameter claim amount (normalized)
   """

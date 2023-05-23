@@ -515,6 +515,8 @@ test('split community and copy beneficiaries', () => {
     handleBeneficiaryAdded(beneficiaryAddedEvent2);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '2');
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'community', communityAddress[0]);
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[1], 'community', communityAddress[0]);
 
     const copiedCommunity = createCommunityCopiedEvent(communityAddress[0], communityAddress[1]);
 
@@ -530,4 +532,6 @@ test('split community and copy beneficiaries', () => {
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'beneficiaries', '1');
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'beneficiaries', '1');
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[0], 'community', communityAddress[1]);
+    assert.fieldEquals('BeneficiaryEntity', beneficiaryAddress[1], 'community', communityAddress[0]);
 });
