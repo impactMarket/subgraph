@@ -105,7 +105,14 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         const totalNewManagers = event.params.managers.length;
 
         // update previous community
-        previousCommunity.next = event.params.communityAddress;
+        let arrayNext = previousCommunity.next;
+
+        if (!arrayNext) {
+            arrayNext = new Array<string>();
+        }
+
+        arrayNext.push(event.params.communityAddress.toHex());
+        previousCommunity.next = arrayNext;
         // create new community
         community.startDayId = previousCommunity.startDayId;
         community.state = previousCommunity.state;
@@ -133,7 +140,7 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
         community.contributors = previousCommunity.contributors;
         community.contributions = previousCommunity.contributions;
         community.estimatedFunds = BigDecimal.zero();
-        community.previous = event.params.previousCommunityAddress;
+        community.previous = event.params.previousCommunityAddress.toHex();
         community.managerList = new Array<string>();
         community.minTranche = previousCommunity.minTranche;
         community.maxTranche = previousCommunity.maxTranche;
@@ -189,13 +196,26 @@ export function handleCommunityMigrated(event: CommunityMigrated): void {
 export function handleCommunityCopied(event: CommunityCopied): void {
     const originalCommunity = CommunityEntity.load(event.params.originalCommunity.toHex())!;
     const newCommunity = new CommunityEntity(event.params.copyCommunity.toHex());
+    const ubi = UBIDailyEntity.load('0')!;
+    // update daily ubi
+    const ubiDaily = loadOrCreateDailyUbi(event.block.timestamp);
 
-    newCommunity.merge([originalCommunity]);
+    // can't merge because it will override the some null fields
+    // newCommunity.merge([originalCommunity]);
 
-    originalCommunity.next = event.params.copyCommunity;
+    // update previous community
+    let arrayNext = originalCommunity.next;
 
+    if (!arrayNext) {
+        arrayNext = new Array<string>();
+    }
+
+    arrayNext.push(event.params.copyCommunity.toHex());
+    originalCommunity.next = arrayNext;
+
+    // new community
     newCommunity.id = event.params.copyCommunity.toHex();
-    newCommunity.previous = event.params.originalCommunity;
+    newCommunity.previous = event.params.originalCommunity.toHex();
     newCommunity.startDayId = event.block.timestamp.toI32() / 86400;
     newCommunity.beneficiaries = 0;
     newCommunity.removedBeneficiaries = 0;
@@ -211,19 +231,24 @@ export function handleCommunityCopied(event: CommunityCopied): void {
     newCommunity.estimatedFunds = BigDecimal.zero();
     newCommunity.lastActivity = event.block.timestamp.toI32();
     // remaining properties are the same
-    // newCommunity.state = originalCommunity.state;
+    newCommunity.state = originalCommunity.state;
     // newCommunity.previous = event.params.originalCommunity;
-    // newCommunity.claimAmount = originalCommunity.claimAmount;
-    // newCommunity.originalClaimAmount = originalCommunity.originalClaimAmount;
-    // newCommunity.maxClaim = originalCommunity.maxClaim;
-    // newCommunity.maxTotalClaim = originalCommunity.maxTotalClaim;
-    // newCommunity.decreaseStep = originalCommunity.decreaseStep;
-    // newCommunity.baseInterval = originalCommunity.baseInterval;
-    // newCommunity.incrementInterval = originalCommunity.incrementInterval;
-    // newCommunity.maxBeneficiaries = originalCommunity.maxBeneficiaries;
-    // newCommunity.minTranche = originalCommunity.minTranche;
-    // newCommunity.maxTranche = originalCommunity.maxTranche;
+    newCommunity.claimAmount = originalCommunity.claimAmount;
+    newCommunity.originalClaimAmount = originalCommunity.originalClaimAmount;
+    newCommunity.maxClaim = originalCommunity.maxClaim;
+    newCommunity.maxTotalClaim = originalCommunity.maxTotalClaim;
+    newCommunity.decreaseStep = originalCommunity.decreaseStep;
+    newCommunity.baseInterval = originalCommunity.baseInterval;
+    newCommunity.incrementInterval = originalCommunity.incrementInterval;
+    newCommunity.maxBeneficiaries = originalCommunity.maxBeneficiaries;
+    newCommunity.minTranche = originalCommunity.minTranche;
+    newCommunity.maxTranche = originalCommunity.maxTranche;
+
+    ubi.communities += 1;
+    ubiDaily.communities += 1;
 
     originalCommunity.save();
     newCommunity.save();
+    ubi.save();
+    ubiDaily.save();
 }

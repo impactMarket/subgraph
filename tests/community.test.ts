@@ -23,6 +23,7 @@ import {
     handleCommunityRemoved
 } from '../src/mappings/communityAdmin';
 import { handleCommunityEdited } from '../src/mappings/old/community';
+import { log, store } from '@graphprotocol/graph-ts';
 
 export {
     handleCommunityAdded,
@@ -271,17 +272,25 @@ test('lock/unlock community', () => {
 test('split community without users', () => {
     clearStore();
 
-    const community = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
+    const community0 = createCommunityAddedEvent(communityAddress[0], [managerAddress[0]], communityProps[0]);
 
-    handleCommunityAdded(community);
+    handleCommunityAdded(community0);
 
     assert.fieldEquals('CommunityEntity', communityAddress[0], 'state', '0');
 
-    const copiedCommunity = createCommunityCopiedEvent(communityAddress[0], communityAddress[1]);
+    const copiedCommunity0 = createCommunityCopiedEvent(communityAddress[0], communityAddress[1]);
+    const copiedCommunity1 = createCommunityCopiedEvent(communityAddress[0], communityAddress[2]);
 
-    handleCommunityCopied(copiedCommunity);
+    handleCommunityCopied(copiedCommunity0);
+    handleCommunityCopied(copiedCommunity1);
 
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'state', '0');
-    assert.fieldEquals('CommunityEntity', communityAddress[0], 'next', communityAddress[1]);
+    assert.fieldEquals('CommunityEntity', communityAddress[2], 'state', '0');
+    assert.fieldEquals('CommunityEntity', communityAddress[0], 'next', `[${communityAddress[1]}, ${communityAddress[2]}]`);
     assert.fieldEquals('CommunityEntity', communityAddress[1], 'previous', communityAddress[0]);
+    log.info('{}', [(store.get('CommunityEntity', communityAddress[2])!.get('next') === null).toString()]);
+    assert.fieldEquals('CommunityEntity', communityAddress[1], 'previous', communityAddress[0]);
+    assert.assertNull(store.get('CommunityEntity', communityAddress[1])!.get('next'));
+    assert.fieldEquals('CommunityEntity', communityAddress[2], 'previous', communityAddress[0]);
+    assert.assertNull(store.get('CommunityEntity', communityAddress[2])!.get('next'));
 });

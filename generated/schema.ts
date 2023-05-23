@@ -112,37 +112,37 @@ export class CommunityEntity extends Entity {
     this.set("state", Value.fromI32(value));
   }
 
-  get previous(): Bytes | null {
+  get previous(): string | null {
     let value = this.get("previous");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set previous(value: Bytes | null) {
+  set previous(value: string | null) {
     if (!value) {
       this.unset("previous");
     } else {
-      this.set("previous", Value.fromBytes(<Bytes>value));
+      this.set("previous", Value.fromString(<string>value));
     }
   }
 
-  get next(): Bytes | null {
+  get next(): Array<string> | null {
     let value = this.get("next");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toStringArray();
     }
   }
 
-  set next(value: Bytes | null) {
+  set next(value: Array<string> | null) {
     if (!value) {
       this.unset("next");
     } else {
-      this.set("next", Value.fromBytes(<Bytes>value));
+      this.set("next", Value.fromStringArray(<Array<string>>value));
     }
   }
 

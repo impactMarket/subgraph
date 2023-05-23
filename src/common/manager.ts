@@ -37,7 +37,7 @@ export function genericHandleManagerAdded(
                 _community.previous !== null &&
                 Address.fromString(manager.community).equals(
                     // wasm still thinks it's null, so need to force
-                    _community.previous!
+                    Address.fromString(_community.previous!)
                 )
             ) {
                 // this is just migrating

@@ -2,7 +2,9 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 const communityAddress: string[] = [
     '0x1cad798788568098e51c5751fe03a8daa0c7eac6',
-    '0x6a15bd0445e00b1705e0f02ad2e60902c1cbcc3e'
+    '0x6a15bd0445e00b1705e0f02ad2e60902c1cbcc3e',
+    '0x3b0c1a3d5a9f8d7a4abaa41ab82f819b5b71937e',
+    '0x1c4b70a24eccb9b505b2a4cf3a2e5a006e25b7b2',
 ];
 const managerAddress: string[] = [
     '0x270ec2751810dae7a1e7377dc77f9098ac9b5bce',

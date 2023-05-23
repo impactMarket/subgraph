@@ -178,11 +178,12 @@ export function handleMaxBeneficiariesUpdated(event: MaxBeneficiariesUpdated): v
 export function handleBeneficiaryCopied(event: BeneficiaryCopied): void {
     const newCommunity = CommunityEntity.load(event.address.toHex())!;
     const beneficiary = BeneficiaryEntity.load(event.params.beneficiary.toHex())!;
-    const oldCommunity = CommunityEntity.load(beneficiary.community)!;
+    const beneficiaryCommunity = beneficiary.community;
+    const oldCommunity = CommunityEntity.load(beneficiaryCommunity)!;
 
     newCommunity.beneficiaries += 1;
     oldCommunity.beneficiaries -= 1;
-    beneficiary.community = event.address.toHex();
+    beneficiary.community = newCommunity.id;
     beneficiary.addedBy = event.params.manager;
 
     // save
