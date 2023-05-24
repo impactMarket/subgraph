@@ -2,61 +2,17 @@ import { BigInt } from '@graphprotocol/graph-ts';
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
 import { cEURAddress, cREALAddress, cUSDAddress, fiveCents, normalize, userAddress } from './utils/constants';
-import {
-    createDepositAddedEvent,
-    createDonateInterestEvent,
-    createTokenAddedEvent,
-    createTokenRemovedEvent,
-    createWithdrawEvent
-} from './utils/depositRedirect';
-import {
-    handleDepositAdded,
-    handleDonateInterest,
-    handleTokenAdded,
-    handleTokenRemoved,
-    handleWithdraw
-} from '../src/mappings/depositRedirect';
+import { createDepositAddedEvent, createDonateInterestEvent, createWithdrawEvent } from './utils/depositRedirect';
+import { handleDepositAdded, handleDonateInterest, handleWithdraw } from '../src/mappings/depositRedirect';
 
-export { handleDepositAdded, handleDonateInterest, handleTokenAdded, handleTokenRemoved, handleWithdraw };
+export { handleDepositAdded, handleDonateInterest, handleWithdraw };
 
 const day1Time = 1640716193;
 const day2Time = 1640816193;
 const day3Time = 1640866193;
 
-test('should add token', () => {
-    clearStore();
-
-    const tokenAdd = createTokenAddedEvent(cUSDAddress);
-
-    handleTokenAdded(tokenAdd);
-
-    assert.fieldEquals('DepositRedirectToken', cUSDAddress, 'active', 'true');
-});
-
-test('should remove token', () => {
-    clearStore();
-
-    const tokenAdd = createTokenAddedEvent(cUSDAddress);
-
-    handleTokenAdded(tokenAdd);
-
-    const tokenRemove = createTokenRemovedEvent(cUSDAddress);
-
-    handleTokenRemoved(tokenRemove);
-
-    assert.fieldEquals('DepositRedirectToken', cUSDAddress, 'active', 'false');
-});
-
 test('should deposits multiple days', () => {
     clearStore();
-
-    const tokenAddcUSD = createTokenAddedEvent(cUSDAddress);
-    const tokenAddcEUR = createTokenAddedEvent(cEURAddress);
-    const tokenAddcREAL = createTokenAddedEvent(cREALAddress);
-
-    handleTokenAdded(tokenAddcUSD);
-    handleTokenAdded(tokenAddcEUR);
-    handleTokenAdded(tokenAddcREAL);
 
     // day 1
     const depositAddedEvent1 = createDepositAddedEvent(userAddress[0], cUSDAddress, fiveCents, day1Time);
@@ -84,7 +40,12 @@ test('should deposits multiple days', () => {
         'deposited',
         normalize(fiveCents.toString()).toString()
     );
-    assert.fieldEquals('DepositRedirectToken', cUSDAddress, 'deposited', normalize(fiveCents.toString()).toString());
+    assert.fieldEquals(
+        'DepositAsset',
+        `depositRedirect-${cUSDAddress}`,
+        'deposited',
+        normalize(fiveCents.toString()).toString()
+    );
 
     // day 2
     const depositAddedEvent2 = createDepositAddedEvent(userAddress[0], cUSDAddress, fiveCents, day2Time);
@@ -123,8 +84,8 @@ test('should deposits multiple days', () => {
         normalize(fiveCents.times(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cUSDAddress,
+        'DepositAsset',
+        `depositRedirect-${cUSDAddress}`,
         'deposited',
         normalize(fiveCents.times(BigInt.fromI32(3)).toString()).toString()
     );
@@ -203,25 +164,27 @@ test('should deposits multiple days', () => {
         normalize(fiveCents.toString()).toString()
     );
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cUSDAddress,
+        'DepositAsset',
+        `depositRedirect-${cUSDAddress}`,
         'deposited',
         normalize(fiveCents.times(BigInt.fromI32(4)).toString()).toString()
     );
-    assert.fieldEquals('DepositRedirectToken', cEURAddress, 'deposited', normalize(fiveCents.toString()).toString());
-    assert.fieldEquals('DepositRedirectToken', cREALAddress, 'deposited', normalize(fiveCents.toString()).toString());
+    assert.fieldEquals(
+        'DepositAsset',
+        `depositRedirect-${cEURAddress}`,
+        'deposited',
+        normalize(fiveCents.toString()).toString()
+    );
+    assert.fieldEquals(
+        'DepositAsset',
+        `depositRedirect-${cREALAddress}`,
+        'deposited',
+        normalize(fiveCents.toString()).toString()
+    );
 });
 
 test('should donate interest multiple days', () => {
     clearStore();
-
-    const tokenAddcUSD = createTokenAddedEvent(cUSDAddress);
-    const tokenAddcEUR = createTokenAddedEvent(cEURAddress);
-    const tokenAddcREAL = createTokenAddedEvent(cREALAddress);
-
-    handleTokenAdded(tokenAddcUSD);
-    handleTokenAdded(tokenAddcEUR);
-    handleTokenAdded(tokenAddcREAL);
 
     // day 1
     const depositAddedEvent1 = createDepositAddedEvent(userAddress[0], cUSDAddress, fiveCents, day1Time);
@@ -265,8 +228,8 @@ test('should donate interest multiple days', () => {
         normalize(fiveCents.div(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cUSDAddress,
+        'DepositAsset',
+        `depositRedirect-${cUSDAddress}`,
         'interest',
         normalize(fiveCents.div(BigInt.fromI32(2)).toString()).toString()
     );
@@ -349,16 +312,21 @@ test('should donate interest multiple days', () => {
         'interest',
         normalize(fiveCents.div(BigInt.fromI32(2)).toString()).toString()
     );
-    assert.fieldEquals('DepositRedirectToken', cUSDAddress, 'interest', normalize(fiveCents.toString()).toString());
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cEURAddress,
+        'DepositAsset',
+        `depositRedirect-${cUSDAddress}`,
+        'interest',
+        normalize(fiveCents.toString()).toString()
+    );
+    assert.fieldEquals(
+        'DepositAsset',
+        `depositRedirect-${cEURAddress}`,
         'interest',
         normalize(fiveCents.div(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cREALAddress,
+        'DepositAsset',
+        `depositRedirect-${cREALAddress}`,
         'interest',
         normalize(fiveCents.div(BigInt.fromI32(2)).toString()).toString()
     );
@@ -366,14 +334,6 @@ test('should donate interest multiple days', () => {
 
 test('should withdraw multiple days', () => {
     clearStore();
-
-    const tokenAddcUSD = createTokenAddedEvent(cUSDAddress);
-    const tokenAddcEUR = createTokenAddedEvent(cEURAddress);
-    const tokenAddcREAL = createTokenAddedEvent(cREALAddress);
-
-    handleTokenAdded(tokenAddcUSD);
-    handleTokenAdded(tokenAddcEUR);
-    handleTokenAdded(tokenAddcREAL);
 
     // day 1
     const depositAddedEvent1 = createDepositAddedEvent(userAddress[0], cUSDAddress, fiveCents, day1Time);
@@ -463,26 +423,26 @@ test('should withdraw multiple days', () => {
         normalize(fiveCents.div(BigInt.fromI32(4)).toString()).toString()
     );
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cUSDAddress,
+        'DepositAsset',
+        `depositRedirect-${cUSDAddress}`,
         'deposited',
         normalize(fiveCents.div(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cEURAddress,
+        'DepositAsset',
+        `depositRedirect-${cEURAddress}`,
         'deposited',
         normalize(fiveCents.div(BigInt.fromI32(2)).toString()).toString()
     );
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cUSDAddress,
+        'DepositAsset',
+        `depositRedirect-${cUSDAddress}`,
         'interest',
         normalize(fiveCents.div(BigInt.fromI32(4)).toString()).toString()
     );
     assert.fieldEquals(
-        'DepositRedirectToken',
-        cEURAddress,
+        'DepositAsset',
+        `depositRedirect-${cEURAddress}`,
         'interest',
         normalize(fiveCents.div(BigInt.fromI32(4)).toString()).toString()
     );
