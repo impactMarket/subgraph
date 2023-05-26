@@ -1,6 +1,3 @@
-scalar Bytes
-scalar BigDecimal
-
 """
 Contributions of an asset to an entity
 """
@@ -487,39 +484,63 @@ type ContributorEntity @entity {
 
 type DepositAsset @entity {
   """
-  {{ key }}-{{ tokenAddress }}-{{ dayId }} for Depositor
-  {{ key }}-{{ tokenAddress }}-{{ depositorAddress }} for DepositRedirectDaily
+  {{ key }}-{{ tokenAddress }}-{{ dayId }} for DepositRedirectDaily
+  {{ key }}-{{ tokenAddress }}-{{ depositorAddress }} for Depositor
   """
   id: ID!
-  # asset deposited
+  """
+  asset deposited
+  """
   asset: Bytes!
-  # amount deposited (normalized)
+  """
+  amount deposited (normalized)
+  """
   deposited: BigDecimal!
-  # interest donated (normalized)
+  """
+  interest donated (normalized)
+  """
   interest: BigDecimal!
 }
 
 type Depositor @entity {
-  # depositor address
+  """
+  depositor address
+  """
   id: ID!
-  # deposited assets
+  """
+  deposited assets
+  """
   assets: [DepositAsset!]!
+  """
+  first deposit timestamp
+  """
+  firstDeposit: Int!
+  """
+  lastDeposit timestamp
+  """
+  lastDeposit: Int!
+  """
+  number of time that donated the interest
+  """
+  redirects: Int!
+  """
+  withdraw timestamp
+  """
+  withdraw: Int
 }
 
 type DepositRedirectDaily @entity {
-  # day id
+  """
+  day id
+  "0" for global
+  """
   id: ID!
-  # deposited assets
+  """
+  deposited assets
+  """
   assets: [DepositAsset!]!
-}
-
-type DepositRedirectToken @entity {
-  # token address
-  id: ID!
-  # is token active
-  active: Boolean!
-  # amount deposited (normalized)
-  deposited: BigDecimal!
-  # interest donated (normalized)
-  interest: BigDecimal!
+  """
+  unique depositors
+  """
+  depositors: Int!
 }

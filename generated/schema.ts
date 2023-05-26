@@ -1328,6 +1328,42 @@ export class Depositor extends Entity {
   set assets(value: Array<string>) {
     this.set("assets", Value.fromStringArray(value));
   }
+
+  get firstDeposit(): i32 {
+    let value = this.get("firstDeposit");
+    return value!.toI32();
+  }
+
+  set firstDeposit(value: i32) {
+    this.set("firstDeposit", Value.fromI32(value));
+  }
+
+  get lastDeposit(): i32 {
+    let value = this.get("lastDeposit");
+    return value!.toI32();
+  }
+
+  set lastDeposit(value: i32) {
+    this.set("lastDeposit", Value.fromI32(value));
+  }
+
+  get redirects(): i32 {
+    let value = this.get("redirects");
+    return value!.toI32();
+  }
+
+  set redirects(value: i32) {
+    this.set("redirects", Value.fromI32(value));
+  }
+
+  get withdraw(): i32 {
+    let value = this.get("withdraw");
+    return value!.toI32();
+  }
+
+  set withdraw(value: i32) {
+    this.set("withdraw", Value.fromI32(value));
+  }
 }
 
 export class DepositRedirectDaily extends Entity {
@@ -1371,65 +1407,13 @@ export class DepositRedirectDaily extends Entity {
   set assets(value: Array<string>) {
     this.set("assets", Value.fromStringArray(value));
   }
-}
 
-export class DepositRedirectToken extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
+  get depositors(): i32 {
+    let value = this.get("depositors");
+    return value!.toI32();
   }
 
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save DepositRedirectToken entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type DepositRedirectToken must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("DepositRedirectToken", id.toString(), this);
-    }
-  }
-
-  static load(id: string): DepositRedirectToken | null {
-    return changetype<DepositRedirectToken | null>(
-      store.get("DepositRedirectToken", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get active(): boolean {
-    let value = this.get("active");
-    return value!.toBoolean();
-  }
-
-  set active(value: boolean) {
-    this.set("active", Value.fromBoolean(value));
-  }
-
-  get deposited(): BigDecimal {
-    let value = this.get("deposited");
-    return value!.toBigDecimal();
-  }
-
-  set deposited(value: BigDecimal) {
-    this.set("deposited", Value.fromBigDecimal(value));
-  }
-
-  get interest(): BigDecimal {
-    let value = this.get("interest");
-    return value!.toBigDecimal();
-  }
-
-  set interest(value: BigDecimal) {
-    this.set("interest", Value.fromBigDecimal(value));
+  set depositors(value: i32) {
+    this.set("depositors", Value.fromI32(value));
   }
 }
