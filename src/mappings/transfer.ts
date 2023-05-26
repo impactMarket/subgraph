@@ -13,7 +13,13 @@ import {
     UserTransactionsEntity
 } from '../../generated/schema';
 import { Transfer } from '../../generated/cUSD/cUSD';
-import { attestationProxyAddress, pactAddress, stakingAddress, treasuryAddress } from '../common/addresses';
+import {
+    attestationProxyAddress,
+    microCreditAddress,
+    pactAddress,
+    stakingAddress,
+    treasuryAddress
+} from '../common/addresses';
 import { loadOrCreateCommunityDaily } from '../common/community';
 import { loadOrCreateDailyUbi } from '../common/ubi';
 import { normalize } from '../utils';
@@ -100,6 +106,14 @@ function updateContributorContributionsHelper(
 
 export function handleTransferAsset(event: Transfer): void {
     // because this is executed for every transfer, performance is very important
+
+    // ignore microcredit
+    if (
+        event.params.to.notEqual(Address.fromString(microCreditAddress)) ||
+        event.params.from.notEqual(Address.fromString(microCreditAddress))
+    ) {
+        return;
+    }
 
     // this registers action only related to PACT holding/staking
     if (event.address.equals(Address.fromString(pactAddress))) {
