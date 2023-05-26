@@ -4,5 +4,6 @@ const attestationProxyAddress: string = '{{AttestationProxy}}';
 const cUSDAddress: string = '{{cUSD}}';
 const pactAddress: string = '{{PACT}}';
 const stakingAddress: string = '{{Staking}}';
+const microCreditAddress: string = '{{MicroCredit}}';
 
-export { cUSDAddress, communityAdminAddress, treasuryAddress, attestationProxyAddress, pactAddress, stakingAddress };
+export { cUSDAddress, communityAdminAddress, treasuryAddress, attestationProxyAddress, pactAddress, stakingAddress, microCreditAddress };

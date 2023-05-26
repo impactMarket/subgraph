@@ -13,5 +13,6 @@
     "AttestationProxy": "0xad5e5722427d79dff28a4ab30249729d1f8b4cc0",
     "PACT": "0x73a2de6a8370108d43c3c80430c84c30df323ed2",
     "Staking": "0x2bdd85857edd9a4faa72b663536189e38d8e3c71",
-    "DepositRedirect": "0x11cB7F0E3a3A06Fe07173c33657CD1c599f7a783"
+    "DepositRedirect": "0x11cB7F0E3a3A06Fe07173c33657CD1c599f7a783",
+    "MicroCredit": "0x87b2B044aA4175f18c4729133c85822C4C6d1cAF"
 }
