@@ -109,8 +109,8 @@ export function handleTransferAsset(event: Transfer): void {
 
     // ignore microcredit
     if (
-        event.params.to.notEqual(Address.fromString(microCreditAddress)) ||
-        event.params.from.notEqual(Address.fromString(microCreditAddress))
+        event.params.to.equals(Address.fromString(microCreditAddress)) ||
+        event.params.from.equals(Address.fromString(microCreditAddress))
     ) {
         return;
     }
