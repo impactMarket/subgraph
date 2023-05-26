@@ -519,6 +519,14 @@ type Depositor @entity {
   lastDeposit timestamp
   """
   lastDeposit: Int!
+  """
+  number of time that donated the interest
+  """
+  redirects: Int!
+  """
+  withdraw timestamp
+  """
+  withdraw: Int
 }
 
 type DepositRedirectDaily @entity {

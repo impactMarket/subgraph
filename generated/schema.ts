@@ -1346,6 +1346,24 @@ export class Depositor extends Entity {
   set lastDeposit(value: i32) {
     this.set("lastDeposit", Value.fromI32(value));
   }
+
+  get redirects(): i32 {
+    let value = this.get("redirects");
+    return value!.toI32();
+  }
+
+  set redirects(value: i32) {
+    this.set("redirects", Value.fromI32(value));
+  }
+
+  get withdraw(): i32 {
+    let value = this.get("withdraw");
+    return value!.toI32();
+  }
+
+  set withdraw(value: i32) {
+    this.set("withdraw", Value.fromI32(value));
+  }
 }
 
 export class DepositRedirectDaily extends Entity {

@@ -64,6 +64,7 @@ export function handleDepositAdded(event: DepositAdded): void {
         depositor = new Depositor(event.params.depositorAddress.toHex());
         depositor.assets = new Array<string>();
         depositor.firstDeposit = event.block.timestamp.toI32();
+        depositor.redirects = 0;
 
         depositRedirect.depositors += 1;
         depositRedirectDaily.depositors += 1;
@@ -147,6 +148,13 @@ export function handleWithdraw(event: Withdraw): void {
     );
     depositRedirectAsset.deposited = depositRedirectAsset.deposited.minus(normalize(event.params.amount.toString()));
 
+    if (depositorAsset.deposited.equals(BigDecimal.zero())) {
+        const depositor = Depositor.load(event.params.depositorAddress.toHex())!;
+
+        depositor.withdraw = event.block.timestamp.toI32();
+        depositor.save();
+    }
+
     depositorAsset.interest = depositorAsset.interest.plus(normalize(event.params.interest.toString()));
     depositRedirectDailyAsset.interest = depositRedirectDailyAsset.interest.plus(
         normalize(event.params.interest.toString())
@@ -162,6 +170,7 @@ export function handleDonateInterest(event: DonateInterest): void {
     // validate depositor asset entity
     const depositorDepositAssetId = `depositor-${event.params.token.toHex()}-${event.params.depositorAddress.toHex()}`;
     const depositorAsset = DepositAsset.load(depositorDepositAssetId)!;
+    const depositor = Depositor.load(event.params.depositorAddress.toHex())!;
 
     // validate depositRedirectDaily asset entity
     const depositRedirectDailyAssetId = `depositRedirectDaily-${event.params.token.toHex()}-${
@@ -201,8 +210,10 @@ export function handleDonateInterest(event: DonateInterest): void {
         normalize(event.params.interest.toString())
     );
     depositRedirectAsset.interest = depositRedirectAsset.interest.plus(normalize(event.params.interest.toString()));
+    depositor.redirects += 1;
 
     depositorAsset.save();
+    depositor.save();
     depositRedirectDailyAsset.save();
     depositRedirectAsset.save();
 }
