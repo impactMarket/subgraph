@@ -50,10 +50,6 @@ dataSources:
         - name: DepositRedirect
           file: ./abis/DepositRedirect.json
       eventHandlers:
-        - event: TokenAdded(indexed address)
-          handler: handleTokenAdded
-        - event: TokenRemoved(indexed address)
-          handler: handleTokenRemoved
         - event: DepositAdded(indexed address,indexed address,uint256)
           handler: handleDepositAdded
         - event: DonateInterest(indexed address,indexed address,uint256,uint256)
