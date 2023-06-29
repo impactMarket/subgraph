@@ -31,6 +31,28 @@ dataSources:
           handler: handleCommunityCopied
       file: ./src/mappings/communityAdmin.ts
   - kind: ethereum/contract
+    name: ReferralLink
+    network: {{network}}
+    source:
+      address: "{{ReferralLink}}"
+      abi: ReferralLink
+      startBlock: {{startBlockReferrals}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - UserReferral
+      abis:
+        - name: ReferralLink
+          file: ./abis/ReferralLink.json
+      eventHandlers:
+        - event: CampaignAdded(indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleCampaignAdded
+        - event: RewardClaimed(indexed address,indexed uint256,address)
+          handler: handleRewardClaimed
+      file: ./src/mappings/referralLink.ts
+  - kind: ethereum/contract
     name: DepositRedirect
     network: {{network}}
     source:

@@ -1417,3 +1417,141 @@ export class DepositRedirectDaily extends Entity {
     this.set("depositors", Value.fromI32(value));
   }
 }
+
+export class ReferralCampaign extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ReferralCampaign entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ReferralCampaign must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ReferralCampaign", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ReferralCampaign | null {
+    return changetype<ReferralCampaign | null>(
+      store.get("ReferralCampaign", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get startTime(): i32 {
+    let value = this.get("startTime");
+    return value!.toI32();
+  }
+
+  set startTime(value: i32) {
+    this.set("startTime", Value.fromI32(value));
+  }
+
+  get endTime(): i32 {
+    let value = this.get("endTime");
+    return value!.toI32();
+  }
+
+  set endTime(value: i32) {
+    this.set("endTime", Value.fromI32(value));
+  }
+
+  get rewardAmount(): BigDecimal {
+    let value = this.get("rewardAmount");
+    return value!.toBigDecimal();
+  }
+
+  set rewardAmount(value: BigDecimal) {
+    this.set("rewardAmount", Value.fromBigDecimal(value));
+  }
+
+  get maxReferralLinks(): i32 {
+    let value = this.get("maxReferralLinks");
+    return value!.toI32();
+  }
+
+  set maxReferralLinks(value: i32) {
+    this.set("maxReferralLinks", Value.fromI32(value));
+  }
+}
+
+export class UserReferral extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save UserReferral entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type UserReferral must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("UserReferral", id.toString(), this);
+    }
+  }
+
+  static load(id: string): UserReferral | null {
+    return changetype<UserReferral | null>(store.get("UserReferral", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    return value!.toBytes();
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
+  }
+
+  get campaign(): string {
+    let value = this.get("campaign");
+    return value!.toString();
+  }
+
+  set campaign(value: string) {
+    this.set("campaign", Value.fromString(value));
+  }
+
+  get usedBy(): Array<Bytes> {
+    let value = this.get("usedBy");
+    return value!.toBytesArray();
+  }
+
+  set usedBy(value: Array<Bytes>) {
+    this.set("usedBy", Value.fromBytesArray(value));
+  }
+
+  get usages(): i32 {
+    let value = this.get("usages");
+    return value!.toI32();
+  }
+
+  set usages(value: i32) {
+    this.set("usages", Value.fromI32(value));
+  }
+}
