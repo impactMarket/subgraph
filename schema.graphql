@@ -547,3 +547,50 @@ type DepositRedirectDaily @entity {
   """
   depositors: Int!
 }
+
+type ReferralCampaign @entity {
+  """
+  campaign id
+  """
+  id: ID!
+  """
+  campaign start timestamp
+  """
+  startTime: Int!
+  """
+  campaign end timestamp
+  """
+  endTime: Int!
+  """
+  campaign reward amount
+  """
+  rewardAmount: BigDecimal!
+  """
+  campaign max referrals per user
+  """
+  maxReferralLinks: Int!
+}
+
+type UserReferral @entity {
+  """
+  referral id
+  {{ campaignId }}-{{ userAddress }}
+  """
+  id: ID!
+  """
+  user address
+  """
+  user: Bytes!
+  """
+  campaign id
+  """
+  campaign: ReferralCampaign!
+  """
+  users that have used this referral link
+  """
+  usedBy: [Bytes!]!
+  """
+  referral number od usages
+  """
+  usages: Int!
+}
