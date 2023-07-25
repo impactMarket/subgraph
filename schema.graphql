@@ -1,6 +1,3 @@
-scalar Bytes
-scalar BigDecimal
-
 """
 Contributions of an asset to an entity
 """
@@ -481,6 +478,126 @@ type ContributorEntity @entity {
   last PACT activity day id (block timestamp / 86400)
   """
   lastPACTActivity: Int
+}
+
+"""
+Proposals from the impactMarketCouncil
+"""
+type ProposalEntity @entity {
+  """
+  proposal id
+  """
+  id: ID!
+  """
+  unix timestamp when the proposal was created
+  """
+  createdAt: Int!
+  """
+  proposer address
+  """
+  proposer: Bytes!
+  """
+  proposal signature
+  """
+  signatures: [String!]!
+  """
+  proposal calldata
+  """
+  calldatas: [Bytes!]!
+  """
+  proposal endBlock
+  """
+  endBlock: Int!
+  """
+  proposal description
+  """
+  description: String!
+  """
+  status from last action
+  """
+  status: Int!
+  """
+  addresses of votes against
+  """
+  votedAgainst: [Bytes!]!
+  """
+  addresses of votes for
+  """
+  votedFor: [Bytes!]!
+  """
+  addresses of votes abstain
+  """
+  votedAbstain: [Bytes!]!
+}
+
+"""
+ImpactMarketCouncil members
+"""
+type ImpactMarketCouncilMemberEntity @entity {
+  """
+  member address
+  """
+  id: ID!
+  """
+  tx timestamp of when this member was added to the impactMarketCouncil
+  """
+  since: Int!
+  """
+  tx timestamp of when this member left the impactMarketCouncil
+  """
+  until: Int!
+  """
+  status of this member (0: active, 1: inactive)
+  """
+  status: Int!
+  """
+  total number of votes
+  """
+  votes: Int!
+}
+
+"""
+Ambassadors Entities
+"""
+type AmbassadorsEntityEntity @entity {
+  """
+  entity address
+  """
+  id: ID!
+  """
+  entity status  (0: active, 1: inactive)
+  """
+  status: Int!
+  """
+  array of ambassadors addresses
+  """
+  ambassadors: [AmbassadorEntity!]!
+}
+
+"""
+Ambassadors
+"""
+type AmbassadorEntity @entity {
+  """
+  ambassador address
+  """
+  id: ID!
+  """
+  tx timestamp of when this ambassador was added to the impactMarketCouncil
+  """
+  since: Int!
+  """
+  tx timestamp of when this ambassador left the impactMarketCouncil
+  """
+  until: Int!
+  """
+  status of this ambassador (0: active, 1: inactive)
+  """
+  status: Int!
+  """
+  array of communities addresses this ambassador is ambassador for
+  """
+  communities: [Bytes!]!
 }
 
 # Deposit and Redirect

@@ -1,4 +1,6 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
+description: impactMarket's protocol provides accessible financial solutions to empower underprivileged people worldwide, unlocking opportunities and human potential. 💙
+repository: https://github.com/impactMarket/subgraph
 schema:
   file: ./schema.graphql
 dataSources:
@@ -11,7 +13,7 @@ dataSources:
       startBlock: {{startBlockV1}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - CommunityEntity
@@ -31,6 +33,76 @@ dataSources:
           handler: handleCommunityCopied
       file: ./src/mappings/communityAdmin.ts
   - kind: ethereum/contract
+    name: ImpactMarketCouncil
+    network: {{network}}
+    source:
+      address: "{{ImpactMarketCouncil}}"
+      abi: ImpactMarketCouncil
+      startBlock: {{startBlockAmbassadors}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - ProposalEntity
+      abis:
+        - name: ImpactMarketCouncil
+          file: ./abis/ImpactMarketCouncil.json
+      eventHandlers:
+        - event: ProposalCanceled(uint256)
+          handler: handleProposalCanceled
+        - event: ProposalCreated(uint256,address,string[],bytes[],uint256,string)
+          handler: handleProposalCreatedOld
+        - event: ProposalCreated(uint256,address,address[],string[],bytes[],uint256,string)
+          handler: handleProposalCreated
+        - event: ProposalExecuted(uint256)
+          handler: handleProposalExecuted
+        - event: VoteCast(indexed address,uint256,uint8,uint256,string)
+          handler: handleVoteCast
+        - event: MemberAdded(address)
+          handler: handleMemberAdded
+        - event: MemberRemoved(address)
+          handler: handleMemberRemoved
+      file: ./src/mappings/impactMarketCouncil.ts
+  - kind: ethereum/contract
+    name: Ambassadors
+    network: {{network}}
+    source:
+      address: "{{Ambassadors}}"
+      abi: Ambassadors
+      startBlock: {{startBlockAmbassadors}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - AmbassadorEntity
+      abis:
+        - name: Ambassadors
+          file: ./abis/Ambassadors.json
+      eventHandlers:
+        - event: EntityAdded(indexed address)
+          handler: handleEntityAdded
+        - event: EntityRemoved(indexed address)
+          handler: handleEntityRemoved
+        - event: EntityAccountReplaced(uint256,indexed address,indexed address)
+          handler: handleEntityAccountReplaced
+        - event: AmbassadorAdded(indexed address,indexed address)
+          handler: handleAmbassadorAdded
+        - event: AmbassadorRemoved(indexed address,indexed address)
+          handler: handleAmbassadorRemoved
+        - event: AmbassadorAccountReplaced(uint256,indexed address,indexed address,indexed address)
+          handler: handleAmbassadorAccountReplaced
+        - event: AmbassadorReplaced(uint256,indexed address,indexed address,indexed address)
+          handler: handleAmbassadorReplaced
+        - event: AmbassadorTransfered(indexed address,indexed address,indexed address)
+          handler: handleAmbassadorTransfered
+        - event: AmbassadorToCommunityUpdated(indexed address,indexed address,indexed address)
+          handler: handleAmbassadorToCommunityUpdated
+        - event: CommunityRemoved(indexed address,indexed address)
+          handler: handleCommunityRemoved
+      file: ./src/mappings/ambassadors.ts
+  - kind: ethereum/contract
     name: ReferralLink
     network: {{network}}
     source:
@@ -39,7 +111,7 @@ dataSources:
       startBlock: {{startBlockReferrals}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - UserReferral
@@ -61,7 +133,7 @@ dataSources:
       startBlock: {{startBlockV2}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - DepositAsset
@@ -88,7 +160,7 @@ dataSources:
       startBlock: {{startBlockAlpha}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - CommunityEntity
@@ -112,7 +184,7 @@ dataSources:
       startBlock: {{startBlockAlpha}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - UserTransactionsEntity
@@ -133,7 +205,7 @@ templates:
       abi: Community
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - ManagerEntity
@@ -186,7 +258,7 @@ templates:
       abi: OldCommunity
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - ManagerEntity
