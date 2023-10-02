@@ -21,7 +21,6 @@ export function handleEntityAdded(event: EntityAdded): void {
         entity = new AmbassadorsEntityEntity(id);
     }
     entity.status = 0;
-    entity.ambassadors = [];
     entity.save();
 }
 
@@ -29,7 +28,6 @@ export function handleEntityRemoved(event: EntityRemoved): void {
     const id = `${event.params.entity.toHex()}`;
     const entity = AmbassadorsEntityEntity.load(id)!;
 
-    entity.ambassadors = [];
     entity.status = 1;
     entity.save();
 }
@@ -41,7 +39,6 @@ export function handleEntityAccountReplaced(event: EntityAccountReplaced): void 
     const newEntity = new AmbassadorsEntityEntity(newId);
 
     newEntity.status = oldEntity.status;
-    newEntity.ambassadors = oldEntity.ambassadors;
     newEntity.save();
 
     store.remove('AmbassadorsEntityEntity', oldId);
@@ -55,6 +52,7 @@ export function handleAmbassadorAdded(event: AmbassadorAdded): void {
         ambassador = new AmbassadorEntity(id);
     }
     ambassador.since = event.block.timestamp.toI32();
+    ambassador.entity = event.transaction.from.toHex();
     ambassador.until = 0;
     ambassador.status = 0;
     ambassador.communities = [];
@@ -72,25 +70,13 @@ export function handleAmbassadorRemoved(event: AmbassadorRemoved): void {
 }
 
 export function handleAmbassadorAccountReplaced(event: AmbassadorAccountReplaced): void {
-    const entityId = `${event.params.entityAccount.toHex()}`;
     const oldId = `${event.params.oldAccount.toHex()}`;
     const newId = `${event.params.newAccount.toHex()}`;
     const oldAmbassador = AmbassadorEntity.load(oldId)!;
     const newAmbassador = new AmbassadorEntity(newId);
-    const entity = AmbassadorsEntityEntity.load(entityId)!;
-
-    const entityAmbassadors = entity.ambassadors;
-    const newEntityAmbassadors: string[] = [];
-
-    for (let i = 0; i < entityAmbassadors.length; i++) {
-        if (Address.fromString(entityAmbassadors[i]).notEqual(event.params.oldAccount)) {
-            newEntityAmbassadors.push(entityAmbassadors[i]);
-        }
-    }
-    newEntityAmbassadors.push(newId);
-    entity.ambassadors = newEntityAmbassadors;
 
     newAmbassador.since = oldAmbassador.since;
+    newAmbassador.entity = oldAmbassador.entity;
     newAmbassador.until = oldAmbassador.until;
     newAmbassador.status = oldAmbassador.status;
     newAmbassador.communities = oldAmbassador.communities;
@@ -100,25 +86,13 @@ export function handleAmbassadorAccountReplaced(event: AmbassadorAccountReplaced
 }
 
 export function handleAmbassadorReplaced(event: AmbassadorReplaced): void {
-    const entityId = `${event.params.entityAccount.toHex()}`;
     const oldId = `${event.params.oldAmbassador.toHex()}`;
     const newId = `${event.params.newAmbassador.toHex()}`;
     const oldAmbassador = AmbassadorEntity.load(oldId)!;
     const newAmbassador = new AmbassadorEntity(newId);
-    const entity = AmbassadorsEntityEntity.load(entityId)!;
-
-    const entityAmbassadors = entity.ambassadors;
-    const newEntityAmbassadors: string[] = [];
-
-    for (let i = 0; i < entityAmbassadors.length; i++) {
-        if (Address.fromString(entityAmbassadors[i]).notEqual(event.params.oldAmbassador)) {
-            newEntityAmbassadors.push(entityAmbassadors[i]);
-        }
-    }
-    newEntityAmbassadors.push(newId);
-    entity.ambassadors = newEntityAmbassadors;
 
     newAmbassador.since = oldAmbassador.since;
+    newAmbassador.entity = oldAmbassador.entity;
     newAmbassador.until = oldAmbassador.until;
     newAmbassador.status = oldAmbassador.status;
     newAmbassador.communities = oldAmbassador.communities;
@@ -128,26 +102,12 @@ export function handleAmbassadorReplaced(event: AmbassadorReplaced): void {
 }
 
 export function handleAmbassadorTransfered(event: AmbassadorTransfered): void {
-    const oldEntity = AmbassadorsEntityEntity.load(event.params.oldEntity.toHex())!;
-    const newEntity = AmbassadorsEntityEntity.load(event.params.newEntity.toHex())!;
+    const id = `${event.params.ambassador.toHex()}`;
+    const ambassador = AmbassadorEntity.load(id)!;
 
-    const oldEntityAmbassadors = oldEntity.ambassadors;
-    const newOldEntityAmbassadors: string[] = [];
+    ambassador.entity = event.params.newEntity.toHex();
 
-    for (let i = 0; i < oldEntityAmbassadors.length; i++) {
-        if (Address.fromString(oldEntityAmbassadors[i]).notEqual(event.params.ambassador)) {
-            newOldEntityAmbassadors.push(oldEntityAmbassadors[i]);
-        }
-    }
-    oldEntity.ambassadors = newOldEntityAmbassadors;
-
-    const newEntityAmbassadors = newEntity.ambassadors;
-
-    newEntityAmbassadors.push(event.params.ambassador.toHex());
-    newEntity.ambassadors = newEntityAmbassadors;
-
-    oldEntity.save();
-    newEntity.save();
+    ambassador.save();
 }
 
 export function handleAmbassadorToCommunityUpdated(event: AmbassadorToCommunityUpdated): void {

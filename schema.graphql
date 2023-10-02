@@ -574,7 +574,7 @@ type AmbassadorsEntityEntity @entity {
   """
   array of ambassadors addresses
   """
-  ambassadors: [AmbassadorEntity!]!
+  ambassadors: [AmbassadorEntity!]! @derivedFrom(field: "entity")
 }
 
 """
@@ -585,6 +585,10 @@ type AmbassadorEntity @entity {
   ambassador address
   """
   id: ID!
+  """
+  ambassador entity
+  """
+  entity: AmbassadorsEntityEntity!
   """
   tx timestamp of when this ambassador was added to the impactMarketCouncil
   """

@@ -2014,17 +2014,12 @@ export class AmbassadorsEntityEntity extends Entity {
     this.set("status", Value.fromI32(value));
   }
 
-  get ambassadors(): Array<string> {
-    let value = this.get("ambassadors");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set ambassadors(value: Array<string>) {
-    this.set("ambassadors", Value.fromStringArray(value));
+  get ambassadors(): AmbassadorEntityLoader {
+    return new AmbassadorEntityLoader(
+      "AmbassadorsEntityEntity",
+      this.get("id")!.toString(),
+      "ambassadors"
+    );
   }
 }
 
@@ -2069,6 +2064,19 @@ export class AmbassadorEntity extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get entity(): string {
+    let value = this.get("entity");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set entity(value: string) {
+    this.set("entity", Value.fromString(value));
   }
 
   get since(): i32 {
@@ -2567,5 +2575,23 @@ export class UserReferral extends Entity {
 
   set usages(value: i32) {
     this.set("usages", Value.fromI32(value));
+  }
+}
+
+export class AmbassadorEntityLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): AmbassadorEntity[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<AmbassadorEntity[]>(value);
   }
 }
