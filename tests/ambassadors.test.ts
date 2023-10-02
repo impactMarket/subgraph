@@ -103,6 +103,8 @@ test('should add ambassador', () => {
 
     assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'status', '0');
     assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'status', '0');
+    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'entity', entityAddress[0]);
+    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'ambassadors', `[${ambassadorAddress[0]}]`);
 });
 
 // should remove ambassador
