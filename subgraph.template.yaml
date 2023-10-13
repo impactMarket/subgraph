@@ -13,7 +13,7 @@ dataSources:
       startBlock: {{startBlockV1}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - CommunityEntity
@@ -41,7 +41,7 @@ dataSources:
       startBlock: {{startBlockAmbassadors}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ProposalEntity
@@ -73,7 +73,7 @@ dataSources:
       startBlock: {{startBlockAmbassadors}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - AmbassadorEntity
@@ -111,7 +111,7 @@ dataSources:
       startBlock: {{startBlockReferrals}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - UserReferral
@@ -133,7 +133,7 @@ dataSources:
       startBlock: {{startBlockV2}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - DepositAsset
@@ -160,7 +160,7 @@ dataSources:
       startBlock: {{startBlockAlpha}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - CommunityEntity
@@ -184,7 +184,7 @@ dataSources:
       startBlock: {{startBlockAlpha}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - UserTransactionsEntity
@@ -205,7 +205,7 @@ templates:
       abi: Community
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ManagerEntity
@@ -258,7 +258,7 @@ templates:
       abi: OldCommunity
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ManagerEntity
