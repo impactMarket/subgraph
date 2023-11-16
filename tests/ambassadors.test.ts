@@ -49,7 +49,7 @@ test('should create entity', () => {
 
     handleEntityAdded(entityAdded);
 
-    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'status', '0');
+    assert.fieldEquals('AmbassadorsEntity', entityAddress[0], 'status', '0');
 });
 
 // should remove entity
@@ -66,7 +66,7 @@ test('should remove entity', () => {
 
     handleEntityRemoved(entityRemoved);
 
-    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'status', '1');
+    assert.fieldEquals('AmbassadorsEntity', entityAddress[0], 'status', '1');
 });
 
 // should replace entity account
@@ -83,8 +83,8 @@ test('should replace entity account', () => {
 
     handleEntityAccountReplaced(entityAccountReplaced);
 
-    assert.notInStore('AmbassadorsEntityEntity', entityAddress[0]);
-    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[1], 'status', '0');
+    assert.notInStore('AmbassadorsEntity', entityAddress[0]);
+    assert.fieldEquals('AmbassadorsEntity', entityAddress[1], 'status', '0');
 });
 
 // should add ambassador
@@ -101,10 +101,10 @@ test('should add ambassador', () => {
 
     handleAmbassadorAdded(ambassadorAdded);
 
-    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'status', '0');
-    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'status', '0');
-    // assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'entity', entityAddress[0]);
-    // assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'ambassadors', `[${ambassadorAddress[0]}]`);
+    assert.fieldEquals('AmbassadorsEntity', entityAddress[0], 'status', '0');
+    assert.fieldEquals('Ambassador', ambassadorAddress[0], 'status', '0');
+    // assert.fieldEquals('Ambassador', ambassadorAddress[0], 'entity', entityAddress[0]);
+    // assert.fieldEquals('AmbassadorsEntity', entityAddress[0], 'ambassadors', `[${ambassadorAddress[0]}]`);
 });
 
 // should remove ambassador
@@ -125,8 +125,8 @@ test('should remove ambassador', () => {
 
     handleAmbassadorRemoved(ambassadorRemoved);
 
-    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'status', '0');
-    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'status', '1');
+    assert.fieldEquals('AmbassadorsEntity', entityAddress[0], 'status', '0');
+    assert.fieldEquals('Ambassador', ambassadorAddress[0], 'status', '1');
 });
 
 // should replace ambassador account
@@ -152,9 +152,9 @@ test('should replace ambassador account', () => {
 
     handleAmbassadorAccountReplaced(ambassadorAccountReplaced);
 
-    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'status', '0');
-    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[1], 'status', '0');
-    assert.notInStore('AmbassadorEntity', ambassadorAddress[0]);
+    assert.fieldEquals('AmbassadorsEntity', entityAddress[0], 'status', '0');
+    assert.fieldEquals('Ambassador', ambassadorAddress[1], 'status', '0');
+    assert.notInStore('Ambassador', ambassadorAddress[0]);
 });
 
 // should replace ambassador
@@ -180,9 +180,9 @@ test('should replace ambassador', () => {
 
     handleAmbassadorReplaced(ambassadorReplaced);
 
-    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[0], 'status', '0');
-    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[1], 'status', '0');
-    assert.notInStore('AmbassadorEntity', ambassadorAddress[0]);
+    assert.fieldEquals('AmbassadorsEntity', entityAddress[0], 'status', '0');
+    assert.fieldEquals('Ambassador', ambassadorAddress[1], 'status', '0');
+    assert.notInStore('Ambassador', ambassadorAddress[0]);
 });
 
 // should transfer ambassador
@@ -211,9 +211,9 @@ test('should transfer ambassador', () => {
 
     handleAmbassadorTransfered(ambassadorTransfered);
 
-    assert.fieldEquals('AmbassadorsEntityEntity', entityAddress[1], 'ambassadors', `[${ambassadorAddress[0]}]`);
-    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'status', '0');
-    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'entity', entityAddress[1]);
+    assert.fieldEquals('AmbassadorsEntity', entityAddress[1], 'ambassadors', `[${ambassadorAddress[0]}]`);
+    assert.fieldEquals('Ambassador', ambassadorAddress[0], 'status', '0');
+    assert.fieldEquals('Ambassador', ambassadorAddress[0], 'entity', entityAddress[1]);
 });
 
 // should update community to ambassador
@@ -238,7 +238,7 @@ test('should update community to ambassador', () => {
 
     handleAmbassadorToCommunityUpdated(ambassadorToCommunityUpdated);
 
-    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'communities', `[${communityAddress[0]}]`);
+    assert.fieldEquals('Ambassador', ambassadorAddress[0], 'communities', `[${communityAddress[0]}]`);
 });
 
 // should remove community
@@ -267,7 +267,7 @@ test('should remove community', () => {
 
     handleCommunityRemoved(communityRemoved);
 
-    assert.fieldEquals('AmbassadorEntity', ambassadorAddress[0], 'communities', `[]`);
+    assert.fieldEquals('Ambassador', ambassadorAddress[0], 'communities', `[]`);
 });
 
 // should remove community without ambassador

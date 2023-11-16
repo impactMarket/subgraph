@@ -222,32 +222,32 @@ export function createCommunityEditedEvent(community: string, props: Map<string,
     return communityEditedEvent;
 }
 
-export function createCommunityLockedEvent(ambassadorEntity: string, communityAddress: string): CommunityLocked {
+export function createCommunityLockedEvent(ambassador: string, communityAddress: string): CommunityLocked {
     const communityLockedEvent = changetype<CommunityLocked>(newMockEvent());
 
     communityLockedEvent.parameters = [];
     communityLockedEvent.address = Address.fromString(communityAddress);
-    const ambassadorEntityParam = new ethereum.EventParam(
+    const ambassadorParam = new ethereum.EventParam(
         'manager',
-        ethereum.Value.fromAddress(Address.fromString(ambassadorEntity))
+        ethereum.Value.fromAddress(Address.fromString(ambassador))
     );
 
-    communityLockedEvent.parameters.push(ambassadorEntityParam);
+    communityLockedEvent.parameters.push(ambassadorParam);
 
     return communityLockedEvent;
 }
 
-export function createCommunityUnlockedEvent(ambassadorEntity: string, communityAddress: string): CommunityUnlocked {
+export function createCommunityUnlockedEvent(ambassador: string, communityAddress: string): CommunityUnlocked {
     const communityUnlockedEvent = changetype<CommunityUnlocked>(newMockEvent());
 
     communityUnlockedEvent.parameters = [];
     communityUnlockedEvent.address = Address.fromString(communityAddress);
-    const ambassadorEntityParam = new ethereum.EventParam(
+    const ambassadorParam = new ethereum.EventParam(
         'manager',
-        ethereum.Value.fromAddress(Address.fromString(ambassadorEntity))
+        ethereum.Value.fromAddress(Address.fromString(ambassador))
     );
 
-    communityUnlockedEvent.parameters.push(ambassadorEntityParam);
+    communityUnlockedEvent.parameters.push(ambassadorParam);
 
     return communityUnlockedEvent;
 }

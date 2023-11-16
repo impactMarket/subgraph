@@ -483,7 +483,7 @@ type ContributorEntity @entity {
 """
 Proposals from the impactMarketCouncil
 """
-type ProposalEntity @entity {
+type ProposalCouncil @entity {
   """
   proposal id
   """
@@ -533,7 +533,7 @@ type ProposalEntity @entity {
 """
 ImpactMarketCouncil members
 """
-type ImpactMarketCouncilMemberEntity @entity {
+type CouncilMember @entity {
   """
   member address
   """
@@ -559,7 +559,7 @@ type ImpactMarketCouncilMemberEntity @entity {
 """
 Ambassadors Entities
 """
-type AmbassadorsEntityEntity @entity {
+type AmbassadorsEntity @entity {
   """
   entity address
   """
@@ -571,13 +571,13 @@ type AmbassadorsEntityEntity @entity {
   """
   array of ambassadors addresses
   """
-  ambassadors: [AmbassadorEntity!]! @derivedFrom(field: "entity")
+  ambassadors: [Ambassador!]! @derivedFrom(field: "entity")
 }
 
 """
 Ambassadors
 """
-type AmbassadorEntity @entity {
+type Ambassador @entity {
   """
   ambassador address
   """
@@ -585,7 +585,7 @@ type AmbassadorEntity @entity {
   """
   ambassador entity
   """
-  entity: AmbassadorsEntityEntity!
+  entity: AmbassadorsEntity!
   """
   tx timestamp of when this ambassador was added to the impactMarketCouncil
   """

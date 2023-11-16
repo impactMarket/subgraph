@@ -1684,7 +1684,7 @@ export class ContributorEntity extends Entity {
   }
 }
 
-export class ProposalEntity extends Entity {
+export class ProposalCouncil extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1692,24 +1692,24 @@ export class ProposalEntity extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ProposalEntity entity without an ID");
+    assert(id != null, "Cannot save ProposalCouncil entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ProposalEntity must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ProposalCouncil must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ProposalEntity", id.toString(), this);
+      store.set("ProposalCouncil", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): ProposalEntity | null {
-    return changetype<ProposalEntity | null>(
-      store.get_in_block("ProposalEntity", id)
+  static loadInBlock(id: string): ProposalCouncil | null {
+    return changetype<ProposalCouncil | null>(
+      store.get_in_block("ProposalCouncil", id)
     );
   }
 
-  static load(id: string): ProposalEntity | null {
-    return changetype<ProposalEntity | null>(store.get("ProposalEntity", id));
+  static load(id: string): ProposalCouncil | null {
+    return changetype<ProposalCouncil | null>(store.get("ProposalCouncil", id));
   }
 
   get id(): string {
@@ -1856,7 +1856,7 @@ export class ProposalEntity extends Entity {
   }
 }
 
-export class ImpactMarketCouncilMemberEntity extends Entity {
+export class CouncilMember extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1864,29 +1864,24 @@ export class ImpactMarketCouncilMemberEntity extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save ImpactMarketCouncilMemberEntity entity without an ID"
-    );
+    assert(id != null, "Cannot save CouncilMember entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ImpactMarketCouncilMemberEntity must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type CouncilMember must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ImpactMarketCouncilMemberEntity", id.toString(), this);
+      store.set("CouncilMember", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): ImpactMarketCouncilMemberEntity | null {
-    return changetype<ImpactMarketCouncilMemberEntity | null>(
-      store.get_in_block("ImpactMarketCouncilMemberEntity", id)
+  static loadInBlock(id: string): CouncilMember | null {
+    return changetype<CouncilMember | null>(
+      store.get_in_block("CouncilMember", id)
     );
   }
 
-  static load(id: string): ImpactMarketCouncilMemberEntity | null {
-    return changetype<ImpactMarketCouncilMemberEntity | null>(
-      store.get("ImpactMarketCouncilMemberEntity", id)
-    );
+  static load(id: string): CouncilMember | null {
+    return changetype<CouncilMember | null>(store.get("CouncilMember", id));
   }
 
   get id(): string {
@@ -1955,7 +1950,7 @@ export class ImpactMarketCouncilMemberEntity extends Entity {
   }
 }
 
-export class AmbassadorsEntityEntity extends Entity {
+export class AmbassadorsEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1963,28 +1958,25 @@ export class AmbassadorsEntityEntity extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save AmbassadorsEntityEntity entity without an ID"
-    );
+    assert(id != null, "Cannot save AmbassadorsEntity entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type AmbassadorsEntityEntity must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type AmbassadorsEntity must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("AmbassadorsEntityEntity", id.toString(), this);
+      store.set("AmbassadorsEntity", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): AmbassadorsEntityEntity | null {
-    return changetype<AmbassadorsEntityEntity | null>(
-      store.get_in_block("AmbassadorsEntityEntity", id)
+  static loadInBlock(id: string): AmbassadorsEntity | null {
+    return changetype<AmbassadorsEntity | null>(
+      store.get_in_block("AmbassadorsEntity", id)
     );
   }
 
-  static load(id: string): AmbassadorsEntityEntity | null {
-    return changetype<AmbassadorsEntityEntity | null>(
-      store.get("AmbassadorsEntityEntity", id)
+  static load(id: string): AmbassadorsEntity | null {
+    return changetype<AmbassadorsEntity | null>(
+      store.get("AmbassadorsEntity", id)
     );
   }
 
@@ -2014,16 +2006,16 @@ export class AmbassadorsEntityEntity extends Entity {
     this.set("status", Value.fromI32(value));
   }
 
-  get ambassadors(): AmbassadorEntityLoader {
-    return new AmbassadorEntityLoader(
-      "AmbassadorsEntityEntity",
+  get ambassadors(): AmbassadorLoader {
+    return new AmbassadorLoader(
+      "AmbassadorsEntity",
       this.get("id")!.toString(),
       "ambassadors"
     );
   }
 }
 
-export class AmbassadorEntity extends Entity {
+export class Ambassador extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -2031,26 +2023,22 @@ export class AmbassadorEntity extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save AmbassadorEntity entity without an ID");
+    assert(id != null, "Cannot save Ambassador entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type AmbassadorEntity must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Ambassador must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("AmbassadorEntity", id.toString(), this);
+      store.set("Ambassador", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): AmbassadorEntity | null {
-    return changetype<AmbassadorEntity | null>(
-      store.get_in_block("AmbassadorEntity", id)
-    );
+  static loadInBlock(id: string): Ambassador | null {
+    return changetype<Ambassador | null>(store.get_in_block("Ambassador", id));
   }
 
-  static load(id: string): AmbassadorEntity | null {
-    return changetype<AmbassadorEntity | null>(
-      store.get("AmbassadorEntity", id)
-    );
+  static load(id: string): Ambassador | null {
+    return changetype<Ambassador | null>(store.get("Ambassador", id));
   }
 
   get id(): string {
@@ -2578,7 +2566,7 @@ export class UserReferral extends Entity {
   }
 }
 
-export class AmbassadorEntityLoader extends Entity {
+export class AmbassadorLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -2590,8 +2578,8 @@ export class AmbassadorEntityLoader extends Entity {
     this._field = field;
   }
 
-  load(): AmbassadorEntity[] {
+  load(): Ambassador[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<AmbassadorEntity[]>(value);
+    return changetype<Ambassador[]>(value);
   }
 }

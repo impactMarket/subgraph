@@ -1,4 +1,4 @@
-import { ImpactMarketCouncilMemberEntity, ProposalEntity } from '../../generated/schema';
+import { CouncilMember, ProposalCouncil } from '../../generated/schema';
 import {
     ProposalCanceled,
     ProposalCreated,
@@ -9,10 +9,10 @@ import {
 
 export function handleProposalCreatedOld(event: ProposalCreated): void {
     const id = `${event.params.id.toString()}`;
-    let proposal = ProposalEntity.load(id);
+    let proposal = ProposalCouncil.load(id);
 
     if (!proposal) {
-        proposal = new ProposalEntity(id);
+        proposal = new ProposalCouncil(id);
     }
     proposal.createdAt = event.block.timestamp.toI32();
     proposal.proposer = event.params.proposer;
@@ -29,10 +29,10 @@ export function handleProposalCreatedOld(event: ProposalCreated): void {
 
 export function handleProposalCreated(event: ProposalCreated1): void {
     const id = `${event.params.id.toString()}`;
-    let proposal = ProposalEntity.load(id);
+    let proposal = ProposalCouncil.load(id);
 
     if (!proposal) {
-        proposal = new ProposalEntity(id);
+        proposal = new ProposalCouncil(id);
     }
     proposal.createdAt = event.block.timestamp.toI32();
     proposal.proposer = event.params.proposer;
@@ -49,7 +49,7 @@ export function handleProposalCreated(event: ProposalCreated1): void {
 }
 
 export function handleProposalExecuted(event: ProposalExecuted): void {
-    const proposal = ProposalEntity.load(event.params.id.toString());
+    const proposal = ProposalCouncil.load(event.params.id.toString());
 
     if (proposal) {
         proposal.status = 1;
@@ -58,7 +58,7 @@ export function handleProposalExecuted(event: ProposalExecuted): void {
 }
 
 export function handleProposalCanceled(event: ProposalCanceled): void {
-    const proposal = ProposalEntity.load(event.params.id.toString());
+    const proposal = ProposalCouncil.load(event.params.id.toString());
 
     if (proposal) {
         proposal.status = 2;
@@ -67,8 +67,8 @@ export function handleProposalCanceled(event: ProposalCanceled): void {
 }
 
 export function handleVoteCast(event: VoteCast): void {
-    const proposal = ProposalEntity.load(event.params.proposalId.toString());
-    const member = ImpactMarketCouncilMemberEntity.load(event.params.voter.toHex());
+    const proposal = ProposalCouncil.load(event.params.proposalId.toString());
+    const member = CouncilMember.load(event.params.voter.toHex());
 
     if (proposal) {
         switch (event.params.support) {
