@@ -8,8 +8,7 @@ import {
     communityProps,
     fiveCents,
     managerAddress,
-    normalize,
-    toToken
+    normalize
 } from './utils/constants';
 import {
     createBeneficiaryAddedEvent,
@@ -162,10 +161,20 @@ test('should add claim', () => {
     );
     assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '2');
     // assert daily community average
-    assert.fieldEquals('AverageValue', GLOBAL_COMMUNITY_AVERAGE, 'value', toToken('5').toString());
+    assert.fieldEquals(
+        'AverageValue',
+        GLOBAL_COMMUNITY_AVERAGE,
+        'value',
+        normalize(communityProps[0].get('maxTotalClaim')!).toString()
+    );
     assert.fieldEquals('AverageValue', GLOBAL_COMMUNITY_AVERAGE, 'count', '1');
     // assert daily ubi rate
-    assert.fieldEquals('AverageValue', `${DAILY_UBI_RATE}0`, 'value', toToken('5').toString());
+    assert.fieldEquals(
+        'AverageValue',
+        `${DAILY_UBI_RATE}18989`,
+        'value',
+        normalize(communityProps[0].get('originalClaimAmount')!).toString()
+    );
 });
 
 test('should rotate claim timestamp', () => {

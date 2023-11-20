@@ -1,8 +1,8 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
-import { AverageValue, CommunityDailyEntity, CommunityEntity, UBIDailyEntity } from '../../generated/schema';
+import { CommunityDailyEntity, CommunityEntity, UBIDailyEntity } from '../../generated/schema';
 import { EMPTY_AVERAGE, GLOBAL_COMMUNITY_AVERAGE } from '../utils/constants';
-import { fiveCents, normalize, updateAverage } from '../utils';
+import { fiveCents, newEmptyAverage, normalize, updateAverage } from '../utils';
 import { genericHandleManagerAdded } from './manager';
 import { loadOrCreateDailyUbi } from './ubi';
 
@@ -117,9 +117,9 @@ export function generiHandleCommunityAdded(
     let ubi = UBIDailyEntity.load('0');
 
     if (!ubi) {
-        const emptyAvg = new AverageValue(EMPTY_AVERAGE);
-        const globalCommunityUBIAverage = new AverageValue(GLOBAL_COMMUNITY_AVERAGE);
-        
+        const emptyAvg = newEmptyAverage(EMPTY_AVERAGE);
+        const globalCommunityUBIAverage = newEmptyAverage(GLOBAL_COMMUNITY_AVERAGE);
+
         globalCommunityUBIAverage.value = community.maxClaim;
         globalCommunityUBIAverage.count = 1;
         globalCommunityUBIAverage.save();

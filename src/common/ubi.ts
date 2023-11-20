@@ -2,16 +2,18 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 import { AverageValue, UBIDailyEntity } from '../../generated/schema';
 import { DAILY_GIVING_RATE, DAILY_UBI_RATE, EMPTY_AVERAGE } from '../utils/constants';
+import { newEmptyAverage } from '../utils';
 
 export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
     const dayIdInt = _blockTimestamp.toI32() / 86400;
     const ubiDailyId = dayIdInt.toString();
     let ubiDaily = UBIDailyEntity.load(ubiDailyId);
-    const emptyAvg = AverageValue.load(EMPTY_AVERAGE)!;
-    const dailyUbiRate = new AverageValue(DAILY_UBI_RATE + dayIdInt.toString());
-    const dailyGivingRate = new AverageValue(DAILY_GIVING_RATE + dayIdInt.toString());
 
     if (!ubiDaily) {
+        const emptyAvg = AverageValue.load(EMPTY_AVERAGE)!;
+        const dailyUbiRate = newEmptyAverage(DAILY_UBI_RATE + dayIdInt.toString());
+        const dailyGivingRate = newEmptyAverage(DAILY_GIVING_RATE + dayIdInt.toString());
+
         ubiDaily = new UBIDailyEntity(ubiDailyId);
         ubiDaily.communities = 0;
         ubiDaily.beneficiaries = 0;
@@ -60,6 +62,9 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
             yesterdayUbiDaily.fundingRate = fundingRate;
             yesterdayUbiDaily.save();
         }
+
+        dailyGivingRate.save();
+        dailyUbiRate.save();
     }
 
     return ubiDaily;

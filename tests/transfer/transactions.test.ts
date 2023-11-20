@@ -2,6 +2,7 @@ import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
 import { BeneficiaryEntity, CommunityEntity, ManagerEntity, UBIDailyEntity } from '../../generated/schema';
+import { EMPTY_AVERAGE, GLOBAL_COMMUNITY_AVERAGE } from '../../src/utils/constants';
 import {
     ambassadorAddress,
     beneficiaryAddress,
@@ -13,7 +14,7 @@ import {
 import { attestationProxyAddress, cUSDAddress } from '../../src/common/addresses';
 import { createTransferEvent } from '../utils/transfer';
 import { handleTransferAsset } from '../../src/mappings/transfer';
-import { normalize } from '../../src/utils/index';
+import { newEmptyAverage, normalize } from '../../src/utils/index';
 
 export { handleTransferAsset };
 
@@ -152,6 +153,9 @@ function createDummyEntities(): void {
     beneficiary4.addedBy = Address.fromString(managerAddress[1]);
     beneficiary4.save();
 
+    const emptyAvg = newEmptyAverage(EMPTY_AVERAGE);
+    const globalCommunityUBIAverage = newEmptyAverage(GLOBAL_COMMUNITY_AVERAGE);
+
     const ubi = new UBIDailyEntity('0');
 
     ubi.communities = 2;
@@ -166,7 +170,13 @@ function createDummyEntities(): void {
     ubi.reach = 0;
     ubi.claims = 0;
     ubi.fundingRate = BigDecimal.zero();
+    ubi.dailyUbiRate = emptyAvg.id;
+    ubi.dailyGivingRate = emptyAvg.id;
+    ubi.globalCommunityUBIAvg = globalCommunityUBIAverage.id;
     ubi.save();
+
+    emptyAvg.save();
+    globalCommunityUBIAverage.save();
 }
 
 test('should count first time user transactions', () => {

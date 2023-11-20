@@ -43,3 +43,13 @@ export function updateAverage(averageId: string, amount: BigDecimal, isIncrease:
     // save newly created average entity
     averageUpdated.save();
 }
+
+export function newEmptyAverage(averageId: string): AverageValue {
+    const emptyAvg = new AverageValue(averageId);
+
+    emptyAvg.value = BigDecimal.zero();
+    emptyAvg.count = 0;
+    // emptyAvg.save();
+
+    return emptyAvg;
+}

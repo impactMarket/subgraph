@@ -1,4 +1,5 @@
 import { Address, Bytes, store } from '@graphprotocol/graph-ts';
+import { Ambassador, AmbassadorsEntity } from '../../generated/schema';
 import {
     AmbassadorAccountReplaced,
     AmbassadorAdded,
@@ -11,7 +12,6 @@ import {
     EntityAdded,
     EntityRemoved
 } from '../../generated/Ambassadors/Ambassadors';
-import { Ambassador, AmbassadorsEntity } from '../../generated/schema';
 
 export function handleEntityAdded(event: EntityAdded): void {
     const id = `${event.params.entity.toHex()}`;
