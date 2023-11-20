@@ -1,13 +1,15 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { assert, clearStore, test } from 'matchstick-as/assembly/index';
 
+import { DAILY_UBI_RATE, GLOBAL_COMMUNITY_AVERAGE } from '../src/utils/constants';
 import {
     beneficiaryAddress,
     communityAddress,
     communityProps,
     fiveCents,
     managerAddress,
-    normalize
+    normalize,
+    toToken
 } from './utils/constants';
 import {
     createBeneficiaryAddedEvent,
@@ -159,6 +161,11 @@ test('should add claim', () => {
         ).toString()
     );
     assert.fieldEquals('UBIDailyEntity', '0', 'beneficiaries', '2');
+    // assert daily community average
+    assert.fieldEquals('AverageValue', GLOBAL_COMMUNITY_AVERAGE, 'value', toToken('5').toString());
+    assert.fieldEquals('AverageValue', GLOBAL_COMMUNITY_AVERAGE, 'count', '1');
+    // assert daily ubi rate
+    assert.fieldEquals('AverageValue', `${DAILY_UBI_RATE}0`, 'value', toToken('5').toString());
 });
 
 test('should rotate claim timestamp', () => {

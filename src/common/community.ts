@@ -1,7 +1,8 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
-import { CommunityDailyEntity, CommunityEntity, UBIDailyEntity } from '../../generated/schema';
-import { fiveCents, normalize } from '../utils';
+import { AverageValue, CommunityDailyEntity, CommunityEntity, UBIDailyEntity } from '../../generated/schema';
+import { EMPTY_AVERAGE, GLOBAL_COMMUNITY_AVERAGE } from '../utils/constants';
+import { fiveCents, normalize, updateAverage } from '../utils';
 import { genericHandleManagerAdded } from './manager';
 import { loadOrCreateDailyUbi } from './ubi';
 
@@ -116,6 +117,12 @@ export function generiHandleCommunityAdded(
     let ubi = UBIDailyEntity.load('0');
 
     if (!ubi) {
+        const emptyAvg = new AverageValue(EMPTY_AVERAGE);
+        const globalCommunityUBIAverage = new AverageValue(GLOBAL_COMMUNITY_AVERAGE);
+        
+        globalCommunityUBIAverage.value = community.maxClaim;
+        globalCommunityUBIAverage.count = 1;
+        globalCommunityUBIAverage.save();
         ubi = new UBIDailyEntity('0');
         // one already!
         ubi.communities = 1;
@@ -135,7 +142,13 @@ export function generiHandleCommunityAdded(
         ubi.transactions = 0;
         ubi.reach = 0;
         ubi.fundingRate = BigDecimal.zero();
+        // setting this two empty for global data since we only care about daily
+        ubi.dailyGivingRate = emptyAvg.id;
+        ubi.dailyUbiRate = emptyAvg.id;
+        ubi.globalCommunityUBIAvg = globalCommunityUBIAverage.id;
         ubi.save();
+        globalCommunityUBIAverage.save();
+        emptyAvg.save();
     } else {
         // one already!
         ubi.communities += 1;
@@ -143,6 +156,7 @@ export function generiHandleCommunityAdded(
             ubi.claimed = ubi.claimed.plus(fiveCents);
             community.estimatedFunds = community.estimatedFunds.minus(fiveCents);
         }
+        updateAverage(GLOBAL_COMMUNITY_AVERAGE, community.maxClaim);
         ubi.save();
     }
     // update daily ubi
@@ -168,6 +182,7 @@ export function generiHandleCommunityRemoved(_communityAddress: Address, _blockT
     if (!community) {
         community = new CommunityEntity(communityId);
     }
+    updateAverage(GLOBAL_COMMUNITY_AVERAGE, community.maxClaim, false);
     community.state = 1;
     community.save();
     // update ubi

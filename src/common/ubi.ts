@@ -1,11 +1,15 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
-import { UBIDailyEntity } from '../../generated/schema';
+import { AverageValue, UBIDailyEntity } from '../../generated/schema';
+import { DAILY_GIVING_RATE, DAILY_UBI_RATE, EMPTY_AVERAGE } from '../utils/constants';
 
 export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
     const dayIdInt = _blockTimestamp.toI32() / 86400;
     const ubiDailyId = dayIdInt.toString();
     let ubiDaily = UBIDailyEntity.load(ubiDailyId);
+    const emptyAvg = AverageValue.load(EMPTY_AVERAGE)!;
+    const dailyUbiRate = new AverageValue(DAILY_UBI_RATE + dayIdInt.toString());
+    const dailyGivingRate = new AverageValue(DAILY_GIVING_RATE + dayIdInt.toString());
 
     if (!ubiDaily) {
         ubiDaily = new UBIDailyEntity(ubiDailyId);
@@ -21,6 +25,9 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
         ubiDaily.transactions = 0;
         ubiDaily.reach = 0;
         ubiDaily.fundingRate = BigDecimal.zero();
+        ubiDaily.dailyUbiRate = dailyUbiRate.id;
+        ubiDaily.dailyGivingRate = dailyGivingRate.id;
+        ubiDaily.globalCommunityUBIAvg = emptyAvg.id;
 
         let previousDayIdInt = dayIdInt - 1;
         const yesterdayUbiDaily = UBIDailyEntity.load(previousDayIdInt.toString());
@@ -43,6 +50,7 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
             let fundingRate = BigDecimal.zero();
 
             if (monthlyContributed.gt(BigDecimal.zero())) {
+                // this does not consider division precendence over subtraction
                 fundingRate = monthlyContributed
                     .minus(monthlyClaimed)
                     .div(monthlyContributed)

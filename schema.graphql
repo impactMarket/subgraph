@@ -1,5 +1,17 @@
-scalar Bytes
-scalar BigDecimal
+type AverageValue @entity {
+  """
+  average unique id
+  """
+  id: ID!
+  """
+  average value
+  """
+  value: BigDecimal!
+  """
+  number of values
+  """
+  count: Int!
+}
 
 """
 Contributions of an asset to an entity
@@ -262,6 +274,18 @@ type UBIDailyEntity @entity {
   funding rate: (monthly raised - monthly claimed) / monthly raised
   """
   fundingRate: BigDecimal!
+  """
+  daily UBI rate is the average for each day, considering only beneficiaries that have last claimed more than 7 days ago
+  """
+  dailyUbiRate: AverageValue!
+  """
+  daily giving rate is the average for each day, considering only donors that have last donated more than 30 days ago
+  """
+  dailyGivingRate: AverageValue!
+  """
+  global UBI community average
+  """
+  globalCommunityUBIAvg: AverageValue!
 }
 
 """
@@ -481,6 +505,130 @@ type ContributorEntity @entity {
   last PACT activity day id (block timestamp / 86400)
   """
   lastPACTActivity: Int
+}
+
+"""
+Proposals from the impactMarketCouncil
+"""
+type ProposalCouncil @entity {
+  """
+  proposal id
+  """
+  id: ID!
+  """
+  unix timestamp when the proposal was created
+  """
+  createdAt: Int!
+  """
+  proposer address
+  """
+  proposer: Bytes!
+  """
+  proposal signature
+  """
+  signatures: [String!]!
+  """
+  proposal calldata
+  """
+  calldatas: [Bytes!]!
+  """
+  proposal endBlock
+  """
+  endBlock: Int!
+  """
+  proposal description
+  """
+  description: String!
+  """
+  status from last action
+  """
+  status: Int!
+  """
+  addresses of votes against
+  """
+  votedAgainst: [Bytes!]!
+  """
+  addresses of votes for
+  """
+  votedFor: [Bytes!]!
+  """
+  addresses of votes abstain
+  """
+  votedAbstain: [Bytes!]!
+}
+
+"""
+ImpactMarketCouncil members
+"""
+type CouncilMember @entity {
+  """
+  member address
+  """
+  id: ID!
+  """
+  tx timestamp of when this member was added to the impactMarketCouncil
+  """
+  since: Int!
+  """
+  tx timestamp of when this member left the impactMarketCouncil
+  """
+  until: Int!
+  """
+  status of this member (0: active, 1: inactive)
+  """
+  status: Int!
+  """
+  total number of votes
+  """
+  votes: Int!
+}
+
+"""
+Ambassadors Entities
+"""
+type AmbassadorsEntity @entity {
+  """
+  entity address
+  """
+  id: ID!
+  """
+  entity status  (0: active, 1: inactive)
+  """
+  status: Int!
+  """
+  array of ambassadors addresses
+  """
+  ambassadors: [Ambassador!]! @derivedFrom(field: "entity")
+}
+
+"""
+Ambassadors
+"""
+type Ambassador @entity {
+  """
+  ambassador address
+  """
+  id: ID!
+  """
+  ambassador entity
+  """
+  entity: AmbassadorsEntity!
+  """
+  tx timestamp of when this ambassador was added to the impactMarketCouncil
+  """
+  since: Int!
+  """
+  tx timestamp of when this ambassador left the impactMarketCouncil
+  """
+  until: Int!
+  """
+  status of this ambassador (0: active, 1: inactive)
+  """
+  status: Int!
+  """
+  array of communities addresses this ambassador is ambassador for
+  """
+  communities: [Bytes!]!
 }
 
 # Deposit and Redirect

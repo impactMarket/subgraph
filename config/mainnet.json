@@ -1,6 +1,7 @@
 {
     "startBlockAlpha": 2627648,
     "startBlockV1": 10494981,
+    "startBlockAmbassadors": 13669429,
     "startBlockMultiCurrency": 15775207,
     "startBlockV2": 15775207,
     "startBlockReferrals": 20020806,
@@ -11,6 +12,8 @@
     "cUSD": "0x765DE816845861e75A25fCA122bb6898B8B1282a",
     "cEUR": "0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73",
     "cREAL": "0xe8537a3d056DA446677B9E9d6c5dB704EaAb4787",
+    "ImpactMarketCouncil": "0xF2CA11DA5c3668DD48774f3Ce8ac09aFDc24aF3E",
+    "Ambassadors": "0x25f58d8C2522dC7E0C53cF8163C837De2415Ba51",
     "AttestationProxy": "0xd787384d91a7ffac85d51c63ef71580df6c677b7",
     "PACT": "0x46c9757C5497c5B1f2eb73aE79b6B67D119B0B58",
     "Staking": "0x1751e740379FC08b7f0eF6d49183fc0931Bd8179",
