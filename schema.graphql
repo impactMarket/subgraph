@@ -1,3 +1,18 @@
+type AverageValue @entity {
+  """
+  average unique id
+  """
+  id: ID!
+  """
+  average value
+  """
+  value: BigDecimal!
+  """
+  number of values
+  """
+  count: Int!
+}
+
 """
 Contributions of an asset to an entity
 """
@@ -259,6 +274,18 @@ type UBIDailyEntity @entity {
   funding rate: (monthly raised - monthly claimed) / monthly raised
   """
   fundingRate: BigDecimal!
+  """
+  daily UBI rate is the average for each day, considering only beneficiaries that have last claimed more than 7 days ago
+  """
+  dailyUbiRate: AverageValue!
+  """
+  daily giving rate is the average for each day, considering only donors that have last donated more than 30 days ago
+  """
+  dailyGivingRate: AverageValue!
+  """
+  global UBI community average
+  """
+  globalCommunityUBIAvg: AverageValue!
 }
 
 """

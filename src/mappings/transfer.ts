@@ -22,7 +22,7 @@ import {
 } from '../common/addresses';
 import { loadOrCreateCommunityDaily } from '../common/community';
 import { loadOrCreateDailyUbi } from '../common/ubi';
-import { normalize } from '../utils';
+import { normalize, updateAverage } from '../utils';
 
 function updateContributorHelper(
     event: Transfer,
@@ -178,6 +178,7 @@ export function handleTransferAsset(event: Transfer): void {
 
         updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
         updateContributorContributionsHelper(event, dayId, null, null);
+        updateAverage(ubiDaily.dailyGivingRate, normalizedAmount);
 
         ubi.save();
         ubiDaily.save();
@@ -199,6 +200,7 @@ export function handleTransferAsset(event: Transfer): void {
 
         updateContributorHelper(event, normalizedAmount, dayId, ubi, ubiDaily);
         updateContributorContributionsHelper(event, dayId, community, communityDaily);
+        updateAverage(ubiDaily.dailyGivingRate, normalizedAmount);
 
         if (event.params.from.notEqual(Address.fromString(treasuryAddress))) {
             // from the treasury, to the community, it was likely a "requestFunds" action

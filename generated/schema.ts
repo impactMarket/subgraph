@@ -11,6 +11,74 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class AverageValue extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save AverageValue entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type AverageValue must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("AverageValue", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): AverageValue | null {
+    return changetype<AverageValue | null>(
+      store.get_in_block("AverageValue", id)
+    );
+  }
+
+  static load(id: string): AverageValue | null {
+    return changetype<AverageValue | null>(store.get("AverageValue", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get value(): BigDecimal {
+    let value = this.get("value");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set value(value: BigDecimal) {
+    this.set("value", Value.fromBigDecimal(value));
+  }
+
+  get count(): i32 {
+    let value = this.get("count");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set count(value: i32) {
+    this.set("count", Value.fromI32(value));
+  }
+}
+
 export class AssetContributions extends Entity {
   constructor(id: string) {
     super();
@@ -890,6 +958,45 @@ export class UBIDailyEntity extends Entity {
 
   set fundingRate(value: BigDecimal) {
     this.set("fundingRate", Value.fromBigDecimal(value));
+  }
+
+  get dailyUbiRate(): string {
+    let value = this.get("dailyUbiRate");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set dailyUbiRate(value: string) {
+    this.set("dailyUbiRate", Value.fromString(value));
+  }
+
+  get dailyGivingRate(): string {
+    let value = this.get("dailyGivingRate");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set dailyGivingRate(value: string) {
+    this.set("dailyGivingRate", Value.fromString(value));
+  }
+
+  get globalCommunityUBIAvg(): string {
+    let value = this.get("globalCommunityUBIAvg");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set globalCommunityUBIAvg(value: string) {
+    this.set("globalCommunityUBIAvg", Value.fromString(value));
   }
 }
 

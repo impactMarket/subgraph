@@ -7,7 +7,7 @@ import {
     UBIDailyEntity,
     UserActivityEntity
 } from '../../generated/schema';
-import { fiveCents, normalize } from '../utils';
+import { fiveCents, normalize, updateAverage } from '../utils';
 import { loadOrCreateCommunityDaily } from './community';
 import { loadOrCreateDailyUbi } from './ubi';
 
@@ -243,6 +243,7 @@ export function genericHandleBeneficiaryClaim(
 
             ubiDaily.claimed = ubiDaily.claimed.plus(normalizedAmount);
             ubiDaily.claims += 1;
+            updateAverage(ubiDaily.dailyUbiRate, normalizedAmount);
             ubiDaily.save();
             // update beneficiary
             beneficiary.preLastClaimAt = beneficiary.lastClaimAt;
