@@ -11,8 +11,8 @@ export function loadOrCreateDailyUbi(_blockTimestamp: BigInt): UBIDailyEntity {
 
     if (!ubiDaily) {
         const emptyAvg = AverageValue.load(EMPTY_AVERAGE)!;
-        const dailyUbiRate = newEmptyAverage(DAILY_UBI_RATE + dayIdInt.toString());
-        const dailyGivingRate = newEmptyAverage(DAILY_GIVING_RATE + dayIdInt.toString());
+        const dailyUbiRate = newEmptyAverage(DAILY_UBI_RATE + dayIdInt.toString(), dayIdInt);
+        const dailyGivingRate = newEmptyAverage(DAILY_GIVING_RATE + dayIdInt.toString(), dayIdInt);
 
         ubiDaily = new UBIDailyEntity(ubiDailyId);
         ubiDaily.communities = 0;

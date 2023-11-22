@@ -4,6 +4,10 @@ type AverageValue @entity {
   """
   id: ID!
   """
+  item index (eg: dayId)
+  """
+  index: Int!
+  """
   average value
   """
   value: BigDecimal!

@@ -117,8 +117,8 @@ export function generiHandleCommunityAdded(
     let ubi = UBIDailyEntity.load('0');
 
     if (!ubi) {
-        const emptyAvg = newEmptyAverage(EMPTY_AVERAGE);
-        const globalCommunityUBIAverage = newEmptyAverage(GLOBAL_COMMUNITY_AVERAGE);
+        const emptyAvg = newEmptyAverage(EMPTY_AVERAGE, 0);
+        const globalCommunityUBIAverage = newEmptyAverage(GLOBAL_COMMUNITY_AVERAGE, 0);
 
         globalCommunityUBIAverage.value = community.maxClaim;
         globalCommunityUBIAverage.count = 1;

@@ -44,9 +44,10 @@ export function updateAverage(averageId: string, amount: BigDecimal, isIncrease:
     averageUpdated.save();
 }
 
-export function newEmptyAverage(averageId: string): AverageValue {
+export function newEmptyAverage(averageId: string, index: i32): AverageValue {
     const emptyAvg = new AverageValue(averageId);
 
+    emptyAvg.index = index;
     emptyAvg.value = BigDecimal.zero();
     emptyAvg.count = 0;
     // emptyAvg.save();

@@ -52,6 +52,19 @@ export class AverageValue extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get index(): i32 {
+    let value = this.get("index");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set index(value: i32) {
+    this.set("index", Value.fromI32(value));
+  }
+
   get value(): BigDecimal {
     let value = this.get("value");
     if (!value || value.kind == ValueKind.NULL) {

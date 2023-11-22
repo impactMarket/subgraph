@@ -153,8 +153,8 @@ function createDummyEntities(): void {
     beneficiary4.addedBy = Address.fromString(managerAddress[1]);
     beneficiary4.save();
 
-    const emptyAvg = newEmptyAverage(EMPTY_AVERAGE);
-    const globalCommunityUBIAverage = newEmptyAverage(GLOBAL_COMMUNITY_AVERAGE);
+    const emptyAvg = newEmptyAverage(EMPTY_AVERAGE, 0);
+    const globalCommunityUBIAverage = newEmptyAverage(GLOBAL_COMMUNITY_AVERAGE, 0);
 
     const ubi = new UBIDailyEntity('0');
 
